@@ -38,7 +38,7 @@ const generateAndDownloadPDF = async (certificate_id) => {
 
   pdf.save("이수증서.pdf");
 };
-
+/*
 const receiptPDF = async (payment_id) => {
   const input = document.getElementById(`order-receipt-${payment_id}`);
   const canvas = await html2canvas(input, {
@@ -72,7 +72,7 @@ const receiptPDF = async (payment_id) => {
 
   pdf.save("영수증.pdf");
 };
-
+*/
 export const PdfGenerator = () => {
   let {certificate_id} = useParams();
 
@@ -230,6 +230,7 @@ export const ReceiptPdfGenerator = () => {
       <div className="order-title-wrap">
         <h2 className="order-title">결제상세</h2>
         <div className="order-buttons">
+    {/*
           <Button
             label="영수증 저장하기"
             onClick={() => receiptPDF(order_id)}
@@ -244,7 +245,7 @@ export const ReceiptPdfGenerator = () => {
               alt="저장하기"
               src={downloadIcon}
             />
-          </Button>
+          </Button> */}
           {/* <Button
             label="결제 취소하기"
             style={{ height: "36px", padding: "auto 16px", fontSize: "14px" }}
