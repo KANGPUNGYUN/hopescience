@@ -71,6 +71,12 @@ export const Header = () => {
           />
           <Link
             className="header-link"
+            to="/faq"
+            label="F&Q"
+            color="white"
+          />
+          <Link
+            className="header-link"
             to="/mypage/courses"
             label="내 강의목록"
             color="white"

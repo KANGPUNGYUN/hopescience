@@ -25,3 +25,6 @@ sourcemap-info.json
 .env
 .env.development
 .env.production
+/docs
+.claude
+build

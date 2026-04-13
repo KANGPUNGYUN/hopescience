@@ -2250,6 +2250,117 @@ const useCounselingStore = create((set) => ({
 }));
 
 
+const useColumnStore = create((set) => ({
+  isLoading: false,
+  error: null,
+  columns: [],
+  totalCount: 0,
+  column: null,
+
+  getColumns: async (skip = 0, limit = 6, sort = "desc") => {
+    set({ isLoading: true });
+    try {
+      const response = await getApi({ path: `/columns/?skip=${skip}&limit=${limit}&sort=${sort}` });
+      if (response) {
+        set({
+          columns: response.items.map((col) => ({
+            id: col.id,
+            title: col.title,
+            content: col.content,
+            hashtags: col.hashtags,
+            created_at: col.created_at,
+            updated_at: col.updated_at,
+            view_count: col.view_count,
+          })),
+          totalCount: response.total_count,
+          isLoading: false,
+        });
+      } else {
+        throw new Error(`Failed to fetch columns: Status ${response.status}`);
+      }
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+      alert("칼럼 목록을 가져오는 중 오류가 발생했습니다: " + error.message);
+    }
+  },
+
+  getColumn: async (column_id) => {
+    set({ isLoading: true });
+    try {
+      const response = await getApi({ path: `/columns/${column_id}` });
+      if (response) {
+        set({ column: response, isLoading: false });
+      } else {
+        throw new Error(`Failed to fetch column: Status ${response.status}`);
+      }
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+      alert("칼럼을 가져오는 중 오류가 발생했습니다: " + error.message);
+    }
+  },
+
+  createColumn: async (title, content, hashtags, accessToken) => {
+    set({ isLoading: true });
+    try {
+      const response = await postApi({
+        path: "/columns/",
+        data: { title, content, hashtags },
+        access_token: accessToken,
+      });
+      if (response?.id) {
+        set({ isLoading: false });
+        alert("칼럼이 정상적으로 등록되었습니다.");
+        return true;
+      }
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+      alert("칼럼 등록 실패: " + error.message);
+      return false;
+    }
+  },
+
+  updateColumn: async (column_id, title, content, hashtags, accessToken) => {
+    set({ isLoading: true });
+    try {
+      const response = await putApi({
+        path: `/columns/${column_id}`,
+        data: { title, content, hashtags },
+        access_token: accessToken,
+      });
+      if (response) {
+        set({ isLoading: false });
+        alert("칼럼이 정상적으로 수정되었습니다.");
+        return true;
+      }
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+      alert("칼럼 수정 실패: " + error.message);
+      return false;
+    }
+  },
+
+  deleteColumn: async (column_id, accessToken) => {
+    set({ isLoading: true });
+    try {
+      await deleteApi({
+        path: `/columns/${column_id}`,
+        access_token: accessToken,
+      });
+      set({ isLoading: false });
+      alert("칼럼이 정상적으로 삭제되었습니다.");
+      return true;
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+      alert("칼럼 삭제 실패: " + error.message);
+      return false;
+    }
+  },
+
+  clearColumn: () => {
+    set({ column: null });
+  },
+}));
+
 export const certificate = useCertificateStore;
 export const enrollment = useEnrollmentStore;
 export const courseInquiry = useCourseInquiryStore;
@@ -2258,4 +2369,5 @@ export const user = useUserStore;
 export const payment = usePaymentStore;
 export const auth = useAuthStore;
 export const service = useServiceStore;
+export const column = useColumnStore;
 export { useCounselingStore };

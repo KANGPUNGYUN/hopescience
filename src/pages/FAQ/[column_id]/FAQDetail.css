@@ -1,0 +1,137 @@
+.faq-detail-background {
+  width: 100vw;
+  min-height: calc(100vh - 286px);
+  background-color: #171a1f;
+  display: flex;
+  justify-content: center;
+  padding: 120px 30px 80px;
+}
+
+.faq-detail-page {
+  max-width: 900px;
+  width: 100%;
+}
+
+.faq-detail-loading {
+  color: #9095a1;
+  font-size: 15px;
+  text-align: center;
+  padding: 60px 0;
+}
+
+.faq-detail-header {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #2a2d35;
+}
+
+.faq-detail-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #dee1e6;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  word-break: keep-all;
+}
+
+.faq-detail-meta {
+  display: flex;
+  gap: 24px;
+  font-size: 14px;
+  color: #9095a1;
+}
+
+.faq-detail-content {
+  color: #dee1e6;
+  font-size: 16px;
+  line-height: 1.9;
+  word-break: keep-all;
+  padding-bottom: 40px;
+}
+
+/* HTML 콘텐츠 내 요소 스타일 */
+.faq-detail-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 16px 0;
+  border-radius: 4px;
+}
+
+.faq-detail-content p {
+  margin-bottom: 12px;
+}
+
+.faq-detail-content h1,
+.faq-detail-content h2,
+.faq-detail-content h3,
+.faq-detail-content h4 {
+  color: #dee1e6;
+  margin: 20px 0 10px;
+  line-height: 1.4;
+}
+
+.faq-detail-content blockquote {
+  border-left: 3px solid #4b5263;
+  margin: 16px 0;
+  padding: 10px 16px;
+  background-color: #1e2128;
+  color: #9095a1;
+  border-radius: 0 4px 4px 0;
+}
+
+.faq-detail-content a {
+  color: #bd9a31;
+  text-decoration: underline;
+}
+
+.faq-detail-content a:hover {
+  color: #d4b040;
+}
+
+.faq-detail-content ul,
+.faq-detail-content ol {
+  padding-left: 24px;
+  margin-bottom: 12px;
+}
+
+.faq-detail-content li {
+  margin-bottom: 6px;
+}
+
+.faq-detail-content strong,
+.faq-detail-content b {
+  color: #f0f0f0;
+  font-weight: 700;
+}
+
+.faq-detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 24px 0;
+  border-top: 1px solid #2a2d35;
+  margin-bottom: 24px;
+}
+
+.faq-detail-tag {
+  background-color: #323743;
+  color: #9095a1;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 13px;
+}
+
+.faq-detail-footer {
+  padding-top: 8px;
+}
+
+@media screen and (max-width: 800px) {
+  .faq-detail-background {
+    padding: 100px 16px 60px;
+  }
+
+  .faq-detail-title {
+    font-size: 22px;
+  }
+}

@@ -38,6 +38,11 @@ import { AdminCategoryDetail } from "./pages/Admin/Category/[category_name]/[cou
 import { AdminCounselingDetail } from "./pages/Admin/Counseling/[counseling_id]";
 import { FindPassword } from "./pages/FindPassword";
 import { ResetPassword } from "./pages/ResetPassword";
+import { FAQ } from "./pages/FAQ";
+import { FAQDetail } from "./pages/FAQ/[column_id]";
+import { AdminColumn } from "./pages/Admin/Column";
+import { NewColumn } from "./pages/Admin/Column/New";
+import { AdminColumnEdit } from "./pages/Admin/Column/[column_id]";
 
 function App() {
   return (
@@ -103,6 +108,11 @@ function App() {
         <Route path="/admin/service/:course_id" element={<ServiceEdit />} />
         <Route path="/admin/orders" element={<AdminOrders />} />
         <Route path="/admin/orders/:order_id" element={<AdminOrder />} />
+        <Route path="/admin/column" element={<AdminColumn />} />
+        <Route path="/admin/column/new" element={<NewColumn />} />
+        <Route path="/admin/column/:column_id" element={<AdminColumnEdit />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/faq/:column_id" element={<FAQDetail />} />
       </Routes>
     </Router>
   );
