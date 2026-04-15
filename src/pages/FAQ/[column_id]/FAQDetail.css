@@ -62,85 +62,91 @@
   margin-bottom: 12px;
 }
 
-/* Heading */
+/* Heading — CSS Reset(font: inherit)를 오버라이드 */
 .faq-detail-content h1 {
-  font-size: 2em;
-  font-weight: 700;
+  font-size: 2em !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
   color: #dee1e6;
   margin: 24px 0 12px;
   line-height: 1.4;
 }
 
 .faq-detail-content h2 {
-  font-size: 1.5em;
-  font-weight: 700;
+  font-size: 1.5em !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
   color: #dee1e6;
   margin: 22px 0 10px;
   line-height: 1.4;
 }
 
 .faq-detail-content h3 {
-  font-size: 1.17em;
-  font-weight: 700;
+  font-size: 1.17em !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
   color: #dee1e6;
   margin: 20px 0 10px;
   line-height: 1.4;
 }
 
 .faq-detail-content h4 {
-  font-size: 1em;
-  font-weight: 700;
+  font-size: 1em !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
   color: #dee1e6;
   margin: 18px 0 8px;
   line-height: 1.4;
 }
 
 .faq-detail-content h5 {
-  font-size: 0.83em;
-  font-weight: 700;
+  font-size: 0.83em !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
   color: #dee1e6;
   margin: 16px 0 8px;
   line-height: 1.4;
 }
 
 .faq-detail-content h6 {
-  font-size: 0.67em;
-  font-weight: 700;
+  font-size: 0.67em !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
   color: #dee1e6;
   margin: 14px 0 6px;
   line-height: 1.4;
 }
 
-/* 텍스트 스타일 */
+/* 텍스트 스타일 — CSS Reset(font: inherit)를 오버라이드 */
 .faq-detail-content strong,
 .faq-detail-content b {
   color: #f0f0f0;
-  font-weight: 700;
+  font-weight: 700 !important;
 }
 
 .faq-detail-content em,
 .faq-detail-content i {
-  font-style: italic;
+  font-style: italic !important;
 }
 
 .faq-detail-content u {
-  text-decoration: underline;
+  text-decoration: underline !important;
 }
 
 .faq-detail-content s,
 .faq-detail-content del,
 .faq-detail-content strike {
-  text-decoration: line-through;
+  text-decoration: line-through !important;
 }
 
 .faq-detail-content sub {
   vertical-align: sub;
-  font-size: smaller;
+  font-size: smaller !important;
 }
 
 .faq-detail-content sup {
   vertical-align: super;
-  font-size: smaller;
+  font-size: smaller !important;
 }
 
 /* 링크 */

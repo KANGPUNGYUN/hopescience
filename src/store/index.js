@@ -2313,6 +2313,29 @@ const useColumnStore = create((set) => ({
         return true;
       }
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        const authStore = useAuthStore.getState();
+        await authStore.refreshAccessToken();
+        const newToken = useAuthStore.getState().accessToken;
+        if (newToken) {
+          try {
+            const retryResponse = await postApi({
+              path: "/columns/",
+              data: { title, content, hashtags },
+              access_token: newToken,
+            });
+            if (retryResponse?.id) {
+              set({ isLoading: false });
+              alert("칼럼이 정상적으로 등록되었습니다.");
+              return true;
+            }
+          } catch (retryError) {
+            set({ error: retryError.message, isLoading: false });
+            alert("칼럼 등록 실패: " + retryError.message);
+            return false;
+          }
+        }
+      }
       set({ error: error.message, isLoading: false });
       alert("칼럼 등록 실패: " + error.message);
       return false;
@@ -2333,6 +2356,29 @@ const useColumnStore = create((set) => ({
         return true;
       }
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        const authStore = useAuthStore.getState();
+        await authStore.refreshAccessToken();
+        const newToken = useAuthStore.getState().accessToken;
+        if (newToken) {
+          try {
+            const retryResponse = await putApi({
+              path: `/columns/${column_id}`,
+              data: { title, content, hashtags },
+              access_token: newToken,
+            });
+            if (retryResponse) {
+              set({ isLoading: false });
+              alert("칼럼이 정상적으로 수정되었습니다.");
+              return true;
+            }
+          } catch (retryError) {
+            set({ error: retryError.message, isLoading: false });
+            alert("칼럼 수정 실패: " + retryError.message);
+            return false;
+          }
+        }
+      }
       set({ error: error.message, isLoading: false });
       alert("칼럼 수정 실패: " + error.message);
       return false;
@@ -2350,6 +2396,26 @@ const useColumnStore = create((set) => ({
       alert("칼럼이 정상적으로 삭제되었습니다.");
       return true;
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        const authStore = useAuthStore.getState();
+        await authStore.refreshAccessToken();
+        const newToken = useAuthStore.getState().accessToken;
+        if (newToken) {
+          try {
+            await deleteApi({
+              path: `/columns/${column_id}`,
+              access_token: newToken,
+            });
+            set({ isLoading: false });
+            alert("칼럼이 정상적으로 삭제되었습니다.");
+            return true;
+          } catch (retryError) {
+            set({ error: retryError.message, isLoading: false });
+            alert("칼럼 삭제 실패: " + retryError.message);
+            return false;
+          }
+        }
+      }
       set({ error: error.message, isLoading: false });
       alert("칼럼 삭제 실패: " + error.message);
       return false;
