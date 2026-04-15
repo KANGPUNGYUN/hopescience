@@ -13,6 +13,10 @@ import { useNavigate, useParams } from "react-router-dom";
 const Link = Quill.import("formats/link");
 class ExternalLink extends Link {
   static create(value) {
+    // 프로토콜이 없으면 https:// 자동 추가
+    if (value && !/^https?:\/\//i.test(value) && !/^mailto:/i.test(value)) {
+      value = "https://" + value;
+    }
     const node = super.create(value);
     node.setAttribute("target", "_blank");
     node.setAttribute("rel", "noopener noreferrer");

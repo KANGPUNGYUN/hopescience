@@ -29,6 +29,11 @@ export const FAQDetail = () => {
       links.forEach((link) => {
         link.setAttribute("target", "_blank");
         link.setAttribute("rel", "noopener noreferrer");
+        // 프로토콜 없는 URL에 https:// 자동 추가
+        const href = link.getAttribute("href");
+        if (href && !/^https?:\/\//i.test(href) && !/^mailto:/i.test(href)) {
+          link.setAttribute("href", "https://" + href);
+        }
       });
     }
   }, [columnData]);

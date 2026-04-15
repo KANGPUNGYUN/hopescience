@@ -125,6 +125,77 @@
   height: auto;
 }
 
+/* CSS Reset(font: inherit) 오버라이드 — 에디터 내 텍스트 스타일 */
+.column-editor-quill .ql-editor strong,
+.column-editor-quill .ql-editor b {
+  font-weight: 700 !important;
+}
+
+.column-editor-quill .ql-editor em,
+.column-editor-quill .ql-editor i {
+  font-style: italic !important;
+}
+
+.column-editor-quill .ql-editor u {
+  text-decoration: underline !important;
+}
+
+.column-editor-quill .ql-editor s,
+.column-editor-quill .ql-editor del,
+.column-editor-quill .ql-editor strike {
+  text-decoration: line-through !important;
+}
+
+.column-editor-quill .ql-editor h1 {
+  font-size: 2em !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
+  margin: 12px 0;
+  line-height: 1.4;
+}
+
+.column-editor-quill .ql-editor h2 {
+  font-size: 1.5em !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
+  margin: 10px 0;
+  line-height: 1.4;
+}
+
+.column-editor-quill .ql-editor h3 {
+  font-size: 1.17em !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
+  margin: 8px 0;
+  line-height: 1.4;
+}
+
+.column-editor-quill .ql-editor sub {
+  vertical-align: sub;
+  font-size: smaller !important;
+}
+
+.column-editor-quill .ql-editor sup {
+  vertical-align: super;
+  font-size: smaller !important;
+}
+
+.column-editor-quill .ql-editor blockquote {
+  border-left: 4px solid #ccc;
+  margin: 8px 0;
+  padding: 6px 12px;
+}
+
+.column-editor-quill .ql-editor ol {
+  list-style-type: decimal;
+  padding-left: 24px;
+}
+
+.column-editor-quill .ql-editor ul {
+  list-style-type: disc;
+  padding-left: 24px;
+}
+
 @media screen and (max-width: 800px) {
   .column-editor-page-background {
     padding: 32px 10px 60px;
