@@ -197,7 +197,7 @@ export const AdminSideBar = () => {
                     strokeLinecap="round"
                   />
                 </svg>
-                <span className="admin-menu-label">칼럼관리</span>
+                <span className="admin-menu-label">F&Q 칼럼관리</span>
               </NavLink>
             </li>
             <li>

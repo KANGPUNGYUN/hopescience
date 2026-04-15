@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Header } from "../../../components/Header";
 import { Footer } from "../../../components/Footer";
 import { Button } from "../../../components/Button";
@@ -9,6 +9,7 @@ import "./FAQDetail.css";
 export const FAQDetail = () => {
   const { column_id } = useParams();
   const navigate = useNavigate();
+  const contentRef = useRef(null);
 
   const { isLoading, columnData, getColumn, clearColumn } = column((state) => ({
     isLoading: state.isLoading,
@@ -21,6 +22,16 @@ export const FAQDetail = () => {
     getColumn(column_id);
     return () => clearColumn();
   }, [column_id]);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      const links = contentRef.current.querySelectorAll("a");
+      links.forEach((link) => {
+        link.setAttribute("target", "_blank");
+        link.setAttribute("rel", "noopener noreferrer");
+      });
+    }
+  }, [columnData]);
 
   const extractHashtags = (hashtags) => {
     if (!hashtags) return [];
@@ -56,6 +67,7 @@ export const FAQDetail = () => {
               </header>
 
               <div
+                ref={contentRef}
                 className="faq-detail-content"
                 dangerouslySetInnerHTML={{ __html: columnData.content }}
               />

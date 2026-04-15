@@ -23,7 +23,7 @@ export const AdminColumn = () => {
         <div className="layout-flex">
           <AdminSideBar />
           <main className="admin-main-content">
-            <h2 className="admin-page-title">칼럼관리</h2>
+            <h2 className="admin-page-title">F&Q 칼럼관리</h2>
             <ColumnPagination />
           </main>
         </div>

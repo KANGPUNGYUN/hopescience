@@ -2,12 +2,24 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import ReactQuill from "react-quill-new";
+import ReactQuill, { Quill } from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import "./ColumnEditor.css";
 import { Button } from "../../components/Button";
 import { column, auth } from "../../store";
 import { useNavigate, useParams } from "react-router-dom";
+
+// 링크를 항상 새 창으로 열도록 커스텀 Link blot 설정
+const Link = Quill.import("formats/link");
+class ExternalLink extends Link {
+  static create(value) {
+    const node = super.create(value);
+    node.setAttribute("target", "_blank");
+    node.setAttribute("rel", "noopener noreferrer");
+    return node;
+  }
+}
+Quill.register(ExternalLink, true);
 
 const schema = yup
   .object({

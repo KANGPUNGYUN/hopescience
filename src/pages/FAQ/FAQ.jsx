@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
+import { Link } from "../../components/Link";
 import "./style.css";
 import { column } from "../../store";
 import { useNavigate } from "react-router-dom";
@@ -69,14 +70,6 @@ export const FAQ = () => {
     return pageButtons;
   };
 
-  const extractHashtags = (hashtags) => {
-    if (!hashtags) return [];
-    return hashtags
-      .split(" ")
-      .filter((tag) => tag.startsWith("#"))
-      .slice(0, 5);
-  };
-
   return (
     <>
       <Header />
@@ -96,54 +89,70 @@ export const FAQ = () => {
             </form>
           </div>
 
-          <div className="faq-list">
-            {isLoading ? (
-              <p className="faq-empty">Loading...</p>
-            ) : columns && columns.length ? (
-              columns.map((col) => (
-                <div
-                  key={col.id}
-                  className="faq-card"
-                  onClick={() => navigate(`/faq/${col.id}`)}
-                >
-                  <h4 className="faq-card-title">{col.title}</h4>
-                  <div className="faq-card-meta">
-                    <span className="faq-card-date">
-                      {new Date(col.created_at).toLocaleDateString("ko-KR")}
-                    </span>
-                  </div>
-                  {col.hashtags && (
-                    <div className="faq-card-tags">
-                      {extractHashtags(col.hashtags).map((tag, idx) => (
-                        <span key={idx} className="faq-tag">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+          <div className="pagination-container">
+            <div className="post-list">
+              <div className="post-list-header">
+                <div>No</div>
+                <div>제목</div>
+                <div>해시태그</div>
+                <div>작성일자</div>
+              </div>
+              {isLoading ? (
+                <div className="post-item">
+                  <div></div>
+                  <div>Loading...</div>
                 </div>
-              ))
-            ) : (
-              <p className="faq-empty">등록된 칼럼이 없습니다.</p>
-            )}
-          </div>
-
-          <div className="pagination-buttons">
-            <button
-              className={`pagination-button ${currentPage === 1 ? "disabled" : ""}`}
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
-              <img className="img-11" alt="이전" src={leftArrowButton} />
-            </button>
-            <div className="pagination-button-wrap">{renderPageButtons()}</div>
-            <button
-              className={`pagination-button ${currentPage === totalPages || totalPages === 0 ? "disabled" : ""}`}
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages || totalPages === 0}
-            >
-              <img className="img-11" alt="다음" src={rightArrowButton} />
-            </button>
+              ) : columns && columns.length ? (
+                columns.map((col) => (
+                  <div key={col.id} className="post-item">
+                    <div style={{ paddingRight: "10px" }}>{col.id}</div>
+                    <Link
+                      to={`/faq/${col.id}`}
+                      className="post-item-link"
+                      label={col.title}
+                      style={{
+                        backgroundColor: "transparent",
+                        fontSize: "14px",
+                        color: "#dee1e6",
+                        width: "auto",
+                        height: "fit-content",
+                        textAlign: "left",
+                        display: "block",
+                        paddingRight: "10px",
+                      }}
+                    />
+                    <div className="faq-hashtags" style={{ paddingRight: "10px" }}>
+                      {col.hashtags || "-"}
+                    </div>
+                    <div style={{ paddingRight: "10px" }}>
+                      {new Date(col.created_at).toLocaleDateString("ko-KR")}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="post-item">
+                  <div></div>
+                  <div>등록된 칼럼이 없습니다.</div>
+                </div>
+              )}
+            </div>
+            <div className="pagination-buttons">
+              <button
+                className={`pagination-button ${currentPage === 1 ? "disabled" : ""}`}
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                <img className="img-11" alt="이전" src={leftArrowButton} />
+              </button>
+              <div className="pagination-button-wrap">{renderPageButtons()}</div>
+              <button
+                className={`pagination-button ${currentPage === totalPages || totalPages === 0 ? "disabled" : ""}`}
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages || totalPages === 0}
+              >
+                <img className="img-11" alt="다음" src={rightArrowButton} />
+              </button>
+            </div>
           </div>
         </section>
       </main>
