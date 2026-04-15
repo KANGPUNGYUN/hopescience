@@ -50,63 +50,77 @@
   color: #6b7280;
 }
 
-.column-editor-content-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 22px;
-  margin-bottom: 6px;
+/* Quill Editor */
+.column-editor-quill {
   max-width: 955px;
 }
 
-.column-editor-preview-btn {
+.column-editor-quill .ql-toolbar {
   background-color: #323743;
-  color: #bdc1ca;
   border: 1px solid #4b5263;
-  border-radius: 4px;
-  padding: 4px 14px;
-  font-size: 13px;
-  cursor: pointer;
+  border-radius: 4px 4px 0 0;
 }
 
-.column-editor-preview-btn:hover {
-  background-color: #4b5263;
+.column-editor-quill .ql-toolbar .ql-stroke {
+  stroke: #bdc1ca;
 }
 
-.column-editor-textarea {
-  display: block;
-  width: 100%;
-  max-width: 955px;
-  min-height: 400px;
-  border-radius: 4px;
-  border: 0;
-  background-color: #323743;
-  font-size: 13px;
-  font-family: "Courier New", monospace;
-  padding: 12px;
+.column-editor-quill .ql-toolbar .ql-fill {
+  fill: #bdc1ca;
+}
+
+.column-editor-quill .ql-toolbar .ql-picker-label {
   color: #bdc1ca;
-  resize: vertical;
-  line-height: 22px;
 }
 
-.column-editor-textarea::placeholder {
-  color: #6b7280;
+.column-editor-quill .ql-toolbar .ql-picker-options {
+  background-color: #323743;
+  border-color: #4b5263;
 }
 
-.column-editor-preview {
-  width: 100%;
-  max-width: 955px;
-  min-height: 400px;
+.column-editor-quill .ql-toolbar .ql-picker-item {
+  color: #bdc1ca;
+}
+
+.column-editor-quill .ql-toolbar button:hover .ql-stroke,
+.column-editor-quill .ql-toolbar .ql-picker-label:hover .ql-stroke {
+  stroke: #bd9a31;
+}
+
+.column-editor-quill .ql-toolbar button:hover .ql-fill,
+.column-editor-quill .ql-toolbar .ql-picker-label:hover .ql-fill {
+  fill: #bd9a31;
+}
+
+.column-editor-quill .ql-toolbar button.ql-active .ql-stroke {
+  stroke: #bd9a31;
+}
+
+.column-editor-quill .ql-toolbar button.ql-active .ql-fill {
+  fill: #bd9a31;
+}
+
+.column-editor-quill .ql-container {
   background-color: #ffffff;
-  border-radius: 4px;
-  padding: 20px;
-  color: #222;
+  border: 1px solid #4b5263;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  min-height: 400px;
   font-size: 14px;
   line-height: 1.8;
-  overflow-x: auto;
 }
 
-.column-editor-preview img {
+.column-editor-quill .ql-editor {
+  min-height: 400px;
+  color: #222;
+}
+
+.column-editor-quill .ql-editor.ql-blank::before {
+  color: #9ca3af;
+  font-style: normal;
+}
+
+.column-editor-quill .ql-editor img {
   max-width: 100%;
   height: auto;
 }

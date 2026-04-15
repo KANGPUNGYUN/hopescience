@@ -1,24 +1,48 @@
+.column-pagination-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 43px;
+  width: 1060px;
+  background-color: #1e2128;
+  padding: 46px 20px 20px;
+}
+
+.column-pagination-container-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.column-list {
+  width: 100%;
+  background-color: #171a1f;
+}
+
 .column-list-header {
   display: grid;
-  grid-template-columns: 60px 1fr 120px 140px;
-  gap: 10px;
-  padding: 12px 16px;
-  background-color: #2a2d35;
-  border-radius: 6px 6px 0 0;
+  grid-template-columns: 0.5fr 3fr 1.5fr 1fr;
+  padding: 20px 16px 16px;
+  font-family: "Lexend", Helvetica;
   font-size: 14px;
   font-weight: 700;
-  color: #9095a1;
+  color: #dee1e6;
 }
 
 .column-list-item {
-  display: grid;
-  grid-template-columns: 60px 1fr 120px 140px;
-  gap: 10px;
-  padding: 12px 16px;
-  border-bottom: 1px solid #2a2d35;
+  font-family: "Manrope", Helvetica;
+  height: 68px;
   font-size: 14px;
+  font-weight: 400;
+  display: grid;
+  grid-template-columns: 0.5fr 3fr 1.5fr 1fr;
   color: #dee1e6;
+  padding: 20px 16px 16px;
   align-items: center;
+}
+
+.column-list-item div,
+.column-list-item a {
+  align-self: center;
 }
 
 .column-list-title {
@@ -30,4 +54,63 @@
 .column-list-actions {
   display: flex;
   gap: 6px;
+}
+
+.column-pagination-footer {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 32px;
+  padding: 0 16px;
+}
+
+.column-pagination-count {
+  color: #dee1e6;
+}
+
+.column-pagination-buttons {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+}
+
+.column-pagination-button {
+  background-color: transparent;
+  border: none;
+  width: 36px;
+  height: 36px;
+}
+
+.column-pagination-button:hover {
+  cursor: pointer;
+}
+
+.column-pagination-button.disabled:hover {
+  cursor: not-allowed;
+}
+
+.column-pagination-button-wrap {
+  display: flex;
+  gap: 4px;
+}
+
+.column-pagination-page-button {
+  background-color: transparent;
+  color: #dee1e6;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 0;
+}
+
+.column-pagination-page-button:hover {
+  background-color: #bd9a31;
+  color: #1e2128;
+  cursor: pointer;
+}
+
+.column-pagination-page-button.active {
+  background-color: #bd9a31;
+  color: #1e2128;
 }

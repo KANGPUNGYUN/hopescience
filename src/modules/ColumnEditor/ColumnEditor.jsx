@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 import "./ColumnEditor.css";
 import { Button } from "../../components/Button";
 import { column, auth } from "../../store";
@@ -15,16 +17,44 @@ const schema = yup
   })
   .required();
 
+const QUILL_MODULES = {
+  toolbar: [
+    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+    ["bold", "italic", "underline", "strike"],
+    [{ color: [] }, { background: [] }],
+    [{ list: "ordered" }, { list: "bullet" }],
+    [{ align: [] }],
+    ["blockquote", "code-block"],
+    ["link", "image", "video"],
+    ["clean"],
+  ],
+};
+
+const QUILL_FORMATS = [
+  "header",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "color",
+  "background",
+  "list",
+  "align",
+  "blockquote",
+  "code-block",
+  "link",
+  "image",
+  "video",
+];
+
 export const ColumnEditor = () => {
-  const [previewMode, setPreviewMode] = useState(false);
-  const [contentValue, setContentValue] = useState("");
   const [isEditMode, setIsEditMode] = useState(false);
 
   const {
     register,
     handleSubmit,
     reset,
-    watch,
+    control,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -56,7 +86,6 @@ export const ColumnEditor = () => {
     } else {
       clearColumn();
       reset({ title: "", content: "", hashtags: "" });
-      setContentValue("");
     }
   }, [column_id]);
 
@@ -67,14 +96,8 @@ export const ColumnEditor = () => {
         content: columnData.content,
         hashtags: columnData.hashtags || "",
       });
-      setContentValue(columnData.content || "");
     }
   }, [columnData, column_id, reset]);
-
-  const watchedContent = watch("content");
-  useEffect(() => {
-    setContentValue(watchedContent || "");
-  }, [watchedContent]);
 
   const onSubmit = async (data) => {
     const { accessToken: token } = auth.getState();
@@ -132,32 +155,22 @@ export const ColumnEditor = () => {
             className="column-editor-input"
           />
 
-          <div className="column-editor-content-header">
-            <label className="column-editor-label" style={{ margin: 0 }}>
-              내용 (HTML)
-            </label>
-            <button
-              type="button"
-              className="column-editor-preview-btn"
-              onClick={() => setPreviewMode(!previewMode)}
-            >
-              {previewMode ? "HTML 편집" : "미리보기"}
-            </button>
-          </div>
-
-          {previewMode ? (
-            <div
-              className="column-editor-preview"
-              dangerouslySetInnerHTML={{ __html: contentValue }}
-            />
-          ) : (
-            <textarea
-              {...register("content")}
-              id="column-editor-textarea"
-              placeholder="HTML 형식으로 내용을 작성해주세요&#10;예: <p>내용</p><img src='...'>"
-              className="column-editor-textarea"
-            />
-          )}
+          <label className="column-editor-label">내용</label>
+          <Controller
+            name="content"
+            control={control}
+            render={({ field }) => (
+              <ReactQuill
+                theme="snow"
+                value={field.value}
+                onChange={field.onChange}
+                modules={QUILL_MODULES}
+                formats={QUILL_FORMATS}
+                placeholder="내용을 작성해주세요"
+                className="column-editor-quill"
+              />
+            )}
+          />
           {errors.content && (
             <p className="input-error-message">{errors.content.message}</p>
           )}

@@ -64,7 +64,7 @@ export const ColumnPagination = () => {
       pageButtons.push(
         <button
           key={i}
-          className={currentPage === i ? "pagination-page-button active" : "pagination-page-button"}
+          className={currentPage === i ? "column-pagination-page-button active" : "column-pagination-page-button"}
           onClick={() => handlePageChange(i)}
         >
           {i}
@@ -75,8 +75,38 @@ export const ColumnPagination = () => {
   };
 
   return (
-    <div className="pagination-container">
-      <div className="post-list">
+    <div className="column-pagination-container">
+      <div className="column-pagination-container-header">
+        <Link
+          to="/admin/column/new"
+          label="칼럼 작성"
+          buttonStyle="default"
+          color="white"
+          style={{
+            fontSize: "14px",
+            padding: "7px 20px",
+            width: "fit-content",
+            height: "fit-content",
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16px"
+            height="16px"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M4 12H20M12 4V20"
+              stroke="#ffffff"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </Link>
+      </div>
+      <div className="column-list">
         <div className="column-list-header">
           <div>No</div>
           <div>제목</div>
@@ -84,7 +114,7 @@ export const ColumnPagination = () => {
           <div>관리</div>
         </div>
         {isLoading ? (
-          <div className="post-item">
+          <div className="column-list-item">
             <div></div>
             <div>Loading...</div>
           </div>
@@ -110,36 +140,33 @@ export const ColumnPagination = () => {
             </div>
           ))
         ) : (
-          <div className="post-item">
+          <div className="column-list-item">
             <div></div>
             <div>등록된 칼럼이 없습니다.</div>
           </div>
         )}
-        <div className="post-item-create-button">
-          <Link
-            to="/admin/column/new"
-            label="칼럼 작성"
-            buttonStyle="default"
-            color="white"
-          />
-        </div>
       </div>
-      <div className="pagination-buttons">
-        <button
-          className={`pagination-button ${currentPage === 1 ? "disabled" : ""}`}
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          <img className="img-11" alt="이전" src={leftArrowButton} />
-        </button>
-        <div className="pagination-button-wrap">{renderPageButtons()}</div>
-        <button
-          className={`pagination-button ${currentPage === totalPages || totalPages === 0 ? "disabled" : ""}`}
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages || totalPages === 0}
-        >
-          <img className="img-11" alt="다음" src={rightArrowButton} />
-        </button>
+      <div className="column-pagination-footer">
+        <div className="column-pagination-count">
+          {totalCount || 0} results
+        </div>
+        <div className="column-pagination-buttons">
+          <button
+            className={`column-pagination-button ${currentPage === 1 ? "disabled" : ""}`}
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            <img className="img-11" alt="이전" src={leftArrowButton} />
+          </button>
+          <div className="column-pagination-button-wrap">{renderPageButtons()}</div>
+          <button
+            className={`column-pagination-button ${currentPage === totalPages || totalPages === 0 ? "disabled" : ""}`}
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages || totalPages === 0}
+          >
+            <img className="img-11" alt="다음" src={rightArrowButton} />
+          </button>
+        </div>
       </div>
       <Modal
         modalTitle="칼럼 삭제"
