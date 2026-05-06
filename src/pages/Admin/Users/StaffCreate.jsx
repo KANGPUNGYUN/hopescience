@@ -6,13 +6,37 @@ import { auth } from "../../../store";
 import "./Users.css";
 
 function generatePassword(length = 12) {
-  const chars =
-    "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*";
-  let out = "";
-  for (let i = 0; i < length; i += 1) {
-    out += chars[Math.floor(Math.random() * chars.length)];
+  const letters = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+  const digits = "23456789";
+  const extras = "!@#$%^&*";
+  const all = letters + digits + extras;
+
+  // 서버 검증: 영문+숫자 모두 포함
+  const pick = (s) => s[Math.floor(Math.random() * s.length)];
+  const out = [pick(letters), pick(digits)];
+  while (out.length < Math.max(8, length)) out.push(pick(all));
+  return out.sort(() => Math.random() - 0.5).join("");
+}
+
+function isValidStaffName(value) {
+  return /^[가-힣a-zA-Z\s]+$/.test(value);
+}
+
+function hasLetterAndDigit(value) {
+  const hasLetter = /[a-zA-Z]/.test(value);
+  const hasDigit = /[0-9]/.test(value);
+  return hasLetter && hasDigit;
+}
+
+function extractErrorMessage(err) {
+  const detail = err?.response?.data?.detail;
+  if (Array.isArray(detail) && detail.length > 0) {
+    return detail
+      .map((d) => d?.msg)
+      .filter(Boolean)
+      .join("\n");
   }
-  return out;
+  return err?.response?.data?.message || err?.message || "Unknown error";
 }
 
 export const StaffCreate = () => {
@@ -24,6 +48,22 @@ export const StaffCreate = () => {
   const [password, setPassword] = useState(generatePassword());
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const handleGeneratePassword = async () => {
+    const newPassword = generatePassword();
+    setPassword(newPassword);
+    try {
+      await navigator.clipboard.writeText(newPassword);
+      sessionStorage.setItem("last-generated-staff-password", newPassword);
+      alert(
+        `비밀번호가 생성되어 클립보드에 복사되었습니다.\n\n${newPassword}\n\n브라우저 세션에도 임시 저장했습니다.`
+      );
+    } catch {
+      alert(
+        `비밀번호가 생성되었습니다.\n\n${newPassword}\n\n클립보드 복사에 실패했으니 직접 복사해주세요.`
+      );
+    }
+  };
+
   const onSubmit = async (e) => {
     e.preventDefault();
     const normalizedPhone = (phone || "").replace(/[^0-9]/g, "");
@@ -31,8 +71,16 @@ export const StaffCreate = () => {
       alert("이름/이메일/연락처/비밀번호를 모두 입력해주세요.");
       return;
     }
+    if (!isValidStaffName(name)) {
+      alert("이름은 한글, 영문, 띄어쓰기만 허용됩니다.");
+      return;
+    }
     if (normalizedPhone.length < 9 || normalizedPhone.length > 11) {
       alert("연락처 형식이 올바르지 않습니다. 숫자만 9~11자리로 입력해주세요.");
+      return;
+    }
+    if (!hasLetterAndDigit(password)) {
+      alert("비밀번호는 영문과 숫자를 모두 포함해야 합니다.");
       return;
     }
 
@@ -51,11 +99,7 @@ export const StaffCreate = () => {
       }
       navigate("/admin/users");
     } catch (err) {
-      alert(
-        `스태프 계정 생성 실패: ${
-          err?.response?.data?.message || err?.message || "Unknown error"
-        }`
-      );
+      alert(`스태프 계정 생성 실패:\n${extractErrorMessage(err)}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -119,7 +163,7 @@ export const StaffCreate = () => {
                 />
                 <Button
                   label="비밀번호 생성"
-                  onClick={() => setPassword(generatePassword())}
+                  onClick={handleGeneratePassword}
                   style={{ width: "140px", height: "42px", fontSize: "14px" }}
                 />
               </div>
