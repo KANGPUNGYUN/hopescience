@@ -74,17 +74,19 @@ const useAuthStore = create(
           await postApi({
             path: "/users/logout",
           });
+          alert("로그아웃되었습니다.");
+        } catch (error) {
+          set({ error: error.message });
+          alert("서버 로그아웃 요청 실패, 로컬 세션은 종료합니다.");
+        } finally {
+          // 서버 응답과 무관하게 로컬 세션은 반드시 정리
           set({
             user: null,
             accessToken: null,
             refreshToken: null,
             isLoading: false,
           });
-          sessionStorage.clear();
-          alert("로그아웃되었습니다.");
-        } catch (error) {
-          set({ error: error.message, isLoading: false });
-          alert("로그아웃 실패: " + error.message);
+          sessionStorage.removeItem("auth-storage");
         }
       },
 

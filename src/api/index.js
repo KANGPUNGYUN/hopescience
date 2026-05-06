@@ -16,8 +16,13 @@ function assertStaffApiAllowed({ path }) {
   const userType = getUserTypeFromSessionStorage();
   if (userType !== "staff") return;
 
-  // staff는 현재 칼럼 관련 API만 허용
-  const isAllowed = typeof path === "string" && path.startsWith("/columns");
+  // staff는 현재 칼럼 관련 API만 허용하되, 인증 필수 엔드포인트는 예외 허용
+  const staffAllowedPrefixes = ["/columns"];
+  const staffAllowedExact = ["/users/logout", "/users/login", "/users/refresh"];
+  const isAllowed =
+    typeof path === "string" &&
+    (staffAllowedExact.includes(path) ||
+      staffAllowedPrefixes.some((prefix) => path.startsWith(prefix)));
   if (!isAllowed) {
     const err = new Error("스태프 계정은 칼럼 관리 기능만 사용할 수 있습니다.");
     err.code = "STAFF_FORBIDDEN";
