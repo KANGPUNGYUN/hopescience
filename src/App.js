@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { SignIn, NaverSignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
@@ -43,6 +43,25 @@ import { FAQDetail } from "./pages/FAQ/[column_id]";
 import { AdminColumn } from "./pages/Admin/Column";
 import { NewColumn } from "./pages/Admin/Column/New";
 import { AdminColumnEdit } from "./pages/Admin/Column/[column_id]";
+
+function getUserType() {
+  try {
+    const raw = sessionStorage.getItem("auth-storage");
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return parsed?.state?.user?.userType ?? null;
+  } catch {
+    return null;
+  }
+}
+
+function AdminProtectedRoute({ allowStaff = false, children }) {
+  const userType = getUserType();
+  if (userType !== "admin" && !(allowStaff && userType === "staff")) {
+    return <Navigate to="/admin" replace />;
+  }
+  return children;
+}
 
 function App() {
   return (
@@ -90,27 +109,128 @@ function App() {
           element={<Certificate />}
         />
         <Route path="/admin" element={<Admin />} />
-        <Route path="/admin/users" element={<Users />} />
-        <Route path="/admin/users/:user_id" element={<User />} />
-        <Route path="/admin/QnA" element={<AdminQnA />} />
-        <Route path="/admin/QnA/:inquiry_id" element={<AdminQnADetail />} />
-        <Route path="/admin/QnA/new" element={<NewAdminQnAInquiry />} />
+
+        <Route
+          path="/admin/column"
+          element={
+            <AdminProtectedRoute allowStaff>
+              <AdminColumn />
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/column/new"
+          element={
+            <AdminProtectedRoute allowStaff>
+              <NewColumn />
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/column/:column_id"
+          element={
+            <AdminProtectedRoute allowStaff>
+              <AdminColumnEdit />
+            </AdminProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/users"
+          element={
+            <AdminProtectedRoute>
+              <Users />
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/users/:user_id"
+          element={
+            <AdminProtectedRoute>
+              <User />
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/QnA"
+          element={
+            <AdminProtectedRoute>
+              <AdminQnA />
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/QnA/:inquiry_id"
+          element={
+            <AdminProtectedRoute>
+              <AdminQnADetail />
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/QnA/new"
+          element={
+            <AdminProtectedRoute>
+              <NewAdminQnAInquiry />
+            </AdminProtectedRoute>
+          }
+        />
         <Route
           path="/admin/Category/:category_name/:course_inquiry_id"
-          element={<AdminCategoryDetail />}
+          element={
+            <AdminProtectedRoute>
+              <AdminCategoryDetail />
+            </AdminProtectedRoute>
+          }
         />
         <Route
           path="/admin/Counseling/:counseling_id"
-          element={<AdminCounselingDetail />}
+          element={
+            <AdminProtectedRoute>
+              <AdminCounselingDetail />
+            </AdminProtectedRoute>
+          }
         />
-        <Route path="/admin/service" element={<Service />} />
-        <Route path="/admin/service/new" element={<NewService />} />
-        <Route path="/admin/service/:course_id" element={<ServiceEdit />} />
-        <Route path="/admin/orders" element={<AdminOrders />} />
-        <Route path="/admin/orders/:order_id" element={<AdminOrder />} />
-        <Route path="/admin/column" element={<AdminColumn />} />
-        <Route path="/admin/column/new" element={<NewColumn />} />
-        <Route path="/admin/column/:column_id" element={<AdminColumnEdit />} />
+        <Route
+          path="/admin/service"
+          element={
+            <AdminProtectedRoute>
+              <Service />
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/service/new"
+          element={
+            <AdminProtectedRoute>
+              <NewService />
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/service/:course_id"
+          element={
+            <AdminProtectedRoute>
+              <ServiceEdit />
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/orders"
+          element={
+            <AdminProtectedRoute>
+              <AdminOrders />
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/orders/:order_id"
+          element={
+            <AdminProtectedRoute>
+              <AdminOrder />
+            </AdminProtectedRoute>
+          }
+        />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/faq/:column_id" element={<FAQDetail />} />
       </Routes>

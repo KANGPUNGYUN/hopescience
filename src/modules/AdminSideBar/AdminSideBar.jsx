@@ -8,17 +8,21 @@ import MainLogo from "../../images/main-logo.png";
 export const AdminSideBar = () => {
   const { logout } = auth();
   const navigate = useNavigate();
+  const userType = auth((state) => state.user?.userType);
 
   const handleLogout = () => {
     logout();
     navigate("/admin");
   };
 
+  const homeLink = userType === "staff" ? "/admin/column" : "/admin/users";
+  const isStaff = userType === "staff";
+
   return (
     <>
       <aside className="admin-sidebar" aria-label="Sidebar">
         <div className="admin-sidebar-inner">
-          <NavLink to="/admin/users" className="admin-logo-link">
+          <NavLink to={homeLink} className="admin-logo-link">
             <img
               src={MainLogo}
               alt="메인 로고"
@@ -28,12 +32,13 @@ export const AdminSideBar = () => {
           </NavLink>
 
           <ul className="admin-menu-list">
-            <li>
-              <NavLink
-                to="/admin/users"
-                className="admin-menu-item"
-                activeclassname="active"
-              >
+            {!isStaff && (
+              <li>
+                <NavLink
+                  to="/admin/users"
+                  className="admin-menu-item"
+                  activeclassname="active"
+                >
                 <svg
                   width="24"
                   height="24"
@@ -57,14 +62,16 @@ export const AdminSideBar = () => {
                   />
                 </svg>
                 <span className="admin-menu-label">회원관리</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/admin/service"
-                className="admin-menu-item"
-                activeclassname="active"
-              >
+                </NavLink>
+              </li>
+            )}
+            {!isStaff && (
+              <li>
+                <NavLink
+                  to="/admin/service"
+                  className="admin-menu-item"
+                  activeclassname="active"
+                >
                 <svg
                   width="24"
                   height="24"
@@ -116,14 +123,16 @@ export const AdminSideBar = () => {
                   />
                 </svg>
                 <span className="admin-menu-label">서비스관리</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/admin/QnA"
-                className="admin-menu-item"
-                activeclassname="active"
-              >
+                </NavLink>
+              </li>
+            )}
+            {!isStaff && (
+              <li>
+                <NavLink
+                  to="/admin/QnA"
+                  className="admin-menu-item"
+                  activeclassname="active"
+                >
                 <svg
                   width="24"
                   height="24"
@@ -175,8 +184,9 @@ export const AdminSideBar = () => {
                   />
                 </svg>
                 <span className="admin-menu-label">게시글관리</span>
-              </NavLink>
-            </li>
+                </NavLink>
+              </li>
+            )}
             <li>
               <NavLink
                 to="/admin/column"
@@ -200,12 +210,13 @@ export const AdminSideBar = () => {
                 <span className="admin-menu-label">F&Q 칼럼관리</span>
               </NavLink>
             </li>
-            <li>
-              <NavLink
-                to="/admin/orders"
-                className="admin-menu-item"
-                activeclassname="active"
-              >
+            {!isStaff && (
+              <li>
+                <NavLink
+                  to="/admin/orders"
+                  className="admin-menu-item"
+                  activeclassname="active"
+                >
                 <svg
                   width="24"
                   height="24"
@@ -235,8 +246,9 @@ export const AdminSideBar = () => {
                   />
                 </svg>
                 <span className="admin-menu-label">결제관리</span>
-              </NavLink>
-            </li>
+                </NavLink>
+              </li>
+            )}
             <li>
               <Button
                 className="admin-menu-item admin-logout-button"

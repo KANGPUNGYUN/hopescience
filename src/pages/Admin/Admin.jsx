@@ -38,7 +38,8 @@ export const Admin = () => {
     try {
       const success = await adminLogin(email, password);
       if (success) {
-        navigate("/admin/users");
+        const userType = auth.getState().user?.userType;
+        navigate(userType === "staff" ? "/admin/column" : "/admin/users");
       } else {
         alert("로그인 실패. 아이디와 비밀번호를 확인해주세요.");
       }

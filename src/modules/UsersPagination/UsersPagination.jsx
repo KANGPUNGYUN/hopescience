@@ -1,18 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "../../components/Link";
 import "./UsersPagination.css";
-import { user } from "../../store";
+import { auth, user } from "../../store";
+import { Button } from "../../components/Button";
 import searchIcon from "../../icons/search.svg"
 import leftArrowButton from "../../icons/chevron-left-large.svg"
 import rightArrowButton from "../../icons/chevron-right-large.svg"
+
+function generatePassword(length = 12) {
+  const chars =
+    "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*";
+  let out = "";
+  for (let i = 0; i < length; i += 1) {
+    out += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return out;
+}
 
 export const UsersPagination = () => {
   const users = user((state) => state.users || []);
   const getUsers = user((state) => state.getUsers);
   const searchUsers = user((state) => state.searchUsers);
   const isLoading = user((state) => state.isLoading);
+  const createStaffAccount = auth((state) => state.createStaffAccount);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [staffEmail, setStaffEmail] = useState("");
+  const [staffPassword, setStaffPassword] = useState(generatePassword());
+  const [isCreatingStaff, setIsCreatingStaff] = useState(false);
   const postsPerPage = 7; // 한 페이지당 보여줄 데이터 수를 7로 변경
   const totalPosts = users.length;
 
@@ -66,10 +81,82 @@ export const UsersPagination = () => {
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const userlist = users?.slice(indexOfFirstPost, indexOfLastPost);
 
+  const handleCreateStaff = async () => {
+    if (!staffEmail || !staffPassword) {
+      alert("스태프 이메일/비밀번호를 입력해주세요.");
+      return;
+    }
+    setIsCreatingStaff(true);
+    try {
+      await createStaffAccount(staffEmail, staffPassword, "스태프");
+      alert(
+        `스태프 계정이 생성되었습니다.\n\n아이디(이메일): ${staffEmail}\n비밀번호: ${staffPassword}`
+      );
+      try {
+        await navigator.clipboard.writeText(
+          `아이디(이메일): ${staffEmail}\n비밀번호: ${staffPassword}`
+        );
+      } catch {
+        // ignore clipboard failures
+      }
+      setStaffEmail("");
+      setStaffPassword(generatePassword());
+      await getUsers();
+    } catch (e) {
+      alert(
+        `스태프 계정 생성 실패: ${
+          e?.response?.data?.message || e?.message || "Unknown error"
+        }`
+      );
+    } finally {
+      setIsCreatingStaff(false);
+    }
+  };
+
   return (
     <div className="admin-users-main">
       <div className="users-pagination-container">
         <div className="users-pagination-sort-wrap">
+          <div
+            style={{
+              display: "flex",
+              gap: "8px",
+              alignItems: "center",
+              flexWrap: "wrap",
+              marginBottom: "12px",
+            }}
+          >
+            <div style={{ fontWeight: 700, color: "#DEE1E6" }}>
+              스태프 계정 생성
+            </div>
+            <input
+              type="email"
+              placeholder="staff 이메일"
+              value={staffEmail}
+              onChange={(e) => setStaffEmail(e.target.value)}
+              className="users-pagination-search-input"
+              style={{ maxWidth: "320px" }}
+            />
+            <input
+              type="text"
+              placeholder="비밀번호"
+              value={staffPassword}
+              onChange={(e) => setStaffPassword(e.target.value)}
+              className="users-pagination-search-input"
+              style={{ maxWidth: "240px" }}
+            />
+            <Button
+              label="비밀번호 생성"
+              onClick={() => setStaffPassword(generatePassword())}
+              style={{ width: "140px", height: "40px", fontSize: "14px" }}
+            />
+            <Button
+              label={isCreatingStaff ? "생성 중..." : "스태프 생성"}
+              onClick={handleCreateStaff}
+              disabled={isCreatingStaff}
+              style={{ width: "140px", height: "40px", fontSize: "14px" }}
+            />
+          </div>
           <div className="users-pagination-search-input-wrap">
             <img src={searchIcon} className="search-icon" alt="검색 이미지" />
             <input

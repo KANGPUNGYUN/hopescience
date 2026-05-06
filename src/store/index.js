@@ -135,7 +135,7 @@ const useAuthStore = create(
           });
           const { access_token, refresh_token, user_id, name, user_type } =
             response;
-          if (user_type === "admin") {
+          if (user_type === "admin" || user_type === "staff") {
             set({
               user: { userId: user_id, name, userType: user_type },
               accessToken: access_token,
@@ -146,12 +146,34 @@ const useAuthStore = create(
             return true;
           } else {
             throw new Error(
-              "관리자 계정의 아이디, 비밀번호가 아닙니다. 다시 시도해주세요."
+              "관리자/스태프 계정이 아닙니다. 다시 시도해주세요."
             );
           }
         } catch (error) {
           set({ error: error.message || "Login failed", isLoading: false });
           return false;
+        }
+      },
+
+      createStaffAccount: async (email, password, name = "스태프") => {
+        set({ isLoading: true });
+        try {
+          const response = await postApi({
+            path: "/users",
+            data: {
+              name,
+              phone: "",
+              email,
+              password,
+              user_type: "staff",
+            },
+            access_token: get().accessToken || "",
+          });
+          set({ isLoading: false });
+          return response;
+        } catch (error) {
+          set({ error: error.message || "Staff create failed", isLoading: false });
+          throw error;
         }
       },
 
