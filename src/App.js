@@ -24,7 +24,7 @@ import { Setting } from "./pages/MyPage/Setting";
 import { Certificates } from "./pages/MyPage/Certificates";
 import { Certificate } from "./pages/MyPage/Certificates/[certificate_id]";
 import { Admin } from "./pages/Admin";
-import { Users } from "./pages/Admin/Users";
+import { Users, StaffCreate } from "./pages/Admin/Users";
 import { User } from "./pages/Admin/Users/[user_id]";
 import { AdminQnA } from "./pages/Admin/AdminQnA";
 import { NewAdminQnAInquiry } from "./pages/Admin/AdminQnA/New";
@@ -140,6 +140,14 @@ function App() {
           element={
             <AdminProtectedRoute>
               <Users />
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/users/staff-create"
+          element={
+            <AdminProtectedRoute>
+              <StaffCreate />
             </AdminProtectedRoute>
           }
         />

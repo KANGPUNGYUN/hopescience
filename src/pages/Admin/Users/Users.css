@@ -18,3 +18,10 @@
   font-weight: 900;
   color: #bd9a31;
 }
+
+.users-title-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}

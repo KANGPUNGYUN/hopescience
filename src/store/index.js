@@ -155,14 +155,19 @@ const useAuthStore = create(
         }
       },
 
-      createStaffAccount: async (email, password, name = "스태프") => {
+      createStaffAccount: async (
+        email,
+        password,
+        name = "스태프",
+        phone = "01000000000"
+      ) => {
         set({ isLoading: true });
         try {
           const response = await postApi({
             path: "/users",
             data: {
               name,
-              phone: "",
+              phone,
               email,
               password,
               user_type: "staff",
