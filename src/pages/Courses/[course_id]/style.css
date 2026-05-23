@@ -196,6 +196,7 @@
 }
 
 .course-detail-card__cta--secondary {
+  margin-top: 20px;
   margin-bottom: 16px;
   background: #ffffff;
   color: #1e3a6d;
