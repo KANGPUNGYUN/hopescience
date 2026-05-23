@@ -51,3 +51,24 @@
   .hidden {
     display: none;
   }
+
+  .video-player-container--lecture {
+    position: absolute;
+    inset: 0;
+    max-width: none;
+    max-height: none;
+    width: 100%;
+    height: 100%;
+  }
+
+  .video-player-container--lecture iframe {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+  }
+
+  .video-player-container--lecture .video-player-loading {
+    max-width: none;
+    max-height: none;
+  }

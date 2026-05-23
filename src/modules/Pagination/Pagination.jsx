@@ -2,8 +2,11 @@ import React, { useState, useEffect, useMemo } from "react";
 import "./Pagination.css";
 import { Link } from "../../components/Link";
 import { useLocation, useParams } from "react-router-dom";
-import leftArrowButton from "../../icons/chevron-left-large.svg";
-import rightArrowButton from "../../icons/chevron-right-large.svg";
+import { PaginationNav } from "../../components/PaginationNav";
+import {
+  isReviewBoardListPath,
+  reviewBoardRoutes,
+} from "../../pages/QnA/qnaBoardConfig";
 
 // totalCount, onPageChange 를 받으면 서버 사이드 페이지네이션 동작
 // 없으면 기존 클라이언트 사이드 페이지네이션 동작 (강의 문의 등)
@@ -35,34 +38,7 @@ export const Pagination = ({ inquiries, isLoading, totalCount, onPageChange }) =
     window.scrollTo(0, 0);
   }, [currentPage]);
 
-  const renderPageButtons = () => {
-    const pageButtons = [];
-    const totalPages = Math.ceil(totalPosts / postsPerPage);
-    let startPage = Math.max(currentPage - 2, 1);
-    let endPage = Math.min(startPage + 4, totalPages);
-
-    if (endPage - startPage < 4) {
-      startPage = Math.max(endPage - 4, 1);
-    }
-
-    for (let i = startPage; i <= endPage; i++) {
-      pageButtons.push(
-        <button
-          key={i}
-          className={
-            currentPage === i
-              ? "pagination-page-button active"
-              : "pagination-page-button"
-          }
-          onClick={() => handlePageChange(i)}
-        >
-          {i}
-        </button>
-      );
-    }
-
-    return pageButtons;
-  };
+  const totalPages = Math.ceil(totalPosts / postsPerPage) || 1;
 
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -91,8 +67,8 @@ export const Pagination = ({ inquiries, isLoading, totalCount, onPageChange }) =
               <div style={{ paddingRight: "10px" }}>{post?.id}</div>
               <Link
                 to={
-                  location.pathname === "/QnA"
-                    ? `/QnA/${post?.id}`
+                  isReviewBoardListPath(location.pathname)
+                    ? reviewBoardRoutes.detail(post?.id)
                     : lecture_id === undefined || !lecture_id
                     ? `/courses/${course_id}/1/${post?.id}`
                     : `/courses/${course_id}/${lecture_id}/${post?.id}`
@@ -126,8 +102,8 @@ export const Pagination = ({ inquiries, isLoading, totalCount, onPageChange }) =
         <div className="post-item-create-button">
           <Link
             to={
-              location.pathname === "/QnA"
-                ? "/QnA/new"
+              isReviewBoardListPath(location.pathname)
+                ? reviewBoardRoutes.new
                 : lecture_id === undefined || !lecture_id
                 ? `/courses/${course_id}/1/new`
                 : `/courses/${course_id}/${lecture_id}/new`
@@ -138,35 +114,13 @@ export const Pagination = ({ inquiries, isLoading, totalCount, onPageChange }) =
           />
         </div>
       </div>
-      <div className="pagination-buttons">
-        <button
-          className={`pagination-button ${currentPage === 1 ? "disabled" : ""}`}
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          <img
-            className="img-11"
-            alt="Chevron left large"
-            src={leftArrowButton}
-          />
-        </button>
-        <div className="pagination-button-wrap">{renderPageButtons()}</div>
-        <button
-          className={`pagination-button ${
-            currentPage === Math.ceil(totalPosts / postsPerPage)
-              ? "disabled"
-              : ""
-          }`}
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === Math.ceil(totalPosts / postsPerPage)}
-        >
-          <img
-            className="img-11"
-            alt="Chevron right large"
-            src={rightArrowButton}
-          />
-        </button>
-      </div>
+      <PaginationNav
+        className="pagination-buttons"
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+        showFirstLast={false}
+      />
     </div>
   );
 };

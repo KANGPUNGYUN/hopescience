@@ -1,0 +1,440 @@
+.home-contact {
+  display: grid;
+  grid-template-columns: minmax(0, 864px) minmax(0, 1fr);
+  width: 100%;
+  min-height: 720px;
+  background-color: #faf9f8;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.home-contact__info {
+  position: relative;
+  overflow: hidden;
+  background-color: #ffffff;
+  min-height: 720px;
+}
+
+.home-contact__info-bg {
+  position: absolute;
+  left: -106px;
+  top: 0;
+  width: calc(100% + 212px);
+  max-width: none;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+}
+
+.home-contact__info-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 651px;
+  margin-left: auto;
+  padding: 116px 48px 80px clamp(24px, 4vw, 272px);
+  box-sizing: border-box;
+}
+
+.home-contact__label {
+  margin: 0;
+  color: #2f548c;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.home-contact__info-title {
+  margin: 20px 0 0;
+  color: #222222;
+  font-size: clamp(28px, 2.5vw, 40px);
+  font-weight: 600;
+  line-height: 1.35;
+  word-break: keep-all;
+}
+
+.home-contact__info-desc {
+  margin: 34px 0 0;
+  color: #505050;
+  font-size: clamp(15px, 1.25vw, 18px);
+  font-weight: 400;
+  line-height: 1.44;
+  word-break: keep-all;
+}
+
+.home-contact__info-list {
+  margin: 78px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-contact__info-item {
+  padding-bottom: 28px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid rgba(47, 95, 184, 0.5);
+}
+
+.home-contact__info-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.home-contact__info-item-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.home-contact__info-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  color: #222222;
+}
+
+.home-contact__info-item-label {
+  color: #222222;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.home-contact__info-value {
+  display: block;
+  margin: 12px 0 0 32px;
+  color: #222222;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-decoration: none;
+  word-break: keep-all;
+}
+
+a.home-contact__info-value:hover {
+  color: #2f548c;
+}
+
+.home-contact__form-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px clamp(24px, 3vw, 200px);
+  box-sizing: border-box;
+}
+
+.home-contact__form {
+  width: 100%;
+  max-width: 648px;
+}
+
+.home-contact__form-title {
+  margin: 0 0 36px;
+  color: #222222;
+  font-size: clamp(26px, 2vw, 32px);
+  font-weight: 600;
+  line-height: 1.375;
+}
+
+.home-contact__form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.home-contact__field {
+  display: block;
+}
+
+.home-contact__field-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.home-contact__input,
+.home-contact__textarea {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #aaaaaa;
+  background: transparent;
+  color: #222222;
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.44;
+  letter-spacing: -0.01em;
+  box-sizing: border-box;
+}
+
+.home-contact__input {
+  height: 56px;
+  padding: 15px 0;
+}
+
+.home-contact__input::placeholder,
+.home-contact__textarea::placeholder {
+  color: #767676;
+}
+
+.home-contact__input:focus,
+.home-contact__textarea:focus {
+  outline: none;
+  border-bottom-color: #1e3a6d;
+}
+
+.home-contact__field--message {
+  margin-top: 16px;
+}
+
+.home-contact__textarea {
+  min-height: 110px;
+  padding: 16px 0;
+  resize: vertical;
+}
+
+.home-contact__privacy {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.home-contact__privacy-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.home-contact__privacy-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid #d4d4d8;
+  background-color: #ffffff;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.home-contact__privacy-check {
+  color: #ffffff;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.home-contact__privacy-input:checked + .home-contact__privacy-box {
+  background-color: #1e3a6d;
+  border-color: #1e3a6d;
+}
+
+.home-contact__privacy-input:checked + .home-contact__privacy-box .home-contact__privacy-check {
+  opacity: 1;
+}
+
+.home-contact__privacy-input:focus-visible + .home-contact__privacy-box {
+  outline: 2px solid #1e3a6d;
+  outline-offset: 2px;
+}
+
+.home-contact__privacy-text {
+  color: #767676;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.025em;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.home-contact__submit {
+  width: 100%;
+  height: 56px;
+  margin-top: 40px;
+  border: none;
+  background-color: #1e3a6d;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.44;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.home-contact__submit:hover:not(:disabled) {
+  background-color: #2f548c;
+}
+
+.home-contact__submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+@media (max-width: 1100px) {
+  .home-contact {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .home-contact__info {
+    min-height: 520px;
+  }
+
+  .home-contact__info-inner {
+    margin-left: 0;
+    max-width: none;
+    padding: 72px 24px 56px;
+  }
+
+  .home-contact__info-list {
+    margin-top: 48px;
+  }
+
+  .home-contact__form-panel {
+    padding: 56px 24px 72px;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-contact {
+    min-height: auto;
+  }
+
+  .home-contact__info {
+    min-height: 445px;
+    background-color: #faf9f8;
+  }
+
+  .home-contact__info-bg {
+    left: -144px;
+    width: 663px;
+    max-width: none;
+    opacity: 0.7;
+  }
+
+  .home-contact__info-inner {
+    padding: 48px 16px 40px;
+  }
+
+  .home-contact__label {
+    font-size: 12px;
+    color: #2f5fb8;
+  }
+
+  .home-contact__info-title {
+    margin-top: 14px;
+    font-size: 24px;
+    line-height: 1.42;
+  }
+
+  .home-contact__info-desc {
+    margin-top: 22px;
+    font-size: 14px;
+    line-height: 1.43;
+  }
+
+  .home-contact__info-list {
+    margin-top: 52px;
+  }
+
+  .home-contact__info-item {
+    margin: 0;
+    padding: 13px 0 0;
+    border-bottom: none;
+    border-top: 1px solid rgba(47, 95, 184, 0.5);
+  }
+
+  .home-contact__info-item-head {
+    gap: 6px;
+  }
+
+  .home-contact__info-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .home-contact__info-item-label,
+  .home-contact__info-value {
+    font-size: 14px;
+    line-height: 1.43;
+  }
+
+  .home-contact__info-value {
+    margin: 8px 0 0;
+  }
+
+  .home-contact__form-panel {
+    align-items: flex-start;
+    padding: 48px 16px 40px;
+    background-color: #faf9f8;
+  }
+
+  .home-contact__form {
+    max-width: none;
+  }
+
+  .home-contact__form-title {
+    margin-bottom: 30px;
+    font-size: 20px;
+    line-height: 1.5;
+  }
+
+  .home-contact__form-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .home-contact__input {
+    height: 40px;
+    padding: 10px 0;
+    font-size: 14px;
+    letter-spacing: -0.01em;
+  }
+
+  .home-contact__field--message {
+    margin-top: 8px;
+  }
+
+  .home-contact__textarea {
+    min-height: 112px;
+    padding: 16px 0;
+    font-size: 14px;
+    letter-spacing: -0.01em;
+  }
+
+  .home-contact__privacy {
+    margin-top: 20px;
+    gap: 6px;
+  }
+
+  .home-contact__privacy-box {
+    width: 18px;
+    height: 18px;
+  }
+
+  .home-contact__privacy-text {
+    font-size: 14px;
+    letter-spacing: -0.01em;
+  }
+
+  .home-contact__submit {
+    height: 40px;
+    margin-top: 28px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+}

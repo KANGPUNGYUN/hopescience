@@ -1,7 +1,11 @@
-.certificates-title {
-  margin-top: 24px;
-  padding-bottom: 50px;
-  border-bottom: 1px solid #f3f4f6;
-  font-weight: bold;
-  font-size: 32px;
+@import "../Courses/style.css";
+
+.mypage-section--certificates {
+  max-width: 1024px;
+}
+
+.mypage-section__header--certificates {
+  padding-bottom: 24px;
+  margin-bottom: 0;
+  border-bottom: 1px solid #d4d4d8;
 }

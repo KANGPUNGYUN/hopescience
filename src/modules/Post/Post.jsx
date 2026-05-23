@@ -3,6 +3,10 @@ import "./Post.css";
 import { Link } from "../../components/Link";
 import { Button } from "../../components/Button";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
+import {
+  isReviewBoardDetailPath,
+  reviewBoardRoutes,
+} from "../../pages/QnA/qnaBoardConfig";
 import { inquiry, courseInquiry, auth } from "../../store";
 import { Modal } from "../Modal";
 import { useForm } from "react-hook-form";
@@ -22,7 +26,9 @@ const createCommentSchema = yup
   .required();
 
 export const Post = () => {
-  let { inquiry_id, course_id, lecture_id, course_inquiry_id } = useParams();
+  let { inquiry_id, course_id, lecture_id, course_inquiry_id, review_id } =
+    useParams();
+  const boardPostId = review_id ?? inquiry_id;
   const location = useLocation();
   const {
     isLoading,
@@ -91,9 +97,9 @@ export const Post = () => {
   // console.log(myUserId, !!myUserId)
 
   useEffect(() => {
-    if (inquiry_id) {
+    if (boardPostId) {
       clearCourseQnA();
-      getInquiry(inquiry_id);
+      getInquiry(boardPostId);
     } else if (course_id && course_inquiry_id) {
       clearQnA();
       getCourseInquiry(course_id, course_inquiry_id);
@@ -103,11 +109,11 @@ export const Post = () => {
   const onSubmit = async (data) => {
     if (myUserId) {
       const { accessToken, refreshToken } = auth.getState();
-      if (location.pathname === `/QnA/${inquiry_id}`) {
-        await createComment(inquiry_id, myUserId, data.commentContent).then(
+      if (isReviewBoardDetailPath(location.pathname, boardPostId)) {
+        await createComment(boardPostId, myUserId, data.commentContent).then(
           () => {
             clearCourseQnA();
-            getInquiry(inquiry_id);
+            getInquiry(boardPostId);
           }
         );
       } else {
@@ -152,10 +158,10 @@ export const Post = () => {
   const handleSaveComment = async (comment) => {
     if (editMode) {
       const updatedContent = getValues(`commentContent${comment.id}`);
-      if (location.pathname === `/QnA/${inquiry_id}`) {
+      if (isReviewBoardDetailPath(location.pathname, boardPostId)) {
         await updateComment(comment.id, updatedContent);
         clearCourseQnA();
-        getInquiry(inquiry_id);
+        getInquiry(boardPostId);
       } else {
         await updateCourseComment(
           course_id,
@@ -171,7 +177,7 @@ export const Post = () => {
   };
 
   const handleDeleteComment = async (comment_id) => {
-    if (location.pathname === `/QnA/${inquiry_id}`) {
+    if (isReviewBoardDetailPath(location.pathname, boardPostId)) {
       await deleteComment(comment_id);
       clearCourseQnA();
       getInquiry(inquiry_id);
@@ -218,8 +224,8 @@ export const Post = () => {
               <div className="post-actions">
                 <Link
                   to={
-                    location.pathname === `/QnA/${inquiry_id}`
-                      ? "/QnA"
+                    isReviewBoardDetailPath(location.pathname, boardPostId)
+                      ? reviewBoardRoutes.list
                       : `/courses/${course_id}/${lecture_id}`
                   }
                   label="목록으로"
@@ -231,8 +237,8 @@ export const Post = () => {
                     <Link
                       label="수정하기"
                       to={
-                        location.pathname === `/QnA/${inquiry_id}`
-                          ? `/QnA/${QnA?.id}/edit`
+                        isReviewBoardDetailPath(location.pathname, boardPostId)
+                          ? reviewBoardRoutes.edit(QnA?.id)
                           : `/courses/${course_id}/${lecture_id}/${course_inquiry_id}/edit`
                       }
                       style={{
@@ -396,12 +402,12 @@ export const Post = () => {
           isOpen={showModal}
           onClose={() => setShowModal(false)}
           onConfirm={() => {
-            location.pathname === `/QnA/${inquiry_id}`
-              ? deleteInquiry(inquiry_id)
+            isReviewBoardDetailPath(location.pathname, boardPostId)
+              ? deleteInquiry(boardPostId)
               : deleteCourseInquiry(course_id, course_inquiry_id);
             setShowModal(false);
-            location.pathname === `/QnA/${inquiry_id}`
-              ? navigate("/QnA")
+            isReviewBoardDetailPath(location.pathname, boardPostId)
+              ? navigate(reviewBoardRoutes.list)
               : navigate(`/courses/${course_id}`);
           }}
           confirmLabel="삭제"

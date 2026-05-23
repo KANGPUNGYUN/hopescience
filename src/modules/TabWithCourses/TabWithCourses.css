@@ -1,165 +1,567 @@
-.tabs {
-  border-bottom: 1px solid #f3f4f6;
-  display: flex;
-}
-
-.tabs button.active {
-  color: #15abff;
-  font-weight: bold;
-  border-radius: 0;
-  border-bottom: 4px solid #15abff;
-}
-
-.mypage-course-list {
-  max-width: 1080px;
+.mypage-courses {
   width: 100%;
+  max-width: 1024px;
+  font-family: Pretendard, "Noto Sans KR", sans-serif;
 }
 
-.mypage-course-header {
+/* Summary card */
+.mypage-summary {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 0;
+  margin-bottom: 32px;
+  padding: 32px 45px;
+  border-radius: 0;
+  background: #fff;
+  box-shadow: 0 4px 17.5px rgba(0, 0, 0, 0.08);
+}
+
+.mypage-summary__overall {
+  padding-right: 40px;
+}
+
+.mypage-summary__overall-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.mypage-summary__label {
+  margin: 0;
+  color: #111;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.mypage-summary__percent {
+  color: #222;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+
+.mypage-summary__percent--animated {
+  display: inline-block;
+  min-width: 3.5ch;
+  text-align: right;
+}
+
+.mypage-summary__ratio-value {
+  font-variant-numeric: tabular-nums;
+}
+
+.mypage-summary__ratio {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 28px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.mypage-summary__ratio strong {
+  color: #000;
   font-size: 14px;
   font-weight: 600;
-  display: grid;
-  grid-template-columns: 0.5fr 3fr 4fr 1.5fr 1.5fr 1.5fr;
-  border-bottom: 0.5px solid #dee1e6;
-  padding: 20px 22px;
 }
 
-.mypage-course-loading {
-  padding: 20px;
-}
-
-.mypage-course-index-center-align {
-  text-align: start;
-  padding: 0 10px;
-}
-
-.mypage-course-index-start-align {
-  text-align: start;
-}
-
-.mypage-course-info {
-  display: grid;
-  align-items: center;
-  grid-template-columns: 0.5fr 3fr 4fr 1.5fr 1.5fr 1.5fr;
-}
-
-.mypage-course-item {
-  font-family: "Manrope", Helvetica;
-  font-size: 14px;
+.mypage-summary__ratio span {
+  color: #767676;
   font-weight: 400;
-  color: #dee1e6;
-  height: 86px;
-  padding: 16px 22px;
 }
-.mypage-course-image-wrap {
-  width: 80px;
-  min-width: 80px;
-  height: 54px;
-  border-radius: 4px;
+
+.mypage-summary__bar {
+  height: 8px;
+  margin-bottom: 48px;
+  border-radius: 999px;
+  background: #ddd;
   overflow: hidden;
 }
 
-.mypage-course-image {
-  width: 100%;
+.mypage-summary__bar-fill {
   height: 100%;
-  object-fit: cover;
+  border-radius: 999px;
+  background: #4a7fe3;
 }
 
-.mypage-course-title {
+.mypage-summary__bar-fill--animated {
+  will-change: width;
+}
+
+.mypage-summary__study-time {
   display: flex;
   align-items: center;
-  gap: 32px;
+  justify-content: space-between;
+}
+
+.mypage-summary__time-value {
+  color: #000;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.mypage-summary__divider {
+  width: 1px;
+  background: #e5e5ec;
+}
+
+.mypage-summary__weekly {
+  padding-left: 40px;
+}
+
+.mypage-summary__weekly-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+.mypage-summary__recent {
+  color: #767676;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.43;
+}
+
+.mypage-summary__chart-wrap {
+  height: 120px;
+}
+
+/* Tabs */
+.mypage-courses__tabs {
+  display: flex;
+  align-items: stretch;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #d4d4d8;
+}
+
+.mypage-courses__tab {
+  position: relative;
+  min-width: 114px;
+  height: 46px;
   padding: 0 16px;
+  border: none;
+  background: transparent;
+  color: #767676;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: color 0.2s;
 }
-.mypage-course-progress-wrap {
+
+.mypage-courses__tab:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 1px;
+  height: 10px;
+  background: #d4d4d8;
+  transform: translateY(-50%);
+}
+
+.mypage-courses__tab--active {
+  color: #222;
+  font-weight: 600;
+}
+
+.mypage-courses__tab--active::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: #58513e;
+}
+
+.mypage-courses__loading,
+.mypage-courses__empty-tab {
+  margin: 48px 0;
+  color: #767676;
+  font-size: 16px;
+  text-align: center;
+}
+
+/* Pencil U85BR — 보유 강의 없음 */
+.mypage-courses__empty-state {
   display: flex;
-  gap: 17px;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  margin-top: 24px;
+  padding: 64px 16px 80px;
+  border-top: 1px solid #d4d4d8;
+  text-align: center;
 }
 
-.mypage-course-progress{
-  -webkit-appearance: none;
-  appearance: none;
+.mypage-courses__empty-title {
+  margin: 16px 0 24px;
+  color: #333;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.44;
 }
 
-.mypage-course-progress::-webkit-progress-bar {
-  max-width: 200px;
-  width: 100%;
-  height: 8px;
-  background-color: #dee1e6;
-  border-radius: 6px;
+.mypage-courses__empty-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  height: 36px;
+  padding: 0 20px;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #222;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.43;
+  text-decoration: none;
+  transition: border-color 0.2s, background-color 0.2s;
 }
 
-progress {
-  max-width: 200px;
-  width: 100%;
-  height: 8px;
-  border-radius: 6px;
-  background-color: #dee1e6;
+.mypage-courses__empty-cta:hover {
+  border-color: #999;
+  background: #fafafa;
 }
 
-.mypage-course-progress::-webkit-progress-value {
-  background-color: #BD9A31;
-  border-radius: 6px;
+/* Course cards grid */
+.mypage-courses__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.mypage-course-state {
-  width: fit-content;
-  height: 28px;
-  background-color: #1e2128;
-  border-radius: 14px;
-  padding: 4px 9px;
-  font-family: "Manrope", Helvetica;
+.mypage-course-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 284px;
+  padding: 16px;
+  border: 1px solid #e5e5ec;
+  background: #fff;
+}
+
+.mypage-course-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.mypage-course-card__badge {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 3px 6px;
+  border-radius: 2px;
   font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.mypage-course-card__badge--active {
+  background: #d0e0f9;
+  color: #1e3a6d;
+}
+
+.mypage-course-card__badge--done {
+  background: #eee;
+  color: #222;
+}
+
+.mypage-course-card__meta {
+  color: #767676;
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: right;
+}
+
+.mypage-course-card__title {
+  margin: 0 0 24px;
+  color: #222;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.mypage-course-card__progress-head {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
 }
 
-.mypage-course-state.watching {
-  color: #379ae6;
+.mypage-course-card__progress-label {
+  color: #222;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.43;
 }
 
-.mypage-course-state.surveying {
-  color: #98690c;
+.mypage-course-card__progress-value {
+  color: #767676;
+  font-size: 12px;
+  line-height: 1.5;
 }
 
-.mypage-course-state.finished {
-  color: #37750c;
+.mypage-course-card__progress-bar {
+  height: 6px;
+  margin-bottom: 24px;
+  border-radius: 6px;
+  background: rgba(34, 34, 34, 0.1);
+  overflow: hidden;
 }
 
-@media (max-width: 1023px) {
-  .mypage-course-header, .mypage-course-info {
-    grid-template-columns: .5fr 4fr 4fr;
+.mypage-course-card__progress-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: #4a7fe3;
+  transition: width 0.3s ease;
+}
+
+.mypage-course-card--completed .mypage-course-card__progress-bar {
+  background: #aaa;
+}
+
+.mypage-course-card--completed .mypage-course-card__progress-fill {
+  background: #3e8b63;
+}
+
+.mypage-course-card__dates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 20px;
+  background: #f6f8fa;
+}
+
+.mypage-course-card__date-col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  min-height: 62px;
+  text-align: center;
+}
+
+.mypage-course-card__date-col:first-child::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 1px;
+  height: 16px;
+  background: #d4d4d8;
+  transform: translateY(-50%);
+}
+
+.mypage-course-card__date-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 4px;
+  color: #767676;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.mypage-course-card__date-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mypage-course-card__date-value {
+  color: #222;
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.mypage-course-card__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 36px;
+  margin-top: auto;
+  border: 1px solid transparent;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.43;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.mypage-course-card__btn:hover {
+  opacity: 0.9;
+}
+
+.mypage-course-card__btn--primary {
+  background: #1e3a6d;
+  color: #fff;
+}
+
+.mypage-course-card__btn--secondary {
+  background: #f4f8ff;
+  color: #1e3a6d;
+}
+
+@media screen and (max-width: 1200px) {
+  .mypage-courses__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+}
+
+/* 태블릿: 요약 카드 세로 스택 */
+@media screen and (max-width: 900px) {
+  .mypage-summary {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 24px 16px;
   }
 
-  .mypage-course-image-wrap,
-  .mypage-course-state,
-  .mypage-course-index-start-align,
-  .payment-date,
-  .last-accessed {
+  .mypage-summary__overall {
+    padding-right: 0;
+  }
+
+  .mypage-summary__divider {
     display: none;
   }
-}
-@media (max-width: 767px){
-  .mypage-course-header, .mypage-course-info {
-    grid-template-columns: .5fr 3fr 1fr;
+
+  .mypage-summary__weekly {
+    padding-left: 0;
   }
-  .mypage-course-progress-wrap progress {
-    display: none;
+
+  .mypage-summary__weekly-head {
+    margin-bottom: 24px;
   }
-  .sidebar-link-list {
-    gap: 10px
+
+  .mypage-summary__bar {
+    margin-bottom: 32px;
   }
 }
 
-@media (max-width: 600px) {
-  .sidebar-link-item svg {
-    display: none;
+/* 모바일 — Pencil E9aAGN (375) */
+@media screen and (max-width: 767px) {
+  .mypage-courses {
+    max-width: none;
   }
-}
 
-@media (max-width: 500px) {
-  .sidebar-link {
-    padding-left: 5px;
+  .mypage-summary {
+    gap: 0;
+    margin-bottom: 24px;
+    padding: 16px;
+    box-shadow: 0 4px 17.5px rgba(0, 0, 0, 0.08);
+  }
+
+  .mypage-summary__overall-head {
+    margin-bottom: 4px;
+  }
+
+  .mypage-summary__ratio {
+    margin-bottom: 20px;
+  }
+
+  .mypage-summary__bar {
+    margin-bottom: 24px;
+  }
+
+  .mypage-summary__study-time {
+    margin-bottom: 24px;
+  }
+
+  .mypage-summary__weekly-head {
+    margin-bottom: 16px;
+  }
+
+  .mypage-summary__chart-wrap {
+    height: 120px;
+  }
+
+  .mypage-courses__tabs {
+    margin-bottom: 16px;
+  }
+
+  .mypage-courses__tab {
+    flex: 1;
+    min-width: 0;
+    height: 46px;
+    padding: 0 8px;
+    font-size: 16px;
+  }
+
+  .mypage-courses__tab--active {
+    font-size: 16px;
+  }
+
+  .mypage-courses__grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .mypage-courses__loading,
+  .mypage-courses__empty-tab {
+    margin: 32px 0;
+    font-size: 14px;
+  }
+
+  .mypage-courses__empty-state {
+    padding: 48px 16px 64px;
+  }
+
+  .mypage-courses__empty-title {
+    font-size: 16px;
+  }
+
+  .mypage-course-card {
+    min-height: 0;
+    padding: 16px;
+  }
+
+  .mypage-course-card__top {
+    margin-bottom: 8px;
+  }
+
+  .mypage-course-card__title {
+    margin-bottom: 22px;
+    font-size: 18px;
+    line-height: 1.44;
+  }
+
+  .mypage-course-card__progress-head {
+    margin-bottom: 6px;
+  }
+
+  .mypage-course-card__progress-bar {
+    margin-bottom: 20px;
+  }
+
+  .mypage-course-card__dates {
+    margin-bottom: 16px;
+  }
+
+  .mypage-course-card__date-col {
+    min-height: 62px;
+    padding: 12px 8px;
+  }
+
+  .mypage-course-card__btn {
+    height: 36px;
   }
 }

@@ -1,12 +1,13 @@
 import { Footer } from "../../../../components/Footer";
 import { Header } from "../../../../components/Header";
 import { MyPageSideBar } from "../../../../modules/MyPageSideBar";
+import "../../mypageShared.css";
 import { PdfGenerator } from "../../../../modules/PdfGenerator";
 
 export const Certificate = () => {
   return (
     <>
-      <Header />
+      <Header variant="solid" />
       <main className="mypage-background">
         <div className="mypage-section-wrap">
           <MyPageSideBar />

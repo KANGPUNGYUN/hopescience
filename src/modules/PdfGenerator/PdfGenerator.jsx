@@ -1,43 +1,14 @@
-import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
 import { Button } from "../../components/Button";
 import "./PdfGenerator.css";
 import downloadIcon from "../../icons/move-layer-down.svg";
 import pdfIndexIcon01 from "../../icons/container-156.svg";
 import pdfIndexIcon02 from "../../icons/container-157.svg";
 import { payment, enrollment } from "../../store";
-import stampImage from "../../images/stamp.png";
 import { certificate } from "../../store";
 import { useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
-
-const generateAndDownloadPDF = async (certificate_id) => {
-  const input = document.getElementById(`certificate-${certificate_id}`);
-  const pdfDPI = 300;
-  const scale = pdfDPI / 96;
-  const canvas = await html2canvas(input, {
-    scale: scale,
-    useCORS: true,
-    scrollX: 0,
-    scrollY: -window.scrollY,
-    windowWidth: input.scrollWidth,
-    windowHeight: input.scrollHeight,
-  });
-
-  const pdfWidth = (210 * pdfDPI) / 25.4;
-  const pdfHeight = (297 * pdfDPI) / 25.4;
-
-  const pdf = new jsPDF({
-    orientation: "p",
-    unit: "pt",
-    format: [pdfWidth, pdfHeight],
-  });
-
-  const imgData = canvas.toDataURL("image/png");
-  pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-
-  pdf.save("이수증서.pdf");
-};
+import { CertificateDocument } from "./CertificateDocument";
+import { generateAndDownloadCertificatePDF } from "./certificatePdfUtils";
 /*
 //영수증 저장하기 버튼 관련 로직 시작작
 const receiptPDF = async (payment_id) => {
@@ -80,22 +51,13 @@ export const PdfGenerator = () => {
 
   const {getCertificate, certificate:certificateData, clearCertificate, updateCertificate} = certificate((state=>({getCertificate: state.getCertificate, certificate: state.certificate, clearCertificate: state.clearCertificate, updateCertificate: state.updateCertificate})))
 
-  useEffect(()=>{
+  useEffect(() => {
     clearCertificate();
     getCertificate(certificate_id);
-  },[])
-
-  function formatISOToKoreanDate() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth() + 1; // getMonth()는 0부터 시작하므로 1을 더합니다.
-    const day = today.getDate();
-  
-    return `${year}년 ${month.toString().padStart(2, '0')}월 ${day.toString().padStart(2, '0')}일`;
-  }
+  }, [certificate_id, clearCertificate, getCertificate]);
 
   const handleGenerateAndDownload = async () => {
-    await generateAndDownloadPDF(certificate_id);
+    await generateAndDownloadCertificatePDF(certificate_id);
     
     if (certificateData && certificateData.user_name && !certificateData.issued_date && !certificateData.is_issued) {
       const updateData = {
@@ -126,43 +88,10 @@ export const PdfGenerator = () => {
         />
       </Button>
 
-      <div className="certificate" id={`certificate-${certificate_id}`}>
-        <div className="certificate-pdf-content">
-          <p className="certificate-pdf-id">발급번호: {certificateData?.certificate_id}</p>
-          <h1 className="certificate-pdf-title">수 료 증 서</h1>
-          <h2 className="certificate-pdf-title-eng">
-            Certificate of completion
-          </h2>
-          <div className="certificate-pdf-data">
-            <div className="certificate-pdf-data-index">성 명:</div>
-            <div>{certificateData?.user_name}</div>
-          </div>
-          <div className="certificate-pdf-data">
-            <div className="certificate-pdf-data-index">교 육 과 정:</div>
-            <div>{certificateData?.course_name}</div>
-          </div>
-          <div className="certificate-pdf-data">
-            <div className="certificate-pdf-data-index">수 료 일:</div>
-            <div>{formatISOToKoreanDate()}</div>
-          </div>
-          <div className="certificate-pdf-desc">
-            &nbsp;&nbsp;&nbsp;상기 사람은 본 센터에서 실시한 위 소정의 교육과정
-            전 과목을 성실히 이수하고 해당 교과 시험을 합격하여 성료하였으므로
-            본 증서를 정히 수여합니다.
-          </div>
-        </div>
-        <div className="certificate-pdf-company">
-          <div className="certificate-pdf-company-name">
-            희망과학심리상담센터장 이 현 호
-          </div>
-          <img
-            src={stampImage}
-            alt="희망과학심리센터장 도장"
-            width="100px"
-            height="100px"
-          />
-        </div>
-      </div>
+      <CertificateDocument
+        certificateData={certificateData}
+        certificateId={certificate_id}
+      />
     </div>
   );
 };

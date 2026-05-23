@@ -1,0 +1,19 @@
+@import "../Courses/style.css";
+
+.mypage-section--inquiries {
+  max-width: 1024px;
+}
+
+.mypage-section__header--inquiries {
+  padding-bottom: 24px;
+  margin-bottom: 0;
+}
+
+.mypage-section--inquiry-write {
+  max-width: 1024px;
+}
+
+.mypage-section__header--inquiry-write {
+  padding-bottom: 24px;
+  margin-bottom: 0;
+}

@@ -6,6 +6,11 @@ import "./PostEditor.css";
 import { Button } from "../../components/Button";
 import { inquiry, service, courseInquiry, auth } from "../../store";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
+import {
+  isReviewBoardDetailPath,
+  isReviewBoardNewPath,
+  reviewBoardRoutes,
+} from "../../pages/QnA/qnaBoardConfig";
 
 const schema = yup
   .object({
@@ -72,11 +77,13 @@ export const PostEditor = () => {
   const refreshToken = data ? JSON.parse(data).state?.refreshToken : null;
   const navigate = useNavigate();
   const location = useLocation();
-  let { inquiry_id, course_id, lecture_id, course_inquiry_id } = useParams();
+  let { inquiry_id, course_id, lecture_id, course_inquiry_id, review_id } =
+    useParams();
+  const boardPostId = review_id ?? inquiry_id;
 
   useEffect(() => {
     if (
-      location.pathname === "/QnA/new" ||
+      isReviewBoardNewPath(location.pathname) ||
       (course_id &&
         lecture_id &&
         location.pathname === `/courses/${course_id}/${lecture_id}/new`)
@@ -99,13 +106,13 @@ export const PostEditor = () => {
     } else if (course_id && lecture_id && course_inquiry_id) {
       getCourseInquiry(course_id, course_inquiry_id);
       getService(course_id);
-    } else if (inquiry_id) {
-      getInquiry(inquiry_id);
+    } else if (boardPostId) {
+      getInquiry(boardPostId);
     }
-  }, [location.pathname, inquiry_id, getInquiry, reset]);
+  }, [location.pathname, boardPostId, getInquiry, reset]);
 
   useEffect(() => {
-    if (QnA && location.pathname !== "/QnA/new") {
+    if (QnA && !isReviewBoardNewPath(location.pathname)) {
       clearCourse();
       reset({
         title: QnA?.title,
@@ -153,7 +160,7 @@ export const PostEditor = () => {
         } else {
           createInquiry(myUserId, data.title, data.category, data.content, accessToken)
             .then(() => {
-              navigate("/QnA");
+              navigate(reviewBoardRoutes.list);
             })
             .catch(async (error) => {
               if (error?.response?.status === 401 && !retryAttempted) {
@@ -177,13 +184,13 @@ export const PostEditor = () => {
           }
         } else {
           const QnAUpdateSuccess = updateInquiry(
-            inquiry_id,
+            boardPostId,
             data.title,
             data.category,
             data.content
           );
           if (QnAUpdateSuccess) {
-            navigate("/QnA");
+            navigate(reviewBoardRoutes.list);
           }
         }
       }

@@ -1,0 +1,118 @@
+.page-loading-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #ffffff;
+}
+
+.page-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 24px;
+  background: #ffffff;
+  font-family: Pretendard, "Noto Sans KR", sans-serif;
+}
+
+.page-loading--fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+}
+
+.page-loading--below-header {
+  position: relative;
+  flex: 1;
+  z-index: 1;
+  width: 100%;
+  min-height: calc(100vh - 80px);
+}
+
+.page-loading--inline {
+  position: relative;
+  z-index: 1;
+  min-height: 320px;
+  width: 100%;
+}
+
+@media screen and (max-width: 1280px) {
+  .page-loading--below-header {
+    min-height: calc(100vh - 64px);
+  }
+}
+
+.page-loading__spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: page-loading-spin 1.1s linear infinite;
+}
+
+.page-loading__spinner-svg {
+  display: block;
+}
+
+@keyframes page-loading-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.page-loading__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.page-loading__message {
+  margin: 0;
+  color: #222;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.page-loading__progress {
+  width: 100%;
+}
+
+.page-loading__progress-track {
+  width: 100%;
+  height: 6px;
+  overflow: hidden;
+  background: #e5e5ec;
+  border-radius: 3px;
+}
+
+.page-loading__progress-fill {
+  height: 100%;
+  background: #1e3a6d;
+  border-radius: 3px;
+  transition: width 0.25s ease-out;
+}
+
+.page-loading__progress-label {
+  display: block;
+  margin-top: 8px;
+  color: #767676;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.43;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.page-loading__progress-label strong {
+  color: #1e3a6d;
+  font-weight: 600;
+}

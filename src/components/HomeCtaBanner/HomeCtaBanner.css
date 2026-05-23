@@ -1,0 +1,115 @@
+.home-cta-banner {
+  position: relative;
+  width: 100%;
+  min-height: 316px;
+  overflow: hidden;
+  background-color: #1e3a6d;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.home-cta-banner__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.home-cta-banner__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1920px;
+  margin: 0 auto;
+  min-height: 316px;
+  padding: 70px 24px 66px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.home-cta-banner__title {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(26px, 2.5vw, 36px);
+  font-weight: 600;
+  line-height: 1.33;
+  word-break: keep-all;
+}
+
+.home-cta-banner__subtitle {
+  margin: 28px 0 0;
+  color: #ffffff;
+  font-size: clamp(15px, 1.25vw, 18px);
+  font-weight: 400;
+  line-height: 1.44;
+}
+
+.home-cta-banner__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 36px;
+  min-width: 264px;
+  height: 46px;
+  padding: 0 20px;
+  border-radius: 0;
+  background-color: #ffffff;
+  color: #1e3a6d;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.44;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.home-cta-banner__btn:hover {
+  background-color: #f0f4fa;
+}
+
+.home-cta-banner__btn:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+}
+
+.home-cta-banner__btn-icon {
+  flex-shrink: 0;
+  color: #1e3a6d;
+}
+
+@media (max-width: 768px) {
+  .home-cta-banner {
+    min-height: 212px;
+  }
+
+  .home-cta-banner__inner {
+    min-height: 212px;
+    padding: 48px 16px 28px;
+  }
+
+  .home-cta-banner__title {
+    font-size: 20px;
+    line-height: 1.5;
+  }
+
+  .home-cta-banner__subtitle {
+    margin-top: 16px;
+    font-size: 14px;
+    line-height: 1.43;
+  }
+
+  .home-cta-banner__btn {
+    margin-top: 28px;
+    width: 200px;
+    min-width: 200px;
+    height: 36px;
+    font-size: 14px;
+    line-height: 1.43;
+  }
+}

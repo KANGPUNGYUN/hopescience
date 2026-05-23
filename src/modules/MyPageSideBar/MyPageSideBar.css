@@ -1,45 +1,140 @@
-.sidebar-section {
-  width: 256px;
-  background-color: #1e2128;
-  height: 326px;
-  padding: 24px 24px 64px 24px;
-}
-
-.sidebar-link-list {
-  width: 208px;
+.mypage-sidebar {
   display: flex;
   flex-direction: column;
-  gap: 26px;
+  flex-shrink: 0;
+  width: 196px;
+  min-height: 100%;
+  padding: 32px 0 64px;
+  border-right: 1px solid #f1f1f5;
+  background: #fff;
+  font-family: Pretendard, "Noto Sans KR", sans-serif;
 }
 
-.sidebar-link {
-  color: #dee1e6;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  height: 40px;
-  padding-left: 16px;
-  border-radius: 4px;
-  font-family: '"Manrope", Helvetica';
+.mypage-sidebar__title {
+  margin: 0 0 18px 16px;
+  color: #222;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.mypage-sidebar__email {
+  margin: 0 0 16px 16px;
+  color: #222;
   font-size: 14px;
   font-weight: 400;
+  line-height: 1.43;
 }
 
-.sidebar-link > svg > path {
-  stroke: #dee1e6;
+.mypage-sidebar__settings-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - 32px);
+  height: 36px;
+  margin: 0 16px 24px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: #222;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.43;
+  text-decoration: none;
+  transition: border-color 0.2s, background-color 0.2s;
 }
 
-.sidebar-link.active,
-.sidebar-link:hover {
-  color: #bd9a31;
-  background-color: #171a1f;
-}
-.sidebar-link.active > svg > path,
-.sidebar-link:hover > svg > path {
-  stroke: #bd9a31;
+.mypage-sidebar__settings-btn:hover {
+  border-color: #999;
+  background: #fafafa;
 }
 
-.sidebar-link.active > .certificate-icon > path,
-.sidebar-link:hover > .certificate-icon > path {
-  fill: #bd9a31;
+.mypage-sidebar__nav {
+  flex: 1;
+  border-top: 1px solid #f1f1f5;
+  padding-top: 16px;
+}
+
+.mypage-sidebar__footer {
+  margin-top: auto;
+  padding: 16px 16px 0;
+  border-top: 1px solid #f1f1f5;
+}
+
+.mypage-sidebar__logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 46px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: #767676;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.mypage-sidebar__logout-btn:hover {
+  background: #e7ecf3;
+  color: #222;
+}
+
+.mypage-sidebar__logout-btn:hover .mypage-sidebar__icon {
+  color: #222;
+}
+
+.mypage-sidebar__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mypage-sidebar__item {
+  margin: 0;
+}
+
+.mypage-sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 46px;
+  padding: 0 16px;
+  color: #767676;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.mypage-sidebar__icon {
+  flex-shrink: 0;
+  color: #767676;
+}
+
+.mypage-sidebar__link--active,
+.mypage-sidebar__link:hover {
+  background: #e7ecf3;
+  color: #222;
+  font-weight: 600;
+}
+
+.mypage-sidebar__link--active .mypage-sidebar__icon,
+.mypage-sidebar__link:hover .mypage-sidebar__icon {
+  color: #222;
+}
+
+/* 헤더 모바일 메뉴(햄버거) 구간과 동일 — Header.css 1280px */
+@media screen and (max-width: 1280px) {
+  .mypage-sidebar {
+    display: none;
+  }
 }

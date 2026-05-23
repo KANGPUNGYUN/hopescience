@@ -28,3 +28,5 @@ sourcemap-info.json
 /docs
 .claude
 build
+
+*.pen

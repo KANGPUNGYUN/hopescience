@@ -1,0 +1,1 @@
+export { MyPageInquiryList } from "./MyPageInquiryList";

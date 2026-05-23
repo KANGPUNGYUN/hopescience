@@ -17,12 +17,23 @@ import { QnA } from "./pages/QnA";
 import { QnADetail } from "./pages/QnA/[inquiry_id]";
 import { QnAEdit } from "./pages/QnA/[inquiry_id]/Edit";
 import { NewQnAInquiry } from "./pages/QnA/New";
+import {
+  LegacyQnAToReviewDetail,
+  LegacyQnAToReviewEdit,
+  LegacyQnAToReviewList,
+  LegacyQnAToReviewNew,
+} from "./pages/QnA/reviewBoardRoutes";
 import { MyPage } from "./pages/MyPage/Courses";
 import { Orders } from "./pages/MyPage/Orders";
 import { Order } from "./pages/MyPage/Orders/[payment_id]";
 import { Setting } from "./pages/MyPage/Setting";
 import { Certificates } from "./pages/MyPage/Certificates";
 import { Certificate } from "./pages/MyPage/Certificates/[certificate_id]";
+import {
+  MyPageInquiries,
+  MyPageInquiryWrite,
+  MyPageInquiryEdit,
+} from "./pages/MyPage/Inquiries";
 import { Admin } from "./pages/Admin";
 import { Users, StaffCreate } from "./pages/Admin/Users";
 import { User } from "./pages/Admin/Users/[user_id]";
@@ -40,9 +51,11 @@ import { FindPassword } from "./pages/FindPassword";
 import { ResetPassword } from "./pages/ResetPassword";
 import { FAQ } from "./pages/FAQ";
 import { FAQDetail } from "./pages/FAQ/[column_id]";
+import { NotFound } from "./pages/NotFound";
 import { AdminColumn } from "./pages/Admin/Column";
 import { NewColumn } from "./pages/Admin/Column/New";
 import { AdminColumnEdit } from "./pages/Admin/Column/[column_id]";
+import { PageLoadingGate } from "./components/PageLoading";
 
 function getUserType() {
   try {
@@ -66,8 +79,9 @@ function AdminProtectedRoute({ allowStaff = false, children }) {
 function App() {
   return (
     <Router basename={process.env.PUBLIC_URL}>
+      <PageLoadingGate>
       <Routes>
-        <Route path="/*" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/policy" element={<Policy />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
@@ -95,10 +109,14 @@ function App() {
           path="/courses/:course_id/:lecture_id/new"
           element={<NewLectureInquiry />}
         />
-        <Route path="/QnA" element={<QnA />} />
-        <Route path="/QnA/:inquiry_id" element={<QnADetail />} />
-        <Route path="/QnA/:inquiry_id/edit" element={<QnAEdit />} />
-        <Route path="/QnA/new" element={<NewQnAInquiry />} />
+        <Route path="/review" element={<QnA />} />
+        <Route path="/review/new" element={<NewQnAInquiry />} />
+        <Route path="/review/:review_id" element={<QnADetail />} />
+        <Route path="/review/:review_id/edit" element={<QnAEdit />} />
+        <Route path="/QnA" element={<LegacyQnAToReviewList />} />
+        <Route path="/QnA/new" element={<LegacyQnAToReviewNew />} />
+        <Route path="/QnA/:inquiry_id/edit" element={<LegacyQnAToReviewEdit />} />
+        <Route path="/QnA/:inquiry_id" element={<LegacyQnAToReviewDetail />} />
         <Route path="/mypage/courses" element={<MyPage />} />
         <Route path="/mypage/orders" element={<Orders />} />
         <Route path="/mypage/orders/:payment_id" element={<Order />} />
@@ -107,6 +125,12 @@ function App() {
         <Route
           path="/mypage/certificates/:certificate_id"
           element={<Certificate />}
+        />
+        <Route path="/mypage/inquiries" element={<MyPageInquiries />} />
+        <Route path="/mypage/inquiries/new" element={<MyPageInquiryWrite />} />
+        <Route
+          path="/mypage/inquiries/:inquiry_id/edit"
+          element={<MyPageInquiryEdit />}
         />
         <Route path="/admin" element={<Admin />} />
 
@@ -241,7 +265,11 @@ function App() {
         />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/faq/:column_id" element={<FAQDetail />} />
+        <Route path="/reviews" element={<LegacyQnAToReviewList />} />
+        <Route path="/reviews/:review_id" element={<LegacyQnAToReviewDetail />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
+      </PageLoadingGate>
     </Router>
   );
 }

@@ -16,6 +16,10 @@ export const VideoPlayer = ({
   lectureId,
   course_id,
   onVideoComplete,
+  useCustomChrome = false,
+  onPlayerReady,
+  onPlaybackTimeUpdate,
+  onPlayStateChange,
 }) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -359,27 +363,33 @@ export const VideoPlayer = ({
           autopause: false,
           autoplay: false,
           loop: false,
-          controls: true,
+          controls: !useCustomChrome,
           responsive: true,
         });
 
         playerRef.current = player;
 
+        await player.ready();
+        const videoDuration = await player.getDuration();
+        setDuration(videoDuration);
+
         const handleTimeUpdate = (data) => {
           setCurrentTime(data.seconds);
           updateWatchedIntervals(data.seconds);
+          onPlaybackTimeUpdate?.(data.seconds, videoDuration);
         };
 
         player.on("timeupdate", handleTimeUpdate);
+        player.on("play", () => onPlayStateChange?.(false));
+        player.on("pause", () => onPlayStateChange?.(true));
         player.on("ended", () => {
           console.log("Vimeo 'ended' event triggered");
           handleVideoEnded();
         });
         player.on("loaded", () => setIsLoading(false));
 
-        await player.ready();
-        const videoDuration = await player.getDuration();
-        setDuration(videoDuration);
+        onPlaybackTimeUpdate?.(0, videoDuration);
+        onPlayerReady?.(player);
 
         const savedTime = localStorage.getItem(`watchedTime-${lectureId}`);
         if (savedTime) {
@@ -401,6 +411,8 @@ export const VideoPlayer = ({
     return () => {
       if (playerRef.current) {
         playerRef.current.off("timeupdate");
+        playerRef.current.off("play");
+        playerRef.current.off("pause");
         playerRef.current.off("ended");
         playerRef.current.off("loaded");
         playerRef.current
@@ -411,7 +423,16 @@ export const VideoPlayer = ({
       }
       playerRef.current = null;
     };
-  }, [videoId, lectureId, enrollmentData?.id, handleVideoEnded]);
+  }, [
+    videoId,
+    lectureId,
+    enrollmentData?.id,
+    handleVideoEnded,
+    useCustomChrome,
+    onPlayerReady,
+    onPlaybackTimeUpdate,
+    onPlayStateChange,
+  ]);
 
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -433,8 +454,14 @@ export const VideoPlayer = ({
 
   return (
     <div
-      className="video-player-container"
-      style={{ width: "100%", maxWidth: "1150px", margin: "0 auto" }}
+      className={`video-player-container${
+        useCustomChrome ? " video-player-container--lecture" : ""
+      }`}
+      style={
+        useCustomChrome
+          ? undefined
+          : { width: "100%", maxWidth: "1150px", margin: "0 auto" }
+      }
     >
       {isLoading && (
         <div className="video-player-loading">

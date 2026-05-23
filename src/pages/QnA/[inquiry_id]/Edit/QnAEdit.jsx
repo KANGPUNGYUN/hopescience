@@ -1,13 +1,3 @@
-import { Footer } from "../../../../components/Footer";
-import { Header } from "../../../../components/Header";
-import { PostEditor } from "../../../../modules/PostEditor";
+import { QnAWritePage } from "../../Write/QnAWritePage";
 
-export const QnAEdit = () => {
-  return (
-    <>
-      <Header />
-      <PostEditor />
-      <Footer />
-    </>
-  );
-};
+export const QnAEdit = () => <QnAWritePage mode="edit" />;

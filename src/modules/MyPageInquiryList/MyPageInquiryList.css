@@ -1,0 +1,501 @@
+.mypage-inquiries {
+  width: 100%;
+  max-width: 1024px;
+  font-family: Pretendard, "Noto Sans KR", sans-serif;
+}
+
+/* Pencil b2loM + X1PXtS: 탭 좌측, 1:1 문의하기 우측 */
+.mypage-inquiries__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #222222;
+}
+
+.mypage-inquiries__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.mypage-inquiries__tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 11px 24px;
+  border: none;
+  border-radius: 80px;
+  background: #eee;
+  color: #767676;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.mypage-inquiries__tab--active {
+  background: #1e3a6d;
+  color: #fff;
+}
+
+/* 120×46, 직각 아웃라인 버튼 */
+.mypage-inquiries__write {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 120px;
+  height: 46px;
+  padding: 0;
+  border: 1px solid #1e3a6d;
+  border-radius: 0;
+  background: #fff;
+  color: #1e3a6d;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background-color 0.2s;
+}
+
+.mypage-inquiries__write:hover {
+  background: #f5f8fc;
+}
+
+.mypage-inquiries__loading,
+.mypage-inquiries__empty-tab {
+  margin: 48px 0;
+  color: #767676;
+  font-size: 16px;
+  text-align: center;
+}
+
+.mypage-inquiries__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mypage-inquiries__pagination {
+  margin-top: 32px;
+}
+
+/* Empty */
+.mypage-inquiries-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 24px;
+  padding: 64px 16px 80px;
+  border-top: 1px solid #d4d4d8;
+  text-align: center;
+}
+
+.mypage-inquiries-empty__message {
+  margin: 16px 0 24px;
+  color: #333;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.44;
+}
+
+.mypage-inquiries-empty__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  height: 36px;
+  padding: 0 20px;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #222;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.43;
+  text-decoration: none;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+}
+
+.mypage-inquiries-empty__cta:hover {
+  border-color: #999;
+  background: #fafafa;
+}
+
+/* Row — Pencil EYp3C: height 66, padding 좌 24 */
+.mypage-inquiry-row {
+  border-bottom: 1px solid #e5e5ec;
+  background: #fff;
+}
+
+.mypage-inquiry-row--open {
+  border-top: 1px solid #1e3a6d;
+  background: #f9f9f9;
+}
+
+.mypage-inquiry-row__head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 66px;
+  padding: 0 24px;
+}
+
+.mypage-inquiry-row__toggle {
+  display: grid;
+  flex: 1;
+  grid-template-columns: 96px 117px minmax(0, 1fr) auto 20px;
+  align-items: center;
+  gap: 0 16px;
+  width: 100%;
+  min-height: 66px;
+  padding: 21px 0;
+  border: none;
+  background: transparent;
+  color: #222;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* 데스크톱: 자식(date·category)이 그리드 열에 직접 배치 */
+.mypage-inquiry-row__meta-line {
+  display: contents;
+}
+
+.mypage-inquiry-row__date {
+  color: #767676;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.mypage-inquiry-row__category {
+  color: #767676;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.mypage-inquiry-row__title {
+  overflow: hidden;
+  color: #222;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mypage-inquiry-row__status {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.mypage-inquiry-row__status--pending {
+  color: #222;
+}
+
+.mypage-inquiry-row__status--answered {
+  color: #2f5fb8;
+}
+
+.mypage-inquiry-row__delete {
+  flex-shrink: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #767676;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.mypage-inquiry-row__delete:hover {
+  color: #505050;
+}
+
+.mypage-inquiry-row__panel {
+  padding: 0 24px 24px 129px;
+}
+
+.mypage-inquiry-row__body {
+  margin: 0 0 16px;
+  color: #222;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.mypage-inquiry-row__body--html {
+  margin-bottom: 16px;
+  color: #222;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.mypage-inquiry-row__body--html img {
+  display: none;
+}
+
+.mypage-inquiry-row__body--html p {
+  margin: 0 0 8px;
+}
+
+.mypage-inquiry-row__images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.mypage-inquiry-row__image-item {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  overflow: hidden;
+  border: 1px solid #d4d4d8;
+  background: #fff;
+}
+
+.mypage-inquiry-row__thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mypage-inquiry-row__expand {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  border-radius: 800px;
+  background: rgb(0 0 0 / 50%);
+  cursor: pointer;
+}
+
+.mypage-inquiry-row__expand:hover {
+  background: rgb(0 0 0 / 65%);
+}
+
+.mypage-inquiry-row__answer {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+  padding: 24px 0 0;
+  border-top: 1px solid #e5e5ec;
+}
+
+.mypage-inquiry-row__answer-label {
+  display: block;
+  margin-bottom: 16px;
+  color: #2f5fb8;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.mypage-inquiry-row__answer-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.mypage-inquiry-row__answer-body {
+  margin: 0;
+  color: #222;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.mypage-inquiry-row__answer-body--html {
+  color: #222;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.mypage-inquiry-row__answer-body--html img {
+  display: none;
+}
+
+.mypage-inquiry-row__images--answer {
+  margin-bottom: 0;
+}
+
+/* Image modal */
+.mypage-inquiry-image-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgb(0 0 0 / 75%);
+}
+
+.mypage-inquiry-image-modal__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 15%);
+  color: #fff;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.mypage-inquiry-image-modal__img {
+  max-width: min(100%, 960px);
+  max-height: min(90vh, 800px);
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+/* Pencil ZVDjX — 모바일 */
+@media screen and (max-width: 767px) {
+  .mypage-inquiries__toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .mypage-inquiries__write {
+    order: -1;
+    width: 100%;
+    height: 36px;
+    font-size: 14px;
+    line-height: 1.43;
+  }
+
+  .mypage-inquiries__tabs {
+    gap: 8px;
+  }
+
+  .mypage-inquiries__tab {
+    min-height: 36px;
+    padding: 11px 12px;
+    font-size: 14px;
+    line-height: 1.43;
+  }
+
+  .mypage-inquiry-row__head {
+    position: relative;
+    min-height: 86px;
+    padding: 16px;
+  }
+
+  .mypage-inquiry-row__toggle {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    min-height: 0;
+    padding: 0;
+    padding-right: 48px;
+  }
+
+  /* 1행: 날짜 + 카테고리 */
+  .mypage-inquiry-row__meta-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 8px;
+    max-width: calc(100% - 40px);
+  }
+
+  .mypage-inquiry-row__date {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .mypage-inquiry-row__category {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  /* 2행: 제목 */
+  .mypage-inquiry-row__title {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding-right: 72px;
+    font-size: 16px;
+    line-height: 1.5;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .mypage-inquiry-row__status {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .mypage-inquiry-row__delete {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .mypage-inquiry-row__panel {
+    padding: 0 16px 16px;
+  }
+
+  .mypage-inquiry-row__body,
+  .mypage-inquiry-row__body--html {
+    font-size: 14px;
+    line-height: 1.43;
+  }
+
+  .mypage-inquiry-row__answer-label,
+  .mypage-inquiry-row__answer-body,
+  .mypage-inquiry-row__answer-body--html {
+    font-size: 14px;
+    line-height: 1.43;
+  }
+}

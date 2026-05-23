@@ -1,32 +1,36 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Header, Footer, Input, Button, Link } from "../../components";
-import { Modal } from "../../modules/Modal";
-import "./style.css";
-import { auth } from "../../store";
+import React, { useState, useCallback } from "react";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import LineLeft from "../../icons/line-left.svg";
-import LineRight from "../../icons/line-right.svg";
-import naverImage from "../../images/naver.png";
+import { Input } from "../../components";
+import { AppModal } from "../../modules/AppModal";
+import { PasswordStrengthMeter } from "../../modules/PasswordStrength";
+import { auth } from "../../store";
 import { PolicyContent } from "../Policy/Policy";
+import {
+  AuthPageLayout,
+  AuthField,
+  AuthSocialSection,
+  useNaverLogin,
+} from "../Auth";
 
 const schema = yup
   .object({
-    name: yup.string().required("입력하신 이름은 수료증에 그대로 사용되오니 정확한 이름을 입력해주세요.")
-      .matches(
-      /^[가-힣]{2,}$|^[a-zA-Z]{2,}$/,
-      "유효한 이름형식으로 입력해주세요"
-    )
-    .test(
-      'no-consonant-vowel-only',
-      '자음이나 모음만으로 이루어진 이름은 허용되지 않습니다.',
-      function(value) {
-        if (typeof value !== 'string') return true;
-        return !/^[ㄱ-ㅎㅏ-ㅣ]+$/.test(value);
-      }
-    ),
+    name: yup
+      .string()
+      .required(
+        "입력하신 이름은 수료증에 그대로 사용되오니 정확한 이름을 입력해주세요."
+      )
+      .matches(/^[가-힣]{2,}$|^[a-zA-Z]{2,}$/, "유효한 이름형식으로 입력해주세요")
+      .test(
+        "no-consonant-vowel-only",
+        "자음이나 모음만으로 이루어진 이름은 허용되지 않습니다.",
+        (value) => {
+          if (typeof value !== "string") return true;
+          return !/^[ㄱ-ㅎㅏ-ㅣ]+$/.test(value);
+        }
+      ),
     phone: yup
       .string()
       .required("연락처를 입력해주세요.")
@@ -50,34 +54,25 @@ const schema = yup
 
 export const SignUp = () => {
   const signup = auth((state) => state.register);
-  const isLoading = auth((state) => state.isLoading);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { naverLoginRef, handleNaverLogin } = useNaverLogin();
+  const navigate = useNavigate();
 
-  const naverLoginRef = useRef();
   const {
-    register,
     handleSubmit,
     control,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: yupResolver(schema),
-    mode: 'onSubmit',
+    mode: "onSubmit",
   });
-  const navigate = useNavigate();
+
+  const watchedPassword = watch("password");
 
   const onSubmit = async (data) => {
     try {
       const { name, phone, email, password } = data;
-      console.log(
-        "name:",
-        name,
-        "phone: ",
-        phone,
-        "email: ",
-        email,
-        "password: ",
-        password
-      );
       const signupSuccess = await signup(name, phone, email, password);
       if (signupSuccess) {
         navigate("/signin");
@@ -89,7 +84,7 @@ export const SignUp = () => {
 
   const formatPhoneNumber = useCallback((value) => {
     if (!value) return value;
-    const phoneNumber = value.replace(/[^\d]/g, '');
+    const phoneNumber = value.replace(/[^\d]/g, "");
     const phoneNumberLength = phoneNumber.length;
     if (phoneNumberLength <= 3) return phoneNumber;
     if (phoneNumberLength <= 7) {
@@ -98,211 +93,176 @@ export const SignUp = () => {
     return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${phoneNumber.slice(7, 11)}`;
   }, []);
 
-  const handlePhoneChange = useCallback((e, onChange) => {
-    const inputValue = e.target.value;
-    const currentValue = inputValue.replace(/[^\d]/g, '');
-    const formattedValue = formatPhoneNumber(currentValue);
-    onChange(formattedValue);
-  }, [formatPhoneNumber]);
-
-  const { naver } = window;
-  const NAVER_CLIENT_ID = process.env.REACT_APP_CLIENT_ID; // 발급 받은 Client ID 입력
-  const NAVER_CALLBACK_URL = process.env.REACT_APP_CALLBACK_URL; // 작성했던 Callback URL 입력
-
-  const naverLogin = new naver.LoginWithNaverId({
-    clientId: NAVER_CLIENT_ID, // Naver Developer 에 있는 Client ID
-    callbackUrl: NAVER_CALLBACK_URL, // 요청 보냈을때 네이버에서 응답해 줄 주소
-    isPopup: false, // 네이버 로그인 확인 창을 팝업으로 띄울지 여부
-    loginButton: {
-      color: "green", // green, white
-      type: 3, // 1: 작은버튼, 2: 중간버튼, 3: 큰 버튼
-      height: 50, // 크기는 높이로 결정한다.
+  const handlePhoneChange = useCallback(
+    (e, onChange) => {
+      const inputValue = e.target.value;
+      const currentValue = inputValue.replace(/[^\d]/g, "");
+      const formattedValue = formatPhoneNumber(currentValue);
+      onChange(formattedValue);
     },
-    callbackHandle: true,
-  });
-
-  useEffect(() => {
-    naverLogin.init();
-  }, []);
-
-  const handleNaverLogin = () => {
-    naverLoginRef.current.children[0].click();
-  };
+    [formatPhoneNumber]
+  );
 
   return (
     <>
-      <Header />
-      <main className="signup-background">
-        <div className="signup-box">
-          <h3 className="signup-title">회원가입</h3>
-          <div>
-            <form className="signup-form" onSubmit={handleSubmit(onSubmit)}>
-              <div className="signup-input-group">
-                <Controller
-                  name="name"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <div className="signup-input">
-                      <label htmlFor="name" className="signup-input-label">
-                        
-                        이름
-                      </label>
-                      <Input
-                        {...field}
-                        type="text"
-                        placeholder="입력하신 이름은 수료증에 그대로 사용됩니다"
-                      />
-                      {errors.name && (
-                        <p className="input-error-message">
-                          {errors.name?.message}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                />
-                <Controller
-                  name="phone"
-                  control={control}
-                  defaultValue=""
-                  render={({ field: { onChange, value } }) => (
-                    <div className="signup-input">
-                      <label htmlFor="tel" className="signup-input-label">
-                        연락처
-                      </label>
-                      <Input
-                        type="tel"
-                        placeholder="연락처를 입력하세요"
-                        value={value}
-                        onChange={(e) => handlePhoneChange(e, onChange)}
-                      />
-                      {errors.phone && (
-                        <p className="input-error-message">
-                          {errors.phone?.message}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                />
-                <Controller
-                  name="email"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <div className="signup-input">
-                      <label htmlFor="email" className="signup-input-label">
-                        Email
-                      </label>
-                      <Input
-                        {...field}
-                        type="email"
-                        placeholder="이메일주소를 입력하세요"
-                      />
-                      {errors.email && (
-                        <p className="input-error-message">
-                          {errors.email?.message}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                />
-                <Controller
-                  name="password"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <div className="signup-input">
-                      <label htmlFor="password" className="signup-input-label">
-                        비밀번호
-                      </label>
-                      <Input
-                        {...field}
-                        type="password"
-                        placeholder="비밀번호를 입력하세요(문자, 숫자 조합 8자 이상)"
-                      />
-                      {errors.password && (
-                        <p className="input-error-message">
-                          {errors.password?.message}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                />
-                <Controller
-                  name="terms"
-                  control={control}
-                  defaultValue={false}
-                  render={({ field }) => (
-                    <div className="signup-input">
-                      <div className="signup-check">
-                        <input {...field} type="checkbox" id="terms" />
-                        <label htmlFor="terms">
-                          <Button onClick={()=>setIsModalOpen(true)} className="signup-modal-button">
-                            이용약관 및 정보보호정책 동의
-                          </Button>
-                        </label>
-                      </div>
-                      {errors.terms && (
-                        <p className="input-error-message">
-                          {errors.terms.message}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                />
-              </div>
-              <Button
-                variant="default"
-                size="full"
-                label={isSubmitting ? "회원가입 중.." : "회원가입"}
-                disabled={isSubmitting}
-                type="submit"
-              />
-            </form>
-            <div className="signup-signup">
-              <p>이미 회원가입을 하셨나요?</p>
-              <Link
-                to="/signin"
-                label="Log in"
-                color="#bd9a31"
-                buttonStyle="transparent"
-                fontSize="14px"
-                style={{ width: "fit-content", height: "fit-content" }}
-              />
-            </div>
-            <div className="hr">
-              <img className="line-2" alt="Line" src={LineLeft} />
-              <div className="OR">OR</div>
-              <img className="line-3" alt="Line" src={LineRight} />
-            </div>
-            <div id="naverIdLogin" ref={naverLoginRef}></div>
-            <Button
-              variant="auth"
-              size="full"
-              label="네이버 로그인"
-              onClick={handleNaverLogin}
-            >
-              <img
-                className="line-2"
-                alt="Line"
-                src={naverImage}
-                style={{ width: "44px" }}
-              />
-            </Button>
-          </div>
-        </div>
-        <Modal
-          modalTitle="이용약관 및 정보보호정책"
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          cancelLabel="확인"
+      <AuthPageLayout
+        title="회원가입"
+        subtitle="수료증 발급에 사용되는 정보이니 정확히 입력해 주세요."
+      >
+        <form
+          className="auth-page__form"
+          onSubmit={handleSubmit(onSubmit)}
+          noValidate
         >
-          <div className="signup-modal-scroll">
-            <PolicyContent />
+          <div className="auth-page__fields">
+            <AuthField label="이름" htmlFor="signup-name" error={errors.name?.message}>
+              <Controller
+                name="name"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    id="signup-name"
+                    type="text"
+                    autoComplete="name"
+                    placeholder="입력하신 이름은 수료증에 그대로 사용됩니다"
+                  />
+                )}
+              />
+            </AuthField>
+
+            <AuthField label="연락처" htmlFor="signup-phone" error={errors.phone?.message}>
+              <Controller
+                name="phone"
+                control={control}
+                defaultValue=""
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    id="signup-phone"
+                    type="tel"
+                    autoComplete="tel"
+                    placeholder="연락처를 입력하세요"
+                    value={value}
+                    onChange={(e) => handlePhoneChange(e, onChange)}
+                  />
+                )}
+              />
+            </AuthField>
+
+            <AuthField label="이메일" htmlFor="signup-email" error={errors.email?.message}>
+              <Controller
+                name="email"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    id="signup-email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="이메일 주소를 입력하세요"
+                  />
+                )}
+              />
+            </AuthField>
+
+            <AuthField
+              label="비밀번호"
+              htmlFor="signup-password"
+              error={errors.password?.message}
+            >
+              <Controller
+                name="password"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    id="signup-password"
+                    type="password"
+                    autoComplete="new-password"
+                    placeholder="문자·숫자 조합 8자 이상"
+                  />
+                )}
+              />
+              <PasswordStrengthMeter password={watchedPassword} />
+            </AuthField>
+
+            <div className="auth-page__terms">
+              <Controller
+                name="terms"
+                control={control}
+                defaultValue={false}
+                render={({ field: { value, onChange, onBlur, ref } }) => (
+                  <div className="auth-page__terms-row">
+                    <label className="auth-page__checkbox" htmlFor="signup-terms">
+                      <input
+                        ref={ref}
+                        id="signup-terms"
+                        type="checkbox"
+                        checked={Boolean(value)}
+                        onChange={(e) => onChange(e.target.checked)}
+                        onBlur={onBlur}
+                      />
+                    </label>
+                    <button
+                      type="button"
+                      className="auth-page__terms-btn"
+                      onClick={() => setIsModalOpen(true)}
+                    >
+                      이용약관 및 정보보호정책에 동의합니다
+                    </button>
+                  </div>
+                )}
+              />
+              {errors.terms ? (
+                <p className="input-error-message">{errors.terms.message}</p>
+              ) : null}
+            </div>
           </div>
-        </Modal>
-      </main>
-      <Footer />
+
+          <button
+            type="submit"
+            className="auth-page__submit"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "회원가입 중..." : "회원가입"}
+          </button>
+        </form>
+
+        <p className="auth-page__footer-text">
+          이미 회원이신가요?
+          <RouterLink to="/signin" className="auth-page__link auth-page__link--router">
+            로그인
+          </RouterLink>
+        </p>
+
+        <AuthSocialSection
+          naverLoginRef={naverLoginRef}
+          onNaverLogin={handleNaverLogin}
+        />
+      </AuthPageLayout>
+
+      <AppModal
+        title="이용약관 및 정보보호정책"
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        footerClassName="mypage-setting-modal__footer--single"
+        footer={
+          <button
+            type="button"
+            className="mypage-setting-modal__btn mypage-setting-modal__btn--confirm"
+            onClick={() => setIsModalOpen(false)}
+          >
+            확인
+          </button>
+        }
+      >
+        <div className="auth-policy-scroll">
+          <PolicyContent />
+        </div>
+      </AppModal>
     </>
   );
 };

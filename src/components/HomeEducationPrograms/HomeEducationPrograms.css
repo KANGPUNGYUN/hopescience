@@ -1,0 +1,256 @@
+.home-education {
+  width: 100%;
+  background-color: #faf9f8;
+  padding: 80px 24px 100px;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.home-education__inner {
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: 0 clamp(24px, 16.67vw, 320px);
+}
+
+.home-education__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px 48px;
+  margin-bottom: 48px;
+}
+
+.home-education__label {
+  margin: 0 0 8px;
+  color: #2f5fb8;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.home-education__title {
+  margin: 0;
+  color: #222222;
+  font-size: clamp(28px, 2.5vw, 40px);
+  font-weight: 600;
+  line-height: 1.35;
+  word-break: keep-all;
+}
+
+.home-education__subtitle {
+  margin: 16px 0 0;
+  color: #222222;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.44;
+}
+
+.home-education__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  color: #1e3a6d;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.43;
+  text-decoration: none;
+  padding-bottom: 4px;
+}
+
+.home-education__more:hover {
+  text-decoration: underline;
+}
+
+.home-education__more-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-education__gallery {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  height: 440px;
+}
+
+.home-education__card {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 280px;
+  height: 100%;
+  background-color: #d4d4d8;
+  overflow: hidden;
+  transition:
+    flex-grow 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    flex-basis 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    max-width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.home-education__card--active {
+  flex-grow: 2.6;
+  flex-basis: 724px;
+  max-width: 724px;
+}
+
+.home-education__card-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+.home-education__media {
+  position: absolute;
+  inset: 0;
+}
+
+.home-education__poster,
+.home-education__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  object-fit: cover;
+}
+
+.home-education__video {
+  z-index: 1;
+  pointer-events: none;
+}
+
+.home-education__card:not(.home-education__card--active) .home-education__video {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.home-education__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 50%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  pointer-events: none;
+}
+
+.home-education__play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 3;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15));
+}
+
+.home-education__caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+  padding: 24px 32px 32px;
+  pointer-events: none;
+}
+
+.home-education__card-title {
+  margin: 0;
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.42;
+  transition: font-size 0.4s ease;
+}
+
+.home-education__card--active .home-education__card-title {
+  font-size: 28px;
+  line-height: 1.43;
+}
+
+.home-education__card-desc {
+  margin: 8px 0 0;
+  max-width: 560px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition:
+    opacity 0.35s ease 0.1s,
+    max-height 0.35s ease 0.1s;
+}
+
+.home-education__card--active .home-education__card-desc {
+  opacity: 1;
+  max-height: 80px;
+}
+
+.home-education__card--skeleton {
+  background: linear-gradient(90deg, #e4e4e7 25%, #f4f4f5 50%, #e4e4e7 75%);
+  background-size: 200% 100%;
+  animation: home-education-shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes home-education-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (max-width: 1024px) {
+  .home-education__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .home-education__gallery {
+    height: 380px;
+  }
+
+  .home-education__card {
+    max-width: 200px;
+  }
+
+  .home-education__card--active {
+    max-width: 480px;
+    flex-grow: 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-education {
+    padding: 56px 16px 72px;
+  }
+
+  .home-education__inner {
+    padding: 0;
+  }
+
+  .home-education__gallery {
+    flex-direction: column;
+    height: auto;
+    gap: 16px;
+  }
+
+  .home-education__card,
+  .home-education__card--active {
+    flex: none;
+    max-width: none;
+    width: 100%;
+    height: 280px;
+  }
+}

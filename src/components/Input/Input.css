@@ -20,14 +20,17 @@
   .toggle-password-button {
     position: absolute;
     top: 50%;
-    right: 10px;
+    right: 12px;
     transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background-color: transparent;
     border: none;
     cursor: pointer;
     padding: 0;
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
   }
   
   .input--default {

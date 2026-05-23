@@ -1,0 +1,226 @@
+.mypage-order-detail {
+  width: 100%;
+  max-width: 1024px;
+  font-family: Pretendard, "Noto Sans KR", sans-serif;
+}
+
+.mypage-order-detail__loading,
+.mypage-order-detail__empty {
+  margin: 48px 0;
+  color: #767676;
+  font-size: 16px;
+  text-align: center;
+}
+
+.mypage-order-detail__empty p {
+  margin: 0 0 24px;
+}
+
+.mypage-order-detail__back,
+.mypage-order-detail__back-cta {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 24px;
+  color: #1e3a6d;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.43;
+  text-decoration: none;
+}
+
+.mypage-order-detail__back::before,
+.mypage-order-detail__back-cta::before {
+  content: "←";
+  margin-right: 6px;
+}
+
+.mypage-order-detail__back:hover,
+.mypage-order-detail__back-cta:hover {
+  text-decoration: underline;
+}
+
+.mypage-order-detail__back-cta {
+  justify-content: center;
+  min-width: 160px;
+  min-height: 36px;
+  padding: 0 20px;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #222;
+}
+
+.mypage-order-detail__back-cta::before {
+  display: none;
+}
+
+.mypage-order-detail__back-cta:hover {
+  border-color: #999;
+  background: #fafafa;
+  text-decoration: none;
+}
+
+.mypage-order-detail__summary {
+  margin-bottom: 16px;
+  border: 1px solid #e5e5ec;
+  background: #fff;
+  padding: 20px 32px 24px;
+}
+
+.mypage-order-detail__summary-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.mypage-order-detail__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.mypage-order-detail__badge--completed {
+  background: #d0e0f9;
+  color: #1e3a6d;
+}
+
+.mypage-order-detail__badge--canceled {
+  background: #eee;
+  color: #505050;
+}
+
+.mypage-order-detail__summary-amount {
+  margin: 0;
+  color: #222;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.mypage-order-detail__course-title {
+  margin: 0 0 8px;
+  color: #222;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.44;
+  word-break: break-word;
+}
+
+.mypage-order-detail__summary-datetime {
+  margin: 0;
+  color: #767676;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.43;
+}
+
+.mypage-order-detail__panel {
+  border: 1px solid #e5e5ec;
+  background: #fff;
+}
+
+.mypage-order-detail__panel + .mypage-order-detail__panel {
+  margin-top: 16px;
+}
+
+.mypage-order-detail__panel-title {
+  margin: 0;
+  padding: 16px 32px;
+  border-bottom: 1px solid #e5e5ec;
+  color: #222;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.mypage-order-detail__panel-body {
+  padding: 8px 32px 20px;
+}
+
+.mypage-order-detail__row {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+  padding: 12px 0;
+  font-size: 14px;
+  line-height: 1.43;
+}
+
+.mypage-order-detail__row + .mypage-order-detail__row {
+  border-top: 1px solid #f0f0f5;
+}
+
+.mypage-order-detail__row-label {
+  color: #767676;
+  font-weight: 400;
+}
+
+.mypage-order-detail__row-value {
+  color: #222;
+  font-weight: 400;
+  word-break: break-word;
+}
+
+.mypage-order-detail__row-value--strong {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+@media screen and (max-width: 767px) {
+  .mypage-order-detail__back {
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+
+  .mypage-order-detail__summary {
+    padding: 16px;
+  }
+
+  .mypage-order-detail__summary-head {
+    margin-bottom: 8px;
+  }
+
+  .mypage-order-detail__summary-amount {
+    font-size: 18px;
+  }
+
+  .mypage-order-detail__course-title {
+    font-size: 16px;
+  }
+
+  .mypage-order-detail__summary-datetime {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .mypage-order-detail__panel-title {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  .mypage-order-detail__panel-body {
+    padding: 4px 16px 16px;
+  }
+
+  .mypage-order-detail__row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 10px 0;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .mypage-order-detail__row-value--strong {
+    font-size: 14px;
+  }
+}

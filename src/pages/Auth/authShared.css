@@ -1,0 +1,303 @@
+/* 로그인 · 회원가입 공통 (v2) */
+
+.auth-page {
+  width: 100%;
+  min-height: calc(100vh - 160px);
+  padding: 48px 16px 96px;
+  background: #f6f8fa;
+  font-family: Pretendard, "Noto Sans KR", sans-serif;
+}
+
+.auth-page__inner {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.auth-page__card {
+  width: 100%;
+  max-width: 480px;
+  padding: 40px 32px 32px;
+  background: #fff;
+  box-shadow: 0 4px 35px rgba(0, 0, 0, 0.06);
+}
+
+.auth-page__header {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #1e3a6d;
+}
+
+.auth-page__title {
+  margin: 0;
+  color: #222;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.29;
+  letter-spacing: -0.02em;
+}
+
+.auth-page__subtitle {
+  margin: 12px 0 0;
+  color: #767676;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.auth-page__form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.auth-page__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.auth-field__label {
+  color: #222;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.43;
+}
+
+.auth-field .input {
+  height: 48px;
+  padding: 12px 40px 12px 16px;
+  border: 1px solid #d4d4d8;
+  border-radius: 0;
+  background: #fff;
+  color: #222;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.auth-field .input::placeholder {
+  color: #767676;
+}
+
+.auth-field .input:focus {
+  outline: none;
+  border-color: #1e3a6d;
+}
+
+.auth-field .input-error-message {
+  margin: 0;
+  color: #c94a4a;
+  font-size: 13px;
+  line-height: 1.43;
+}
+
+.auth-page__hint {
+  margin: 8px 0 0;
+  color: #767676;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.auth-page__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.auth-page__checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: #505050;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.43;
+}
+
+.auth-page__checkbox input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #1e3a6d;
+  cursor: pointer;
+}
+
+.auth-page__link {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #1e3a6d;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.43;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.auth-page__link:hover {
+  color: #2f548c;
+}
+
+.auth-page__link--router {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: underline;
+}
+
+.auth-page__submit {
+  width: 100%;
+  height: 52px;
+  margin-top: 4px;
+  border: none;
+  background: #1e3a6d;
+  color: #fff;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.44;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.auth-page__submit:hover:not(:disabled) {
+  background: #2f548c;
+}
+
+.auth-page__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-page__footer-text {
+  margin: 24px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #767676;
+  font-size: 14px;
+  line-height: 1.43;
+}
+
+.auth-page__divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 32px 0 24px;
+}
+
+.auth-page__divider-line {
+  flex: 1;
+  height: 1px;
+  background: #e5e5ec;
+}
+
+.auth-page__divider-label {
+  flex-shrink: 0;
+  color: #767676;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.43;
+}
+
+.auth-page__naver {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 52px;
+  border: none;
+  background: #03c75a;
+  color: #fff;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.44;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.auth-page__naver:hover {
+  background: #02b350;
+}
+
+.auth-page__naver-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.auth-page #naverIdLogin {
+  display: none;
+}
+
+/* 회원가입 약관 */
+.auth-page__terms {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.auth-page__terms-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.auth-page__terms-btn {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #1e3a6d;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.43;
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.auth-page__terms-btn:hover {
+  color: #2f548c;
+}
+
+.auth-policy-scroll {
+  max-height: min(360px, 50vh);
+  overflow-y: auto;
+  padding: 12px;
+  border: 1px solid #e5e5ec;
+  background: #f6f8fa;
+  color: #505050;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+@media screen and (max-width: 767px) {
+  .auth-page {
+    padding: 32px 16px 72px;
+  }
+
+  .auth-page__card {
+    padding: 28px 20px 24px;
+  }
+
+  .auth-page__title {
+    font-size: 24px;
+  }
+}

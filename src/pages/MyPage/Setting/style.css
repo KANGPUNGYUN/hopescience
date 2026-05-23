@@ -1,47 +1,169 @@
-.setting-title-group {
-  margin-top: 24px;
-  padding-bottom: 50px;
-  border-bottom: 1px solid #f3f4f6;
+@import "../Courses/style.css";
+
+.mypage-section--setting {
+  max-width: 1024px;
+}
+
+.mypage-section__header--setting {
+  padding-bottom: 24px;
+  margin-bottom: 0;
+  border-bottom: 1px solid #1e3a6d;
+}
+
+.mypage-setting__loading {
+  margin: 0;
+  color: #767676;
+  font-size: 14px;
+}
+
+.mypage-setting__panel {
+  margin-top: 32px;
+}
+
+.mypage-setting__panel-title {
+  margin: 0 0 24px;
+  color: #222;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.44;
+}
+
+.mypage-setting__panel--account {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid #e5e5ec;
+}
+
+.mypage-setting__row {
+  display: grid;
+  grid-template-columns: 150px 1fr auto;
+  align-items: center;
+  gap: 16px;
+  min-height: 36px;
+  margin-bottom: 26px;
+}
+
+.mypage-setting__row:last-child {
+  margin-bottom: 0;
+}
+
+.mypage-setting__row--no-value {
+  grid-template-columns: 1fr auto;
+}
+
+.mypage-setting__row-label {
+  color: #767676;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.mypage-setting__row-value {
+  color: #222;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+.mypage-setting__row-value--hint {
+  color: #767676;
+}
+
+.mypage-setting__edit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 80px;
+  height: 36px;
+  padding: 11px 12px;
+  border: none;
+  border-radius: 0;
+  background: #eee;
+  color: #505050;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.43;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.mypage-setting__edit-btn:hover {
+  background: #e0e0e0;
+}
+
+.mypage-setting__edit-btn--danger {
+  background: transparent;
+  border: 1px solid #c94a4a;
+  color: #c94a4a;
+}
+
+.mypage-setting__edit-btn--danger:hover {
+  background: #fff5f5;
+}
+
+/* 회원 탈퇴 모달 (Pencil Th73v) */
+.mypage-setting-withdraw__notice {
+  margin: 0 0 20px;
+  color: #222;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.43;
+}
+
+.mypage-setting-withdraw__password {
+  margin-bottom: 20px;
+}
+
+.mypage-setting-withdraw__agree {
   display: flex;
-  align-items: baseline;
-  gap: 20px;
+  align-items: flex-start;
+  gap: 6px;
+  cursor: pointer;
+  color: #222;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.43;
 }
 
-.setting-title {
-  font-weight: bold;
-  font-size: 32px;
+.mypage-setting-withdraw__checkbox {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-.name-edit,
-.email-edit,
-.phone-edit,
-.password-edit {
-  max-width: 762px;
-  min-width: 300px;
-  background-color: #1e2128;
-  margin-top: 43px;
-  padding: 32px;
-  display: flex;
-  flex-direction: column;
+.mypage-setting-withdraw__checkbox-ui {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  border: 1px solid #aaa;
+  background: #fff;
 }
 
-.sign-out {
-  max-width: 762px;
-  min-width: 300px;
-  background-color: #1e2128;
-  margin-top: 43px;
-  padding: 32px;
-  display: flex;
-  justify-content: space-between;
+.mypage-setting-withdraw__checkbox:checked + .mypage-setting-withdraw__checkbox-ui {
+  border-color: #222;
+  background: #222;
+  background-image: url("data:image/svg+xml,%3Csvg width='9' height='6' viewBox='0 0 9 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 3L3.5 5.5L8 1' stroke='white' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
-.name-edit > label,
-.email-edit > label,
-.phone-edit > label,
-.password-edit > label,
-.sign-out-label {
-  display: block;
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 4px;
+@media screen and (max-width: 767px) {
+  .mypage-setting__row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .mypage-setting__edit-btn {
+    justify-self: start;
+  }
 }

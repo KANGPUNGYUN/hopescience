@@ -1,0 +1,238 @@
+.home-edu-ops {
+  position: relative;
+  width: 100%;
+  min-height: 720px;
+  overflow: hidden;
+  background-color: #f5f5f5;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.home-edu-ops__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: rotate(180deg);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.home-edu-ops__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: 120px clamp(24px, 16.67vw, 320px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 440px;
+  gap: 48px 120px;
+  align-items: start;
+  box-sizing: border-box;
+}
+
+.home-edu-ops__label {
+  margin: 0 0 12px;
+  color: #2f5fb8;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+.home-edu-ops__subtitle {
+  margin: 0;
+  color: #505050;
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 400;
+  line-height: 1.33;
+  word-break: keep-all;
+}
+
+.home-edu-ops__title {
+  margin: 16px 0 0;
+  color: #222222;
+  font-size: clamp(28px, 2.5vw, 40px);
+  font-weight: 600;
+  line-height: 1.35;
+  word-break: keep-all;
+}
+
+.home-edu-ops__panel {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  height: 442px;
+  overflow: hidden;
+}
+
+.home-edu-ops__list {
+  height: 100%;
+  overflow: hidden;
+}
+
+.home-edu-ops__list-track {
+  will-change: transform;
+}
+
+.home-edu-ops__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px 16px;
+  height: 80px;
+  min-height: 80px;
+  flex-shrink: 0;
+  padding: 0;
+  border-bottom: 1px solid #e5e5ec;
+  box-sizing: border-box;
+}
+
+.home-edu-ops__row-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.home-edu-ops__row-name {
+  color: #222222;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.44;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.home-edu-ops__row-category {
+  color: #505050;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.43;
+  white-space: nowrap;
+}
+
+.home-edu-ops__row-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 6px 12px;
+  border: 1px solid #2f548c;
+  border-radius: 8000px;
+  color: #2f548c;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.43;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.home-edu-ops__row-date {
+  color: #222222;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.43;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.home-edu-ops__list-fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 42px;
+  background: linear-gradient(180deg, rgba(245, 245, 245, 0) 0%, #f5f5f5 100%);
+  pointer-events: none;
+}
+
+@media (max-width: 1100px) {
+  .home-edu-ops__inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .home-edu-ops__panel {
+    max-width: none;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-edu-ops {
+    min-height: 658px;
+  }
+
+  .home-edu-ops__inner {
+    padding: 60px 16px;
+    gap: 32px;
+  }
+
+  .home-edu-ops__label {
+    font-size: 12px;
+  }
+
+  .home-edu-ops__subtitle {
+    margin-top: 14px;
+    font-size: 16px;
+  }
+
+  .home-edu-ops__title {
+    margin-top: 12px;
+    font-size: 24px;
+  }
+
+  .home-edu-ops__panel {
+    width: 100%;
+    max-width: none;
+    height: 388px;
+  }
+
+  .home-edu-ops__row {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-rows: auto auto;
+    align-items: center;
+    gap: 4px 8px;
+    height: 70px;
+    min-height: 70px;
+    padding: 12px 0 0;
+  }
+
+  .home-edu-ops__row-main {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .home-edu-ops__row-name {
+    font-size: 18px;
+  }
+
+  .home-edu-ops__row-category {
+    font-size: 12px;
+  }
+
+  .home-edu-ops__row-date {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: start;
+    margin-top: 0;
+    font-size: 12px;
+    color: #767676;
+    text-align: left;
+  }
+
+  .home-edu-ops__row-badge {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    align-self: center;
+    min-height: 20px;
+    padding: 1px 8px;
+    font-size: 12px;
+  }
+}

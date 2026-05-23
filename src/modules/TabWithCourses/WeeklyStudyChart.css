@@ -1,0 +1,41 @@
+.weekly-study-chart {
+  position: relative;
+  width: 100%;
+}
+
+.weekly-study-chart__svg {
+  display: block;
+  width: 100%;
+  height: 120px;
+  overflow: visible;
+}
+
+.weekly-study-chart .weekly-chart__line {
+  vector-effect: non-scaling-stroke;
+}
+
+.weekly-study-chart .weekly-chart__tooltip {
+  transition: opacity 0.15s ease;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.06));
+}
+
+.weekly-study-chart .weekly-chart__tooltip-bubble-fill,
+.weekly-study-chart .weekly-chart__tooltip-bubble {
+  fill: #ffffff;
+  fill-opacity: 1;
+  opacity: 1;
+  fill-rule: nonzero;
+}
+
+.weekly-study-chart .weekly-chart__tooltip-bubble {
+  paint-order: fill stroke;
+}
+
+.weekly-study-chart .weekly-chart__dot {
+  transition: r 0.15s ease, stroke-width 0.15s ease;
+}
+
+.weekly-study-chart .weekly-chart__hit:focus-visible {
+  outline: 2px solid #4a7fe3;
+  outline-offset: 2px;
+}

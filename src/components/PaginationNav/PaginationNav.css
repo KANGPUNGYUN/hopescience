@@ -1,0 +1,64 @@
+/* G7b6j Component 215 */
+.pagination-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.pagination-nav__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 2px;
+  background-color: transparent;
+  color: #333333;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.pagination-nav__btn:hover:not(:disabled) {
+  opacity: 0.7;
+}
+
+.pagination-nav__btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.pagination-nav__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 7px 14px;
+  border: none;
+  border-radius: 2px;
+  background-color: transparent;
+  color: #333333;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.43;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.pagination-nav__num:hover:not(.pagination-nav__num--active) {
+  background-color: rgba(238, 241, 245, 0.6);
+}
+
+.pagination-nav__num--active {
+  background-color: #eef1f5;
+  color: #1e3a6d;
+  font-weight: 600;
+  cursor: default;
+}

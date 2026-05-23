@@ -1,0 +1,103 @@
+/* Pencil KvLCC — 희망과학_에러상태 */
+
+.not-found-page {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: calc(100vh - 80px);
+  padding: 48px 24px 80px;
+  background: #ffffff;
+  font-family: Pretendard, "Noto Sans KR", sans-serif;
+}
+
+.not-found-page__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 640px;
+  text-align: center;
+}
+
+.not-found-page__icon {
+  display: block;
+  flex-shrink: 0;
+  margin-bottom: 24px;
+}
+
+.not-found-page__title {
+  margin: 0 0 16px;
+  color: #222;
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.375;
+  letter-spacing: -0.02em;
+  white-space: pre-line;
+}
+
+.not-found-page__description {
+  margin: 0 0 48px;
+  color: #505050;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.444;
+  white-space: pre-line;
+}
+
+.not-found-page__back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  min-height: 44px;
+  padding: 11px 20px;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #222;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.not-found-page__back-btn:hover {
+  background: #f6f8fa;
+  border-color: #b0b0b0;
+}
+
+.not-found-page__back-btn:focus-visible {
+  outline: 2px solid #1e3a6d;
+  outline-offset: 2px;
+}
+
+.not-found-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #fff;
+}
+
+@media screen and (max-width: 767px) {
+  .not-found-page {
+    min-height: calc(100vh - 64px);
+    padding: 32px 16px 64px;
+  }
+
+  .not-found-page__title {
+    font-size: 24px;
+  }
+
+  .not-found-page__description {
+    margin-bottom: 40px;
+    font-size: 16px;
+  }
+
+  .not-found-page__back-btn {
+    width: 100%;
+    max-width: 280px;
+  }
+}

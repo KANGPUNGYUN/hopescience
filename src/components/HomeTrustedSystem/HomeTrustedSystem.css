@@ -1,0 +1,137 @@
+.home-trusted {
+  position: relative;
+  width: 100%;
+  min-height: 620px;
+  overflow: hidden;
+  background-color: #e7ecf3;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.home-trusted__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.home-trusted__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: 100px clamp(24px, 16.67vw, 320px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 507px);
+  gap: 48px 120px;
+  align-items: center;
+}
+
+.home-trusted__label {
+  margin: 0 0 12px;
+  color: #2f5fb8;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+.home-trusted__title {
+  margin: 0;
+  color: #222222;
+  font-size: clamp(28px, 2.5vw, 40px);
+  font-weight: 600;
+  line-height: 1.35;
+  word-break: keep-all;
+}
+
+.home-trusted__headline {
+  margin: 24px 0 0;
+  color: #222222;
+  font-size: clamp(32px, 3vw, 48px);
+  font-weight: 800;
+  line-height: 1.29;
+  word-break: keep-all;
+}
+
+.home-trusted__stats {
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+}
+
+.home-trusted__stat {
+  position: relative;
+  padding-left: 32px;
+  min-height: 146px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.home-trusted__stat::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 24px;
+  width: 3px;
+  height: 48px;
+  background-color: #1e3a6d;
+}
+
+.home-trusted__stat-value {
+  margin: 0;
+  color: #222222;
+  font-size: clamp(40px, 4vw, 64px);
+  font-weight: 800;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+}
+
+.home-trusted__stat-label {
+  margin: 12px 0 0;
+  color: rgba(34, 34, 34, 0.8);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+@media (max-width: 1024px) {
+  .home-trusted__inner {
+    grid-template-columns: 1fr;
+    gap: 56px;
+  }
+
+  .home-trusted__stats {
+    max-width: 507px;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-trusted {
+    min-height: auto;
+  }
+
+  .home-trusted__inner {
+    padding: 72px 16px;
+  }
+
+  .home-trusted__stats {
+    gap: 40px;
+  }
+
+  .home-trusted__stat {
+    min-height: auto;
+    padding-left: 24px;
+  }
+
+  .home-trusted__stat::before {
+    top: 16px;
+    height: 40px;
+  }
+}

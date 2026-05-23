@@ -1,209 +1,480 @@
-.header {
-  background-color: #1e2128;
-  box-shadow: 0px 4px 9px #1e21281c, 0px 0px 2px #1e21281f;
-  height: 92px;
-  width: 100vw;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 64px;
+/* 공통 헤더 — Pencil L115bh / SpDvE / oqjCz 등 기준 */
+
+.site-header {
   position: sticky;
   top: 0;
   z-index: 900;
+  width: 100%;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+  /* 로고·제목·네비 — 동일 톤 (--header-fg와 로고 필터 연동) */
+  --header-fg: #222222;
+  --header-logo-filter: none;
 }
 
-.header .header-menu {
-  width: 387px;
+.site-header--dark {
+  --header-fg: #ffffff;
+  /* 검정 로고 PNG → 텍스트와 동일한 흰색 톤 */
+  --header-logo-filter: brightness(0) invert(1);
+}
+
+/* ── Variants (desktop) ── */
+
+.site-header--light {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(17.5px);
+  -webkit-backdrop-filter: blur(17.5px);
+}
+
+.site-header--dark {
+  background: rgba(24, 29, 42, 0.5);
+  backdrop-filter: blur(17.5px);
+  -webkit-backdrop-filter: blur(17.5px);
+}
+
+.site-header--solid {
+  background: #d8e0eb;
+  border-bottom: 1px solid #e5e5ec;
+}
+
+/* ── Desktop bar ── */
+
+.site-header__desktop {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-}
-
-.header .header-signin {
-  display: flex;
-  width: 64%;
   justify-content: space-between;
+  max-width: 1920px;
+  margin: 0 auto;
+  height: 80px;
+  padding: 0 clamp(24px, 16vw, 320px);
+  gap: 24px;
 }
 
-.menu-toggle-button {
+.site-header__mobile {
   display: none;
+}
+
+.site-header__logo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  text-decoration: none;
+  color: var(--header-fg);
+}
+
+.site-header__logo-mark {
+  display: block;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: var(--header-logo-filter);
+}
+
+.site-header__logo-mark--mobile {
+  display: none;
+}
+
+.site-header__logo-text {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.42;
+  white-space: nowrap;
+  color: var(--header-fg);
+}
+
+.site-header__nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: clamp(24px, 5vw, 80px);
+}
+
+.site-header__nav-link,
+.site-header__nav-link--button {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.44;
+  text-decoration: none;
   background: none;
   border: none;
-  color: white;
-  font-size: 24px;
+  padding: 0;
   cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
 }
 
-.menu-overlay {
-  display: none;
+.site-header__nav-link,
+.site-header__nav-link--button {
+  color: var(--header-fg);
 }
 
-.header-dropdown-menu-mobile {
-  display: none;
+.site-header__nav-link:hover,
+.site-header__nav-link--button:hover,
+.site-header__nav-link--active {
+  opacity: 0.75;
 }
 
-@media screen and (max-width: 1300px) {
-  .header {
-    padding: 0 5%;
-  }
-
-  .header .header-signin {
-    display: none;
-    position: fixed;
-    top: 0;
-    right: -250px;
-    width: 250px;
-    height: 100%;
-    background-color: #1e2128;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 20px;
-    transition: right 0.3s ease;
-    z-index: 1000;
-  }
-
-  .header .header-menu {
-    display: none;
-    position: fixed;
-    top: 150px;
-    right: -250px;
-    width: 250px;
-    height: fit-content;
-    background-color: #1e2128;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 20px;
-    transition: right 0.3s ease;
-    z-index: 1000;
-  }
-
-  .header .header-buttons {
-    display: none;
-    position: fixed;
-    top: 0;
-    right: -250px;
-    width: 250px;
-    height: fit-content;
-    background-color: #1e2128;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 20px;
-    transition: right 0.3s ease;
-    z-index: 1000;
-  }
-
-  .header .header-menu.open,
-  .header .header-signin.open,
-  .header .header-buttons {
-    right: 0;
-    display: flex;
-    align-items: center;
-  }
-
-  .menu-toggle-button {
-    display: block;
-  }
-
-  .menu-overlay {
-    display: block;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-  }
-
-  .header-dropdown-menu-mobile {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 10px;
-  }
-
-  .header-dropdown-menu {
-    display: none !important;
-  }
-
-  .header-user-name:hover {
-    text-decoration-line: none !important;
-  }
-
-  .header-dropdown-menu-mobile .header-mypage-link,
-  .header-dropdown-menu-mobile .header-logout-button {
-    color: white;
-    margin-top: 10px;
-    background-color: transparent;
-    border: none;
-  }
-}
-
-.header-dropdown-menu {
-  position: absolute;
-  top: 75px;
-  right: 10px;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  z-index: 1000;
-}
-
-.header-user-section {
+.site-header__actions {
   display: flex;
   align-items: center;
-  cursor: pointer;
-  color: #dee1e6;
   gap: 20px;
+  flex-shrink: 0;
 }
 
-.header-dropdown-menu:after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border: 10px solid transparent;
-  border-bottom-color: white;
-  border-top: 0;
-  margin-left: -5px;
-  margin-top: -10px;
+.site-header__signup-link {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.47;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
-.header-logout-button {
-  background-color: transparent;
-  border: 0;
-  font-size: 16px;
+.site-header__signup-link {
+  color: var(--header-fg);
 }
 
-.header-logout-button:hover {
-  color: crimson;
-  text-decoration-line: underline;
+.site-header__login-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 104px;
+  height: 36px;
+  padding: 0 20px;
+  border-radius: 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.47;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
-.header-mypage-link:hover {
-  text-decoration-line: underline;
+.site-header--light .site-header__login-btn {
+  background: #1e3a6d;
+  color: #ffffff;
 }
 
-.header-link:hover {
-  color: #bd9a31;
+.site-header--dark .site-header__login-btn {
+  background: #222c3c;
+  color: #ffffff;
 }
 
-.header-user-name:hover {
-  text-decoration-line: underline;
+.site-header__mypage-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 104px;
+  height: 36px;
+  padding: 0 20px;
+  background: #e7ecf3;
+  color: #222222;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.47;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
-.header-buttons {
-  display: flex;
+.site-header__mypage-btn:hover {
+  background: #d8e0eb;
 }
 
-@media (max-width: 375px) {
-  .main-logo-link .link-text {
+/* ── Mobile bar (≤1280px, Pencil SpDvE) ── */
+
+@media screen and (max-width: 1280px) {
+  .site-header__desktop {
     display: none;
   }
+
+  .site-header__mobile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    padding: 0 16px;
+    max-width: 100%;
+  }
+
+  .site-header--light .site-header__mobile,
+  .site-header--solid .site-header__mobile {
+    background: #ffffff;
+    border-bottom: 1px solid #f1f1f5;
+  }
+
+  .site-header--dark .site-header__mobile {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(26.25px);
+    -webkit-backdrop-filter: blur(26.25px);
+  }
+
+  .site-header--subpage .site-header__mobile {
+    background: #ffffff;
+    border-bottom: 1px solid #f1f1f5;
+  }
+
+  .site-header__logo--mobile {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .site-header__logo-text--mobile {
+    font-size: 18px;
+    letter-spacing: 0.01em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .site-header__logo-mark--desktop {
+    display: none;
+  }
+
+  .site-header__logo-mark--mobile {
+    display: block;
+  }
+
+  /* 모바일은 배경이 밝음 → dark variant도 어두운 로고·텍스트 */
+  .site-header--dark {
+    --header-fg: #222222;
+    --header-logo-filter: none;
+  }
+
+  .site-header__menu-btn,
+  .site-header__mobile-close,
+  .site-header__mobile-back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+    color: var(--header-fg);
+  }
+
+  .site-header__mobile-action {
+    flex-shrink: 0;
+    min-width: 80px;
+    height: 36px;
+    padding: 0 16px;
+    border: none;
+    border-radius: 0;
+    background: #1e3a6d;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.43;
+    cursor: pointer;
+  }
+
+  .site-header__mobile-action:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .site-header__mobile-title {
+    flex: 1;
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.5;
+    text-align: center;
+    color: var(--header-fg);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .site-header__mobile-spacer {
+    width: 40px;
+    flex-shrink: 0;
+  }
+
+  .site-header--subpage {
+    --header-fg: #222222;
+    --header-logo-filter: none;
+  }
+}
+
+/* ── Mobile drawer (oqjCz) — body portal, 헤더 backdrop-filter 밖에서 렌더 ── */
+
+.site-header__drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 2000;
+}
+
+.site-header__drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(295px, 88vw);
+  height: 100%;
+  max-height: 100dvh;
+  background: #ffffff;
+  z-index: 2001;
+  padding: 0 0 32px;
+  overflow-y: auto;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.08);
+}
+
+.site-header__drawer-top {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 56px;
+  padding: 0 12px;
+  border-bottom: 1px solid #f1f1f5;
+}
+
+.site-header__drawer-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  color: #222222;
+  cursor: pointer;
+}
+
+.site-header__drawer-email {
+  margin: 16px 16px 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.43;
+  color: #222222;
+}
+
+.site-header__drawer-account-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 16px 16px 0;
+  height: 36px;
+  border: 1px solid #d4d4d8;
+  font-size: 14px;
+  font-weight: 400;
+  color: #222222;
+  text-decoration: none;
+}
+
+.site-header__drawer-nav {
+  display: flex;
+  flex-direction: column;
+  margin-top: 24px;
+}
+
+.site-header__drawer-nav--account {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #f1f1f5;
+}
+
+.site-header__drawer-link--button {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.site-header__drawer-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 46px;
+  padding: 0 16px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #222222;
+  text-decoration: none;
+}
+
+.site-header__drawer-link-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: #222222;
+  pointer-events: none;
+}
+
+.site-header__drawer-link-icon .site-header__drawer-svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+  overflow: visible;
+}
+
+.site-header__drawer-link-icon path {
+  stroke: #222222;
+  stroke-width: 1.5;
+  fill: none;
+}
+
+.site-header__drawer-link-label {
+  flex: 1;
+  min-width: 0;
+}
+
+.site-header__drawer-link:hover,
+.site-header__drawer-link.active {
+  background: rgba(34, 34, 34, 0.04);
+}
+
+.site-header__drawer-logout {
+  margin: 24px 16px 0;
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 14px;
+  color: #666666;
+  cursor: pointer;
+  text-align: left;
+}
+
+.site-header__drawer-auth {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 24px 16px 0;
+  padding-top: 24px;
+  border-top: 1px solid #f1f1f5;
+}
+
+.site-header__drawer-login,
+.site-header__drawer-signup {
+  height: 44px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+}
+
+.site-header__drawer-login {
+  background: #1e3a6d;
+  color: #ffffff;
+}
+
+.site-header__drawer-signup {
+  background: transparent;
+  color: #222222;
+  border: 1px solid #d4d4d8;
+}
+
+/* 레거시 클래스 호환 (기존 페이지 스타일 오버라이드 방지) */
+.header {
+  all: unset;
+  display: contents;
 }

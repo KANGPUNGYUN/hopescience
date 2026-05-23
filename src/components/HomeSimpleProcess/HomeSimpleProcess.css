@@ -1,0 +1,237 @@
+.home-process {
+  width: 100%;
+  background-color: #faf9f8;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.home-process__inner {
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: 152px clamp(24px, 16.67vw, 320px) 140px;
+  box-sizing: border-box;
+  container-type: inline-size;
+  container-name: home-process;
+}
+
+.home-process__label {
+  margin: 0 0 12px;
+  color: #2f5fb8;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+.home-process__title {
+  margin: 0;
+  color: #222222;
+  font-size: clamp(28px, 2.5vw, 40px);
+  font-weight: 600;
+  line-height: 1.35;
+  word-break: keep-all;
+}
+
+.home-process__desc {
+  margin: 24px 0 0;
+  max-width: 720px;
+  color: #505050;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.44;
+  word-break: keep-all;
+}
+
+/*
+  디자인(IjY49) 간격
+  - CYB56 x=320, dYI8s x=760, F0JFON x=1200 → 카드 400px, 단계 간 40px
+  - Z5SO3 x=712, B6GQV x=1152 → 화살표 56px, 40px 간격 중앙(양쪽 8px 겹침)
+  - 행 전체: 1280px
+*/
+.home-process__steps {
+  --process-step-gap: 80px;
+  --process-steps-max-width: 1280px;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--process-step-gap);
+  width: 100%;
+  max-width: var(--process-steps-max-width);
+  margin-top: 74px;
+}
+
+.home-process__group {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 400px;
+}
+
+.home-process__group--last {
+  flex: 1 1 0;
+}
+
+.home-process__step {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  align-items: start;
+  width: 100%;
+  min-width: 383px;
+  min-height: 120px;
+  overflow: visible;
+  border-bottom: 2px solid rgba(47, 95, 184, 0.5);
+  box-sizing: border-box;
+}
+
+.home-process__step-number {
+  grid-column: 1;
+  grid-row: 1;
+  margin: 2px 0 0;
+  color: #2f5fb8;
+  font-family: "Cormorant Garamond", "Times New Roman", serif;
+  font-size: clamp(72px, 10vw, 128px);
+  font-weight: 700;
+  line-height: 0.9;
+  opacity: 0.12;
+  pointer-events: none;
+  user-select: none;
+  overflow: hidden;
+  height: 118px;
+}
+
+.home-process__step-content {
+  grid-column: 2;
+  grid-row: 1;
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  padding: 24px 12px 16px 8px;
+}
+
+.home-process__step-title {
+  margin: 0;
+  color: #222222;
+  font-size: clamp(20px, 2vw, 28px);
+  font-weight: 600;
+  line-height: 1.43;
+  word-break: keep-all;
+}
+
+.home-process__step-desc {
+  margin: 8px 0 0;
+  color: #222222;
+  font-size: clamp(15px, 1.5vw, 18px);
+  font-weight: 400;
+  line-height: 1.44;
+  word-break: keep-all;
+}
+
+.home-process__arrow {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 40px);
+  z-index: 2;
+  width: 56px;
+  height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.home-process__arrow svg {
+  display: block;
+}
+
+@container home-process (max-width: 1220px) {
+  .home-process__steps {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
+    max-width: none;
+    margin-top: 56px;
+  }
+
+  .home-process__group,
+  .home-process__group--last {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    flex: none;
+    width: 100%;
+    max-width: none;
+  }
+
+  .home-process__arrow {
+    position: static;
+    left: auto;
+    transform: rotate(90deg);
+    align-self: center;
+    margin: 8px auto 0;
+    pointer-events: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .home-process__steps {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
+    max-width: none;
+    margin-top: 56px;
+  }
+
+  .home-process__group,
+  .home-process__group--last {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    flex: none;
+    width: 100%;
+    max-width: none;
+  }
+
+  .home-process__arrow {
+    position: static;
+    left: auto;
+    transform: rotate(90deg);
+    align-self: center;
+    margin: 8px auto 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-process__inner {
+    padding: 72px 16px 80px;
+  }
+
+  .home-process__steps {
+    margin-top: 40px;
+    gap: 20px;
+  }
+
+  .home-process__step {
+    grid-template-columns: 88px minmax(0, 1fr);
+    min-height: 120px;
+  }
+
+  .home-process__step-content {
+    padding: 20px 12px 20px 8px;
+  }
+
+  .home-process__step-number {
+    height: 96px;
+  }
+
+  .home-process__step-title {
+    font-size: 22px;
+  }
+
+  .home-process__step-desc {
+    font-size: 16px;
+  }
+}

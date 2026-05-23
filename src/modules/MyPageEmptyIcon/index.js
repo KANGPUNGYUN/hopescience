@@ -1,0 +1,1 @@
+export { MyPageEmptyIcon } from "./MyPageEmptyIcon";

@@ -1,64 +1,202 @@
-import React, { useState, useEffect } from "react";
-import { Header } from "../../components/Header";
-import "./style.css";
-import { Footer } from "../../components/Footer";
-import { Pagination } from "../../modules/Pagination";
+import React, { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Header, Footer } from "../../components";
+import { PaginationNav } from "../../components/PaginationNav";
 import { inquiry } from "../../store";
 import searchIcon from "../../icons/search.svg";
-
-const POSTS_PER_PAGE = 6;
+import { QnAHero } from "./QnAHero";
+import { QnAFilter } from "./QnAFilter";
+import { QnAListItem } from "./QnAListItem";
+import {
+  QNA_POSTS_PER_PAGE,
+  matchesQnaFilter,
+  reviewBoardRoutes,
+} from "./qnaBoardConfig";
+import { EducationReviewComingSoonModal } from "./EducationReviewComingSoonModal";
+import { useEducationReviewComingSoon } from "./useEducationReviewComingSoon";
+import "./style.css";
 
 export const QnA = () => {
+  const navigate = useNavigate();
+  const { isApiEnabled, isComingSoonOpen, openComingSoon, closeComingSoon } =
+    useEducationReviewComingSoon();
+  const [activeFilter, setActiveFilter] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchKeyword, setSearchKeyword] = useState("");
+
   const isLoading = inquiry((state) => state.isLoading);
   const getInquiries = inquiry((state) => state.getInquiries);
   const searchInquiries = inquiry((state) => state.searchInquiries);
   const inquiries = inquiry((state) => state.inquiries);
   const totalCount = inquiry((state) => state.totalCount);
-  const [searchKeyword, setSearchKeyword] = useState("");
 
-  useEffect(() => {
-    getInquiries(0, POSTS_PER_PAGE, "desc");
+  const myUserId = useMemo(() => {
+    const data = sessionStorage.getItem("auth-storage");
+    return data ? JSON.parse(data).state?.user?.userId : null;
   }, []);
 
-  useEffect(() => {
-    if (searchKeyword) {
-      searchInquiries(searchKeyword);
-    } else {
-      getInquiries(0, POSTS_PER_PAGE, "desc");
-    }
-  }, [searchKeyword]);
+  const isClientPaged =
+    Boolean(searchKeyword.trim()) || activeFilter !== "all";
 
-  const handlePageChange = (skip, limit) => {
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeFilter, searchKeyword]);
+
+  useEffect(() => {
+    if (!isApiEnabled) return;
+
+    if (searchKeyword.trim()) {
+      searchInquiries(searchKeyword.trim());
+      return;
+    }
+
+    const limit = isClientPaged ? 500 : QNA_POSTS_PER_PAGE;
+    const skip = isClientPaged ? 0 : (currentPage - 1) * QNA_POSTS_PER_PAGE;
     getInquiries(skip, limit, "desc");
+  }, [
+    isApiEnabled,
+    searchKeyword,
+    activeFilter,
+    currentPage,
+    isClientPaged,
+    getInquiries,
+    searchInquiries,
+  ]);
+
+  const filteredInquiries = useMemo(
+    () =>
+      (inquiries ?? []).filter((item) => matchesQnaFilter(item, activeFilter)),
+    [inquiries, activeFilter]
+  );
+
+  const pagedInquiries = useMemo(() => {
+    if (!isClientPaged) return filteredInquiries;
+    const start = (currentPage - 1) * QNA_POSTS_PER_PAGE;
+    return filteredInquiries.slice(start, start + QNA_POSTS_PER_PAGE);
+  }, [filteredInquiries, isClientPaged, currentPage]);
+
+  const totalPages = isClientPaged
+    ? Math.ceil(filteredInquiries.length / QNA_POSTS_PER_PAGE) || 1
+    : Math.ceil(totalCount / QNA_POSTS_PER_PAGE) || 1;
+
+  const displayTotal = !isApiEnabled
+    ? 0
+    : isClientPaged
+      ? filteredInquiries.length
+      : totalCount;
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const handlePageChange = (page) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
+    document
+      .querySelector(".qna-board-page__content")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const handleWriteClick = () => {
+    if (!isApiEnabled) {
+      openComingSoon();
+      return;
+    }
+    if (!myUserId) {
+      navigate("/signin");
+      return;
+    }
+    navigate(reviewBoardRoutes.new);
   };
 
   return (
     <>
-      <Header />
-      <main className="QnA-background">
-        <section className="QnA-section">
-          <div className="QnA-header">
-            <h3 className="QnA-title">문의게시판</h3>
-            <div className="QnA-search-input-wrap">
-              <img src={searchIcon} className="search-icon" alt="검색 이미지" />
-              <input
-                type="search"
-                className="QnA-search-input"
-                placeholder="Search..."
-                value={searchKeyword}
-                onChange={(e) => setSearchKeyword(e.target.value)}
-              />
+      <div className="qna-board-page-shell">
+        <Header variant="dark" />
+        <main className="qna-board-page">
+          <QnAHero />
+
+          <section className="qna-board-page__content" aria-label="고객 후기 목록">
+            <div className="qna-board-page__inner">
+              <div className="qna-board-toolbar">
+                <QnAFilter
+                  activeFilter={activeFilter}
+                  onFilterChange={setActiveFilter}
+                />
+                <div className="qna-board-toolbar__actions">
+                  <form
+                    className="qna-board-toolbar__search"
+                    role="search"
+                    onSubmit={(e) => e.preventDefault()}
+                  >
+                    <img src={searchIcon} alt="" className="qna-board-toolbar__search-icon" />
+                    <input
+                      type="search"
+                      className="qna-board-toolbar__search-input"
+                      placeholder="제목·후기 검색"
+                      value={searchKeyword}
+                      onChange={(e) => setSearchKeyword(e.target.value)}
+                      aria-label="고객 후기 검색"
+                      disabled={!isApiEnabled}
+                    />
+                  </form>
+                  <button
+                    type="button"
+                    className="qna-board-toolbar__write"
+                    onClick={handleWriteClick}
+                  >
+                    후기 작성
+                  </button>
+                </div>
+              </div>
+
+              <p className="qna-board-page__count">
+                총 {displayTotal.toLocaleString()}건
+              </p>
+
+              <div className="qna-board-list">
+                {!isApiEnabled ? (
+                  <p className="qna-board-page__empty" role="status">
+                    고객 후기 서비스를 준비하고 있습니다.
+                  </p>
+                ) : isLoading ? (
+                  <p className="qna-board-page__status" role="status">
+                    불러오는 중…
+                  </p>
+                ) : pagedInquiries.length > 0 ? (
+                  pagedInquiries.map((item) => (
+                    <QnAListItem key={item.id} inquiry={item} />
+                  ))
+                ) : (
+                  <p className="qna-board-page__empty" role="status">
+                    {searchKeyword.trim()
+                      ? "검색 결과가 없습니다."
+                      : "등록된 고객 후기가 없습니다."}
+                  </p>
+                )}
+              </div>
+
+              {isApiEnabled && !isLoading && pagedInquiries.length > 0 && (
+                <PaginationNav
+                  className="qna-board-page__pagination"
+                  ariaLabel="고객 후기 페이지"
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
+              )}
             </div>
-          </div>
-          <Pagination
-            inquiries={inquiries}
-            isLoading={isLoading}
-            totalCount={searchKeyword ? undefined : totalCount}
-            onPageChange={searchKeyword ? undefined : handlePageChange}
-          />
-        </section>
-      </main>
+          </section>
+        </main>
+      </div>
       <Footer />
+
+      <EducationReviewComingSoonModal
+        isOpen={isComingSoonOpen}
+        onClose={closeComingSoon}
+      />
     </>
   );
 };

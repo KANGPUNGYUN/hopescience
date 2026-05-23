@@ -1,0 +1,230 @@
+.home-cert-showcase {
+  position: relative;
+  width: 100%;
+  height: 920px;
+  overflow: hidden;
+  background-color: #e7ecf3;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.home-cert-showcase__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: rotate(180deg);
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.home-cert-showcase__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: 120px 0 0;
+  box-sizing: border-box;
+}
+
+.home-cert-showcase__header {
+  padding: 0 clamp(24px, 16.67vw, 320px);
+}
+
+.home-cert-showcase__label {
+  margin: 0 0 12px;
+  color: #2f5fb8;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+.home-cert-showcase__title {
+  margin: 0;
+  color: #222222;
+  font-size: clamp(28px, 2.5vw, 40px);
+  font-weight: 600;
+  line-height: 1.35;
+  word-break: keep-all;
+}
+
+.home-cert-showcase__desc {
+  margin: 24px 0 0;
+  max-width: 640px;
+  color: #505050;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.44;
+  word-break: keep-all;
+}
+
+.home-cert-showcase__marquee {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  min-height: 0;
+  margin-top: 64px;
+  overflow: hidden;
+}
+
+.home-cert-showcase__viewport {
+  overflow: hidden;
+  width: 100%;
+  flex-shrink: 0;
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 6%,
+    #000 94%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 6%,
+    #000 94%,
+    transparent 100%
+  );
+}
+
+.home-cert-showcase__viewport--top {
+  height: 402px;
+}
+
+.home-cert-showcase__viewport--bottom {
+  height: 66px;
+}
+
+.home-cert-showcase__viewport--bottom .home-cert-showcase__card-title {
+  display: none;
+}
+
+.home-cert-showcase__rail {
+  display: flex;
+  align-items: flex-start;
+  gap: 48px;
+  width: max-content;
+  will-change: transform;
+}
+
+.home-cert-showcase__rail--right {
+  animation: home-cert-scroll-right 55s linear infinite;
+}
+
+.home-cert-showcase__rail--left {
+  animation: home-cert-scroll-left 55s linear infinite;
+}
+
+@keyframes home-cert-scroll-right {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes home-cert-scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.home-cert-showcase__card {
+  flex-shrink: 0;
+  margin: 0;
+  width: 255px;
+}
+
+.home-cert-showcase__card-image {
+  display: block;
+  width: 255px;
+  height: 360px;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: 0;
+}
+
+.home-cert-showcase__card-title {
+  margin: 16px 0 0;
+  color: #222222;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.44;
+  text-align: center;
+  word-break: keep-all;
+}
+
+.home-cert-showcase__fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 105px;
+  background: linear-gradient(180deg, rgba(231, 236, 243, 0) 0%, #e7ecf3 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+@media (max-width: 768px) {
+  .home-cert-showcase {
+    height: auto;
+    min-height: 640px;
+  }
+
+  .home-cert-showcase__inner {
+    padding: 72px 0 0;
+  }
+
+  .home-cert-showcase__marquee {
+    margin-top: 40px;
+  }
+
+  .home-cert-showcase__viewport--top {
+    height: 340px;
+  }
+
+  .home-cert-showcase__viewport--bottom {
+    height: 52px;
+  }
+
+  .home-cert-showcase__rail {
+    gap: 24px;
+  }
+
+  .home-cert-showcase__card {
+    width: 200px;
+  }
+
+  .home-cert-showcase__card-image {
+    width: 200px;
+    height: 282px;
+  }
+
+  .home-cert-showcase__card-title {
+    font-size: 16px;
+  }
+
+  .home-cert-showcase__rail--right,
+  .home-cert-showcase__rail--left {
+    animation-duration: 40s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-cert-showcase__rail--right,
+  .home-cert-showcase__rail--left {
+    animation: none;
+  }
+}

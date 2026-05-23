@@ -1,0 +1,62 @@
+.mypage-background {
+  width: 100%;
+  min-height: calc(100vh - 160px);
+  padding: 80px 0 110px;
+  background: #fff;
+}
+
+.mypage-section-wrap {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.mypage-section {
+  flex: 1;
+  min-width: 0;
+  margin-left: 60px;
+  padding-top: 32px;
+  font-family: Pretendard, "Noto Sans KR", sans-serif;
+  color: #222;
+}
+
+/* 헤더 모바일 메뉴(햄버거) 구간과 동일 — Header.css 1280px */
+@media screen and (max-width: 1280px) {
+  .mypage-section-wrap {
+    flex-direction: column;
+    padding: 0 16px;
+  }
+
+  .mypage-section {
+    margin-left: 0;
+    padding-top: 24px;
+    max-width: none;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .mypage-background {
+    padding-top: 64px;
+    padding-bottom: 80px;
+  }
+
+  .mypage-section-wrap {
+    padding: 0 16px;
+  }
+
+  .mypage-section {
+    padding-top: 16px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .mypage-background {
+    padding-top: 56px;
+    padding-bottom: 64px;
+  }
+}

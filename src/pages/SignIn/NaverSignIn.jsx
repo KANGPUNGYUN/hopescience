@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Header } from "../../components/Header";
-import { Footer } from "../../components/Footer";
+import { Header } from "../../components";
+import { PageLoading } from "../../components/PageLoading";
 import { auth } from "../../store";
 
 export const NaverSignIn = () => {
@@ -38,15 +38,13 @@ export const NaverSignIn = () => {
   }, [handleNaverLogin]);
 
   return (
-    <>
-      <Header />
-      <main className="signin-background color-white">
-        <div className="naver-signin-wrap">
-          <div className="naver-loader"/>
-          <p>네이버 로그인 처리 중입니다...</p>
-        </div>
-      </main>
-      <Footer />
-    </>
+    <div className="page-loading-shell">
+      <Header variant="light" />
+      <PageLoading
+        message="네이버 로그인 처리 중입니다..."
+        showProgressBar={false}
+        layout="below-header"
+      />
+    </div>
   );
 };

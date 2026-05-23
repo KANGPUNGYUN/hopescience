@@ -1,25 +1,43 @@
-import { useSearchParams } from "react-router-dom";
-import { Footer } from "../../../../../components/Footer";
-import { Header } from "../../../../../components/Header";
+import { Link, useParams, useSearchParams } from "react-router-dom";
+import {
+  PaymentResultLayout,
+  PaymentResultDetails,
+  PaymentFailIcon,
+} from "../paymentResult";
 
 export function FailPage() {
   const [searchParams] = useSearchParams();
+  const { course_id, user_id } = useParams();
+
+  const detailItems = [
+    { label: "에러 코드", value: searchParams.get("code") },
+    { label: "실패 사유", value: searchParams.get("message") },
+  ];
 
   return (
-    <>
-      <Header />
-      <main className="cart-background">
-        <div className="cart-info-wrap">
-          <div className="result wrapper">
-            <div className="box_section">
-              <h2>결제 실패</h2>
-              <p>{`에러 코드: ${searchParams.get("code")}`}</p>
-              <p>{`실패 사유: ${searchParams.get("message")}`}</p>
-            </div>
-          </div>
-        </div>
-      </main>
-      <Footer />
-    </>
+    <PaymentResultLayout
+      variant="fail"
+      icon={<PaymentFailIcon />}
+      title="결제에 실패했습니다"
+      subtitle="결제가 완료되지 않았습니다. 아래 안내를 확인한 뒤 다시 시도해 주세요."
+      actions={
+        <>
+          <Link
+            to={`/cart/${user_id}/${course_id}`}
+            className="payment-result-card__btn payment-result-card__btn--primary"
+          >
+            다시 결제하기
+          </Link>
+          <Link
+            to={course_id ? `/courses/${course_id}` : "/courses"}
+            className="payment-result-card__btn payment-result-card__btn--secondary"
+          >
+            강의 상세로 돌아가기
+          </Link>
+        </>
+      }
+    >
+      <PaymentResultDetails items={detailItems} />
+    </PaymentResultLayout>
   );
 }

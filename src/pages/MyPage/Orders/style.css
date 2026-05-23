@@ -1,7 +1,14 @@
+@import "../Courses/style.css";
+
+.mypage-section--orders {
+  max-width: 1024px;
+}
+
+.mypage-section__header--orders {
+  padding-bottom: 24px;
+  margin-bottom: 0;
+}
+
 .orders-title {
-  margin-top: 24px;
-  padding-bottom: 50px;
-  border-bottom: 1px solid #f3f4f6;
-  font-weight: bold;
-  font-size: 32px;
+  display: none;
 }
