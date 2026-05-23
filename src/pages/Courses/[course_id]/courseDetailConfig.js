@@ -4,8 +4,27 @@ export const COURSE_DETAIL_TABS = [
   { id: "qna", label: "QnA" },
 ];
 
-export const COURSE_CERTIFICATE_NOTE =
-  "제공 (* 이벤트 : 테스트 없이 바로 출력 가능)";
+export const COURSE_CERTIFICATE_NOTE = "전체 강의 수강 완료 후 제공";
+
+const OPEN_EVENT_REMOVAL_PATTERNS = [
+  /오픈\s*기념\s*이벤트!?\s*/gi,
+  /오픈\s*기념으로\s*(?:한\s*달|한달)\s*동안은?\s*테스트\s*없이\s*수료증을?\s*바로\s*출력\s*가능하십니다\.?\s*/gi,
+  /\*?\s*이벤트\s*:\s*테스트\s*없이\s*바로\s*출력\s*가능\s*\*?/gi,
+  /제공\s*\(\s*\*\s*이벤트\s*:[^)]*\)\s*/gi,
+];
+
+export function sanitizeCourseDescription(description) {
+  if (typeof description !== "string" || !description.trim()) {
+    return description;
+  }
+
+  let text = description;
+  for (const pattern of OPEN_EVENT_REMOVAL_PATTERNS) {
+    text = text.replace(pattern, "");
+  }
+
+  return text.replace(/\n{3,}/g, "\n\n").trim();
+}
 
 export const COURSE_ENROLLMENT_PERIOD = "무제한";
 
@@ -59,4 +78,12 @@ export function getCommentCount(inquiry) {
   if (Array.isArray(inquiry?.comments)) return inquiry.comments.length;
   if (typeof inquiry?.comment_count === "number") return inquiry.comment_count;
   return 0;
+}
+
+export function isEnrollmentLectureCompleted(enrollmentProgress, lectureId) {
+  if (lectureId == null || !enrollmentProgress?.length) return false;
+  const id = Number(lectureId);
+  return enrollmentProgress.some(
+    (item) => Number(item.lecture_id) === id && Boolean(item.is_completed)
+  );
 }

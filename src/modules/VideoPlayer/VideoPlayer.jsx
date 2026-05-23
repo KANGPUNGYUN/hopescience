@@ -16,6 +16,7 @@ export const VideoPlayer = ({
   lectureId,
   course_id,
   onVideoComplete,
+  onProgressUpdated,
   useCustomChrome = false,
   onPlayerReady,
   onPlaybackTimeUpdate,
@@ -255,6 +256,7 @@ export const VideoPlayer = ({
         }
       }
       console.log("진도 저장 완료");
+      await onProgressUpdated?.();
     } catch (error) {
       console.error("진도 저장 중 오류 발생:", error);
     }
@@ -273,6 +275,7 @@ export const VideoPlayer = ({
     checkCertificate,
     updateEnrollmentTotalProcess,
     getEnrollment,
+    onProgressUpdated,
   ]);
 
   const updateWatchedIntervals = useCallback((newTime) => {

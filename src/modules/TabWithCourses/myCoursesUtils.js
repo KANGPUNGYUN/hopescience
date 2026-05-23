@@ -8,18 +8,47 @@ export const formatDotDate = (value) => {
   return `${y}.${m}.${d}`;
 };
 
+const resolveTotalLectureCount = (course, completedLectures, isCompleted) => {
+  const fromApi = Number(course.total_lecture_count);
+  if (fromApi > 0) return fromApi;
+
+  if (isCompleted && completedLectures > 0) {
+    return completedLectures;
+  }
+
+  const progress = Number(course.progress) || 0;
+  if (progress > 0 && completedLectures > 0) {
+    return Math.max(
+      completedLectures,
+      Math.round(completedLectures / (progress / 100))
+    );
+  }
+
+  if (completedLectures > 0) {
+    return completedLectures;
+  }
+
+  return 1;
+};
+
 export const mapEnrollmentToCourse = (course) => {
-  const totalLectures =
-    Number(course.total_lecture_count) > 0
-      ? Number(course.total_lecture_count)
-      : 4;
+  const isCompleted = Boolean(course.is_completed);
   const completedLectures = Number.isFinite(
     Number(course.completed_lecture_count)
   )
     ? Number(course.completed_lecture_count)
-    : Math.round((Number(course.progress) || 0) / 100 * totalLectures);
+    : 0;
 
-  const isCompleted = Boolean(course.is_completed);
+  const totalLectures = resolveTotalLectureCount(
+    course,
+    completedLectures,
+    isCompleted
+  );
+
+  const resolvedCompleted =
+    completedLectures > 0
+      ? completedLectures
+      : Math.round((Number(course.progress) || 0) / 100 * totalLectures);
 
   return {
     id: course.id,
@@ -35,7 +64,7 @@ export const mapEnrollmentToCourse = (course) => {
       ? formatDotDate(course.completed_at)
       : formatDotDate(course.last_accessed_at || course.updated_at),
     endDateTitle: isCompleted ? "이수 완료일" : "최근 학습일",
-    completedLectures: Math.min(completedLectures, totalLectures),
+    completedLectures: Math.min(resolvedCompleted, totalLectures),
     totalLectures,
     validityLabel: course.valid_until
       ? `유효기간 : ${formatDotDate(course.valid_until)}`

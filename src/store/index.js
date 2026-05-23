@@ -1916,7 +1916,27 @@ const useEnrollmentStore = create((set) => ({
     try {
       const response = await postApi({ path: `/enrollments/${enrollmentId}/progress`, data: progressData });
       if (response) {
-        set({ isLoading: false });
+        const lectureId = Number(progressData.lecture_id);
+        set((state) => {
+          const list = Array.isArray(state.enrollmentProgress)
+            ? state.enrollmentProgress
+            : [];
+          const merged = {
+            ...progressData,
+            ...response,
+            lecture_id: lectureId,
+            is_completed: Boolean(
+              progressData.is_completed ?? response.is_completed
+            ),
+          };
+          return {
+            isLoading: false,
+            enrollmentProgress: [
+              ...list.filter((p) => Number(p.lecture_id) !== lectureId),
+              merged,
+            ],
+          };
+        });
         console.log("수강 진행 상황이 성공적으로 생성되었습니다.");
         return response;
       } else {
@@ -2005,7 +2025,7 @@ const useEnrollmentStore = create((set) => ({
   },
 
   clearEnrollment: () => {
-    set({ enrollment: null });
+    set({ enrollment: null, enrollmentProgress: [] });
   },
 
   clearEnrollments: () => {

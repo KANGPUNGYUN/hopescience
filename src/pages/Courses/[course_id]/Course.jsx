@@ -1,6 +1,6 @@
 import "./style.css";
 import { useState, useEffect, useMemo, useRef, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { Header, Footer } from "../../../components";
 import { VideoModal } from "../../../modules/VideoModal";
 import { service, courseInquiry, enrollment } from "../../../store";
@@ -11,9 +11,15 @@ import { CourseDetailDescription } from "./CourseDetailDescription";
 import { CourseCurriculum } from "./CourseCurriculum";
 import { CourseQnaList } from "./CourseQnaList";
 import { CourseMobileBar } from "./CourseMobileBar";
+import {
+  getCompletedLectureCount,
+  getCourseTotalLectureCount,
+} from "./[lecture_id]/lecturePageConfig";
+import { sanitizeCourseDescription } from "./courseDetailConfig";
 
 export const Course = () => {
   const { course_id } = useParams();
+  const location = useLocation();
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isCourseCompleted, setIsCourseCompleted] = useState(false);
@@ -59,6 +65,11 @@ export const Course = () => {
     return data ? JSON.parse(data).state?.user?.userId : null;
   }, []);
 
+  const courseDescription = useMemo(
+    () => sanitizeCourseDescription(course?.description),
+    [course?.description]
+  );
+
   const sectionRefs = useMemo(
     () => ({
       description: descriptionRef,
@@ -84,20 +95,52 @@ export const Course = () => {
     getCourseInquiries(course_id);
   }, [course_id, myUserId, clearEnrollment, clearCourse, getIsEnrolled, getService, getCourseInquiries]);
 
-  useEffect(() => {
-    if (enrollmentData) {
-      getEnrollmentProgress(enrollmentData?.id);
-    }
-  }, [enrollmentData, getEnrollmentProgress]);
+  const refreshEnrollmentState = useCallback(async () => {
+    if (!enrollmentData?.id || !myUserId || !course_id) return;
+
+    await Promise.all([
+      getEnrollmentProgress(enrollmentData.id),
+      getIsEnrolled(myUserId, course_id),
+    ]);
+  }, [
+    enrollmentData?.id,
+    myUserId,
+    course_id,
+    getEnrollmentProgress,
+    getIsEnrolled,
+  ]);
 
   useEffect(() => {
-    if (enrollmentProgress && course) {
-      const completedLectures = enrollmentProgress.filter(
-        (progress) => progress.is_completed
-      ).length;
-      setIsCourseCompleted(completedLectures === course.total_lecture_count);
+    if (enrollmentData?.id) {
+      refreshEnrollmentState();
     }
-  }, [enrollmentProgress, course]);
+  }, [enrollmentData?.id, location.key, refreshEnrollmentState]);
+
+  useEffect(() => {
+    const handleVisible = () => {
+      if (document.visibilityState === "visible") {
+        refreshEnrollmentState();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisible);
+    return () => document.removeEventListener("visibilitychange", handleVisible);
+  }, [refreshEnrollmentState]);
+
+  useEffect(() => {
+    if (!course || !enrollmentData) return;
+
+    const total = getCourseTotalLectureCount(course, enrollmentData);
+    const completed = getCompletedLectureCount(
+      enrollmentProgress,
+      enrollmentData
+    );
+
+    setIsCourseCompleted(
+      Boolean(enrollmentData.is_completed) ||
+        (total > 0 && completed >= total)
+    );
+  }, [enrollmentProgress, course, enrollmentData]);
 
   const showMobileBar = !isLoading && course && !enrollmentData;
 
@@ -144,7 +187,7 @@ export const Course = () => {
 
                   <div className="course-detail-content">
                     <CourseDetailDescription
-                      description={course?.description}
+                      description={courseDescription}
                       sectionRef={descriptionRef}
                     />
                     <CourseCurriculum

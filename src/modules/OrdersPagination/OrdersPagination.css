@@ -35,10 +35,13 @@
 }
 
 .order-pagination-search-icon {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   position: absolute;
-  margin: 10px;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  pointer-events: none;
 }
 
 select::-ms-expand {
@@ -265,6 +268,7 @@ select::-ms-expand {
   }
   
   .order-pagination-search-icon {
-    margin: 10px;
+    width: 18px;
+    height: 18px;
   }
 }

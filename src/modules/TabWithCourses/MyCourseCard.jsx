@@ -6,8 +6,9 @@ export const MyCourseCard = ({ course }) => {
   const continueHref = `/courses/${course.courseId}`;
 
   const isCompleted = course.status === "completed";
-  const progressWidth =
-    course.totalLectures > 0
+  const progressWidth = isCompleted
+    ? 100
+    : course.totalLectures > 0
       ? Math.round((course.completedLectures / course.totalLectures) * 100)
       : Math.min(100, Math.max(0, course.progress));
   const lectureLabel = `${course.completedLectures}/${course.totalLectures}강`;

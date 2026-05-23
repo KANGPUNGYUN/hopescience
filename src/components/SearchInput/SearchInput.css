@@ -21,7 +21,11 @@
   
   .search-icon {
     position: absolute;
-    top: 10px;
+    top: 50%;
     left: 10px;
+    width: 18px;
+    height: 18px;
+    transform: translateY(-50%);
+    pointer-events: none;
   }
   

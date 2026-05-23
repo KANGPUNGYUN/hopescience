@@ -22,6 +22,6 @@ export const HOME_SIMPLE_PROCESS_STEPS = [
     id: "certificate",
     number: "03",
     title: "수료증 발급",
-    description: "수료 후 즉시출력 가능",
+    description: "전체 강의 수강 완료 후 제공",
   },
 ];

@@ -1,5 +1,5 @@
 export const MAIN_BANNER_FEATURES = [
-  "24시간 발급 가능",
+  "수강 완료 후 발급",
   "실제 제출 사례 기반",
   "변호사 협력 교육 과정",
 ];

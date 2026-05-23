@@ -10,6 +10,7 @@ import {
 import {
   findSectionIdForLecture,
   getCompletedLectureCount,
+  getCourseTotalLectureCount,
   getEnrollmentPeriodLabel,
   getLectureProgressPercent,
   getSectionSummary,
@@ -32,12 +33,16 @@ export const LectureCurriculumPanel = ({
     setOpenSectionId(findSectionIdForLecture(sections, lecture_id));
   }, [sections, lecture_id]);
 
+  const totalCount = getCourseTotalLectureCount(course, enrollmentData);
+  const completedCount = getCompletedLectureCount(
+    enrollmentProgress,
+    enrollmentData
+  );
   const progressPercent = getLectureProgressPercent(
     enrollmentProgress,
-    course?.total_lecture_count
+    totalCount,
+    enrollmentData
   );
-  const completedCount = getCompletedLectureCount(enrollmentProgress);
-  const totalCount = course?.total_lecture_count ?? 0;
 
   const isLectureCompleted = (id) =>
     enrollmentProgress?.some(

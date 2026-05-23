@@ -17,6 +17,21 @@ export const LecturePlayIcon = ({ size = 24, className = "" }) => (
   </svg>
 );
 
+export const LecturePauseIcon = ({ size = 24, className = "" }) => (
+  <svg
+    className={className}
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <rect x="7.5" y="5" width="3.5" height="14" rx="0.75" fill="white" />
+    <rect x="13" y="5" width="3.5" height="14" rx="0.75" fill="white" />
+  </svg>
+);
+
 export const LecturePrevNavIcon = ({ size = 20, className = "" }) => (
   <svg
     className={className}
@@ -89,6 +104,33 @@ export const LectureNextIcon = ({ size = 16, className = "" }) => (
   </svg>
 );
 
+export const LectureVolumeMuteIcon = ({ size = 20, className = "" }) => (
+  <svg
+    className={className}
+    width={size}
+    height={size}
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <path
+      d="M5.625 6.87491L9.55834 2.94157C9.64574 2.85428 9.75706 2.79484 9.87822 2.77077C9.99939 2.7467 10.125 2.75907 10.2391 2.80633C10.3532 2.85359 10.4508 2.93362 10.5195 3.0363C10.5882 3.13898 10.6249 3.25971 10.625 3.38324V16.6166C10.6249 16.7401 10.5882 16.8608 10.5195 16.9635C10.4508 17.0662 10.3532 17.1462 10.2391 17.1935C10.125 17.2407 9.99939 17.2531 9.87822 17.229C9.75706 17.205 9.64574 17.1455 9.55834 17.0582L5.625 13.1249H3.75834C3.025 13.1249 2.33834 12.7024 2.14334 11.9966C1.96459 11.3461 1.87434 10.6745 1.875 9.99991C1.875 9.30824 1.96834 8.63907 2.14334 8.00324C2.33834 7.29657 3.025 6.87491 3.75834 6.87491H5.625Z"
+      fill="white"
+      stroke="white"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M14.166 6.66699L17.4993 10.0003M17.4993 6.66699L14.166 10.0003"
+      stroke="white"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 export const LectureVolumeIcon = ({ size = 20, className = "" }) => (
   <svg
     className={className}
@@ -128,6 +170,26 @@ export const LectureExpandIcon = ({ size = 20, className = "" }) => (
   >
     <path
       d="M8.92792 8.9289L4.16602 4.16699M4.16602 7.97652V4.16699H7.97554M11.7851 11.786L16.547 16.5479M16.547 12.7384V16.5479H12.7374"
+      stroke="white"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const LectureCompressIcon = ({ size = 20, className = "" }) => (
+  <svg
+    className={className}
+    width={size}
+    height={size}
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <path
+      d="M8.21484 8.21401L3.453 3.45215M3.453 7.26168V3.45215H7.26255M11.0721 11.0711L15.834 15.833M15.834 12.0235V15.834H12.0245"
       stroke="white"
       strokeWidth="1.5"
       strokeLinecap="round"

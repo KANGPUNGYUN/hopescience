@@ -90,6 +90,27 @@ export const CoursePlaySmallIcon = ({ className = "" }) => (
   </svg>
 );
 
+export const CourseCompletedIcon = ({ className = "", size = 16 }) => (
+  <svg
+    className={className}
+    width={size}
+    height={size}
+    viewBox="0 0 16 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <rect width="16" height="16" rx="8" fill="#3E8B63" />
+    <path
+      d="M4 7.69961L7.38462 11.1996L12.8 5.59961"
+      stroke="white"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 export const CoursePlayCircleIcon = ({ className = "" }) => (
   <svg
     className={className}

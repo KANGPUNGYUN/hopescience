@@ -58,12 +58,14 @@ export const Lecture = () => {
 
   const {
     getIsEnrolled,
+    getEnrollment,
     enrollment: enrollmentData,
     getEnrollmentProgress,
     enrollmentProgress,
     isEnrollmentLoading,
   } = enrollment((state) => ({
     getIsEnrolled: state.getIsEnrolled,
+    getEnrollment: state.getEnrollment,
     enrollment: state.enrollment,
     getEnrollmentProgress: state.getEnrollmentProgress,
     enrollmentProgress: state.enrollmentProgress,
@@ -74,6 +76,23 @@ export const Lecture = () => {
     const data = sessionStorage.getItem("auth-storage");
     return data ? JSON.parse(data).state?.user?.userId : null;
   }, []);
+
+  const refreshEnrollmentState = useCallback(async () => {
+    if (!enrollmentData?.id || !myUserId || !course_id) return;
+
+    await Promise.all([
+      getEnrollmentProgress(enrollmentData.id),
+      getEnrollment(enrollmentData.id),
+      getIsEnrolled(myUserId, course_id),
+    ]);
+  }, [
+    enrollmentData?.id,
+    myUserId,
+    course_id,
+    getEnrollmentProgress,
+    getEnrollment,
+    getIsEnrolled,
+  ]);
 
   useEffect(() => {
     if (!course_id) {
@@ -175,6 +194,7 @@ export const Lecture = () => {
               lectureId={lecture_id}
               courseId={course_id}
               onVideoComplete={handleVideoComplete}
+              onProgressUpdated={refreshEnrollmentState}
               nextLecture={nextLecture}
               isLoading={isLoading && !lecture}
             />

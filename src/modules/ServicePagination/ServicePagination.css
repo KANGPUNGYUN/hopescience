@@ -105,6 +105,16 @@
   position: relative;
 }
 
+.service-pagination-search-input-wrap .search-icon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  width: 18px;
+  height: 18px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
 .service-pagination-search-input {
   width: 366px;
   height: 35px;

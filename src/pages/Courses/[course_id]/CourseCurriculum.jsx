@@ -3,9 +3,11 @@ import { Link, useParams } from "react-router-dom";
 import {
   CourseChevronDownIcon,
   CourseChevronUpIcon,
+  CourseCompletedIcon,
   CourseLockIcon,
   CoursePlayCircleIcon,
 } from "../icons/CourseDetailIcons";
+import { isEnrollmentLectureCompleted } from "./courseDetailConfig";
 
 export const CourseCurriculum = ({
   sections = [],
@@ -21,11 +23,6 @@ export const CourseCurriculum = ({
   const toggleSection = (sectionId) => {
     setOpenSectionId((prev) => (prev === sectionId ? null : sectionId));
   };
-
-  const isLectureCompleted = (lectureId) =>
-    enrollmentProgress?.some(
-      (item) => item.lecture_id === lectureId && item.is_completed
-    );
 
   return (
     <section
@@ -61,7 +58,10 @@ export const CourseCurriculum = ({
                 <ul className="course-curriculum__lessons">
                   {section.lectures?.map((lecture) => {
                     const locked = !enrollmentData;
-                    const completed = isLectureCompleted(lecture.id);
+                    const completed = isEnrollmentLectureCompleted(
+                      enrollmentProgress,
+                      lecture.id
+                    );
 
                     if (locked) {
                       return (
@@ -94,7 +94,11 @@ export const CourseCurriculum = ({
                           }`}
                         >
                           <span className="course-curriculum__lesson-title">
-                            <CoursePlayCircleIcon />
+                            {completed ? (
+                              <CourseCompletedIcon />
+                            ) : (
+                              <CoursePlayCircleIcon />
+                            )}
                             {lecture.title}
                             {lecture.video_duration
                               ? ` (${lecture.video_duration})`

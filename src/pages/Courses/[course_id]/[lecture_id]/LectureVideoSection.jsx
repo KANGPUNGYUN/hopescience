@@ -1,13 +1,16 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { VideoPlayer } from "../../../../modules/VideoPlayer";
 import {
+  LectureCompressIcon,
   LectureExpandIcon,
   LectureNextIcon,
+  LecturePauseIcon,
   LecturePlayIcon,
   LecturePrevIcon,
   LectureSettingsIcon,
   LectureVolumeIcon,
+  LectureVolumeMuteIcon,
 } from "./LectureIcons";
 import { formatPlaybackTime } from "./lecturePageConfig";
 
@@ -17,20 +20,42 @@ export const LectureVideoSection = ({
   lectureId,
   courseId,
   onVideoComplete,
+  onProgressUpdated,
   nextLecture,
   isLoading,
 }) => {
   const shellRef = useRef(null);
   const playerRef = useRef(null);
+  const lastVolumeRef = useRef(80);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [paused, setPaused] = useState(true);
   const [videoReady, setVideoReady] = useState(false);
+  const [volume, setVolume] = useState(80);
+  const [muted, setMuted] = useState(false);
+  const [volumeOpen, setVolumeOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
-  const handleReady = useCallback((player) => {
+  const handleReady = useCallback(async (player) => {
     playerRef.current = player;
     setVideoReady(true);
-    player.getPaused().then(setPaused).catch(() => {});
+
+    try {
+      const [isPaused, vol, isMuted] = await Promise.all([
+        player.getPaused(),
+        player.getVolume(),
+        player.getMuted(),
+      ]);
+      setPaused(isPaused);
+      const volPercent = Math.round((vol ?? 1) * 100);
+      setVolume(volPercent);
+      setMuted(Boolean(isMuted));
+      if (!isMuted && volPercent > 0) {
+        lastVolumeRef.current = volPercent;
+      }
+    } catch {
+      setPaused(true);
+    }
   }, []);
 
   const handleTimeUpdate = useCallback((seconds, totalDuration) => {
@@ -51,26 +76,114 @@ export const LectureVideoSection = ({
     }
   }, []);
 
-  const handleSeek = useCallback((e) => {
-    const player = playerRef.current;
-    if (!player || !duration) return;
-    const ratio = Number(e.target.value) / 100;
-    const nextTime = ratio * duration;
-    player.setCurrentTime(nextTime);
-    setCurrentTime(nextTime);
-  }, [duration]);
+  const handleSeek = useCallback(
+    (e) => {
+      const player = playerRef.current;
+      if (!player || !duration) return;
+      const ratio = Number(e.target.value) / 100;
+      const nextTime = ratio * duration;
+      player.setCurrentTime(nextTime);
+      setCurrentTime(nextTime);
+    },
+    [duration]
+  );
 
-  const handleFullscreen = useCallback(() => {
-    const el = shellRef.current;
-    if (!el) return;
-    if (document.fullscreenElement) {
-      document.exitFullscreen?.();
-      return;
+  const toggleMute = useCallback(async () => {
+    const player = playerRef.current;
+    if (!player) return;
+
+    try {
+      if (muted) {
+        const restore = lastVolumeRef.current > 0 ? lastVolumeRef.current : 80;
+        await player.setMuted(false);
+        await player.setVolume(restore / 100);
+        setMuted(false);
+        setVolume(restore);
+      } else {
+        if (volume > 0) {
+          lastVolumeRef.current = volume;
+        }
+        await player.setMuted(true);
+        setMuted(true);
+      }
+    } catch {
+      /* ignore */
     }
-    el.requestFullscreen?.();
+  }, [muted, volume]);
+
+  const handleVolumeChange = useCallback(async (e) => {
+    const player = playerRef.current;
+    if (!player) return;
+
+    const next = Number(e.target.value);
+    setVolume(next);
+
+    try {
+      if (next <= 0) {
+        await player.setMuted(true);
+        setMuted(true);
+        return;
+      }
+
+      lastVolumeRef.current = next;
+      setMuted(false);
+      await player.setMuted(false);
+      await player.setVolume(next / 100);
+    } catch {
+      /* ignore */
+    }
   }, []);
 
+  const syncFullscreen = useCallback(() => {
+    const shell = shellRef.current;
+    const fsEl =
+      document.fullscreenElement ?? document.webkitFullscreenElement ?? null;
+    setIsFullscreen(Boolean(shell && fsEl && (fsEl === shell || shell.contains(fsEl))));
+  }, []);
+
+  const handleFullscreen = useCallback(async () => {
+    const el = shellRef.current;
+    if (!el) return;
+
+    const fsEl =
+      document.fullscreenElement ?? document.webkitFullscreenElement ?? null;
+    const exiting = Boolean(fsEl);
+
+    try {
+      if (exiting) {
+        if (document.exitFullscreen) {
+          await document.exitFullscreen();
+        } else {
+          document.webkitExitFullscreen?.();
+        }
+        setIsFullscreen(false);
+      } else if (el.requestFullscreen) {
+        await el.requestFullscreen();
+        setIsFullscreen(true);
+      } else if (el.webkitRequestFullscreen) {
+        el.webkitRequestFullscreen();
+        setIsFullscreen(true);
+      } else {
+        setIsFullscreen(true);
+      }
+    } catch {
+      setIsFullscreen(!exiting);
+    }
+  }, []);
+
+  useEffect(() => {
+    syncFullscreen();
+    document.addEventListener("fullscreenchange", syncFullscreen);
+    document.addEventListener("webkitfullscreenchange", syncFullscreen);
+    return () => {
+      document.removeEventListener("fullscreenchange", syncFullscreen);
+      document.removeEventListener("webkitfullscreenchange", syncFullscreen);
+    };
+  }, [syncFullscreen]);
+
   const progressValue = duration ? (currentTime / duration) * 100 : 0;
+  const volumeSliderValue = muted ? 0 : volume;
+  const showMutedIcon = muted || volumeSliderValue === 0;
 
   const prevLink = nextLecture?.previous
     ? `/courses/${courseId}/${nextLecture.previous.lecture_id}`
@@ -94,6 +207,7 @@ export const LectureVideoSection = ({
               lectureId={lectureId}
               course_id={courseId}
               onVideoComplete={onVideoComplete}
+              onProgressUpdated={onProgressUpdated}
               useCustomChrome
               onPlayerReady={handleReady}
               onPlaybackTimeUpdate={handleTimeUpdate}
@@ -137,7 +251,11 @@ export const LectureVideoSection = ({
                 onClick={togglePlay}
                 aria-label={paused ? "재생" : "일시정지"}
               >
-                <LecturePlayIcon size={18} />
+                {paused ? (
+                  <LecturePlayIcon size={18} />
+                ) : (
+                  <LecturePauseIcon size={18} />
+                )}
               </button>
               <span className="lecture-video__time">
                 {formatPlaybackTime(currentTime)} / {formatPlaybackTime(duration)}
@@ -166,13 +284,37 @@ export const LectureVideoSection = ({
               )}
             </div>
             <div className="lecture-video__controls-right">
-              <button
-                type="button"
-                className="lecture-video__icon-btn"
-                aria-label="음량"
+              <div
+                className="lecture-video__volume"
+                onMouseEnter={() => setVolumeOpen(true)}
+                onMouseLeave={() => setVolumeOpen(false)}
               >
-                <LectureVolumeIcon />
-              </button>
+                <button
+                  type="button"
+                  className="lecture-video__icon-btn"
+                  onClick={toggleMute}
+                  aria-label={showMutedIcon ? "음소거 해제" : "음소거"}
+                >
+                  {showMutedIcon ? <LectureVolumeMuteIcon /> : <LectureVolumeIcon />}
+                </button>
+                <div
+                  className={`lecture-video__volume-popup${
+                    volumeOpen ? " lecture-video__volume-popup--open" : ""
+                  }`}
+                >
+                  <input
+                    type="range"
+                    className="lecture-video__volume-slider"
+                    min={0}
+                    max={100}
+                    step={1}
+                    value={volumeSliderValue}
+                    onChange={handleVolumeChange}
+                    aria-label="음량"
+                    style={{ "--volume-percent": `${volumeSliderValue}%` }}
+                  />
+                </div>
+              </div>
               <button
                 type="button"
                 className="lecture-video__icon-btn"
@@ -184,9 +326,9 @@ export const LectureVideoSection = ({
                 type="button"
                 className="lecture-video__icon-btn"
                 onClick={handleFullscreen}
-                aria-label="전체 화면"
+                aria-label={isFullscreen ? "전체 화면 종료" : "전체 화면"}
               >
-                <LectureExpandIcon />
+                {isFullscreen ? <LectureCompressIcon /> : <LectureExpandIcon />}
               </button>
             </div>
           </div>
