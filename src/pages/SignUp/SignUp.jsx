@@ -248,6 +248,7 @@ export const SignUp = () => {
         title="이용약관 및 정보보호정책"
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        panelClassName="mypage-setting-modal--policy"
         footerClassName="mypage-setting-modal__footer--single"
         footer={
           <button

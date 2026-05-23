@@ -9,6 +9,7 @@ export const AppModal = ({
   footer,
   footerClassName = "",
   headerVariant = "default",
+  panelClassName = "",
 }) => {
   const titleId = useId();
 
@@ -21,7 +22,9 @@ export const AppModal = ({
       onClick={onClose}
     >
       <div
-        className="mypage-setting-modal"
+        className={`mypage-setting-modal${
+          panelClassName ? ` ${panelClassName}` : ""
+        }`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}

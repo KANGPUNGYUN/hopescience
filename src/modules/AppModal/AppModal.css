@@ -200,3 +200,80 @@
   text-align: center;
   word-break: keep-all;
 }
+
+/* 이용약관·정보보호정책 (회원가입 등) */
+.mypage-setting-modal--policy {
+  width: calc(100vw - 32px);
+  max-width: none;
+  max-height: calc(100vh - 32px);
+}
+
+.mypage-setting-modal--policy .mypage-setting-modal__body {
+  flex: 1;
+  min-height: 0;
+  padding: 12px 16px 16px;
+}
+
+.mypage-setting-modal--policy .auth-policy-scroll {
+  max-height: min(72vh, calc(100vh - 180px));
+  padding: 16px;
+  border: 1px solid #e5e5ec;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 14px;
+  line-height: 1.65;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mypage-setting-modal--policy .p-policy-main {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mypage-setting-modal--policy .p-policy-header {
+  margin: 0 0 12px;
+  padding-top: 0;
+}
+
+.mypage-setting-modal--policy .p-policy-title {
+  font-size: 20px;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+.mypage-setting-modal--policy .p-policy-link-container__inner > ol {
+  column-count: 2;
+}
+
+.mypage-setting-modal--policy .p-policy-term-container h3,
+.mypage-setting-modal--policy .p-policy-term-container h4 {
+  margin-top: 0;
+  padding-top: 20px;
+}
+
+@media screen and (max-width: 767px) {
+  .mypage-setting-modal--policy {
+    width: calc(100vw - 24px);
+    max-height: calc(100vh - 24px);
+  }
+
+  .mypage-setting-modal__overlay:has(.mypage-setting-modal--policy) {
+    padding: 12px;
+  }
+
+  .mypage-setting-modal--policy .auth-policy-scroll {
+    max-height: min(68vh, calc(100vh - 160px));
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .mypage-setting-modal--policy .p-policy-link-container__inner > ol {
+    column-count: 1;
+  }
+
+  .mypage-setting-modal--policy .p-policy-title {
+    font-size: 18px;
+  }
+}
