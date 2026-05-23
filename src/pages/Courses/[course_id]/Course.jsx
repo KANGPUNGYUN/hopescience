@@ -49,15 +49,15 @@ export const Course = () => {
   const {
     getIsEnrolled,
     enrollment: enrollmentData,
-    getEnrollmentProgress,
     enrollmentProgress,
     clearEnrollment,
+    refreshEnrollmentDetails,
   } = enrollment((state) => ({
     getIsEnrolled: state.getIsEnrolled,
     enrollment: state.enrollment,
-    getEnrollmentProgress: state.getEnrollmentProgress,
     enrollmentProgress: state.enrollmentProgress,
     clearEnrollment: state.clearEnrollment,
+    refreshEnrollmentDetails: state.refreshEnrollmentDetails,
   }));
 
   const myUserId = useMemo(() => {
@@ -87,28 +87,21 @@ export const Course = () => {
 
   useEffect(() => {
     clearEnrollment();
+    clearCourse();
+  }, [course_id, clearEnrollment, clearCourse]);
+
+  useEffect(() => {
     if (course_id && myUserId) {
       getIsEnrolled(myUserId, course_id);
     }
-    clearCourse();
     getService(course_id);
     getCourseInquiries(course_id);
-  }, [course_id, myUserId, clearEnrollment, clearCourse, getIsEnrolled, getService, getCourseInquiries]);
+  }, [course_id, myUserId, getIsEnrolled, getService, getCourseInquiries]);
 
   const refreshEnrollmentState = useCallback(async () => {
-    if (!enrollmentData?.id || !myUserId || !course_id) return;
-
-    await Promise.all([
-      getEnrollmentProgress(enrollmentData.id),
-      getIsEnrolled(myUserId, course_id),
-    ]);
-  }, [
-    enrollmentData?.id,
-    myUserId,
-    course_id,
-    getEnrollmentProgress,
-    getIsEnrolled,
-  ]);
+    if (!enrollmentData?.id) return;
+    await refreshEnrollmentDetails(enrollmentData.id);
+  }, [enrollmentData?.id, refreshEnrollmentDetails]);
 
   useEffect(() => {
     if (enrollmentData?.id) {

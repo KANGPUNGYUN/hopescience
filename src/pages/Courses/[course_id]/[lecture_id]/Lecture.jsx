@@ -58,18 +58,18 @@ export const Lecture = () => {
 
   const {
     getIsEnrolled,
-    getEnrollment,
     enrollment: enrollmentData,
     getEnrollmentProgress,
     enrollmentProgress,
     isEnrollmentLoading,
+    refreshEnrollmentDetails,
   } = enrollment((state) => ({
     getIsEnrolled: state.getIsEnrolled,
-    getEnrollment: state.getEnrollment,
     enrollment: state.enrollment,
     getEnrollmentProgress: state.getEnrollmentProgress,
     enrollmentProgress: state.enrollmentProgress,
     isEnrollmentLoading: state.isLoading,
+    refreshEnrollmentDetails: state.refreshEnrollmentDetails,
   }));
 
   const myUserId = useMemo(() => {
@@ -78,21 +78,9 @@ export const Lecture = () => {
   }, []);
 
   const refreshEnrollmentState = useCallback(async () => {
-    if (!enrollmentData?.id || !myUserId || !course_id) return;
-
-    await Promise.all([
-      getEnrollmentProgress(enrollmentData.id),
-      getEnrollment(enrollmentData.id),
-      getIsEnrolled(myUserId, course_id),
-    ]);
-  }, [
-    enrollmentData?.id,
-    myUserId,
-    course_id,
-    getEnrollmentProgress,
-    getEnrollment,
-    getIsEnrolled,
-  ]);
+    if (!enrollmentData?.id) return;
+    await refreshEnrollmentDetails(enrollmentData.id);
+  }, [enrollmentData?.id, refreshEnrollmentDetails]);
 
   useEffect(() => {
     if (!course_id) {

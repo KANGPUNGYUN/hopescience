@@ -1807,19 +1807,57 @@ const useEnrollmentStore = create((set) => ({
   },
 
   getIsEnrolled: async (userId, courseId) => {
-    set({ isLoading: true, enrollment: null });
+    const normalizedUserId = Number(userId);
+    const normalizedCourseId = Number(courseId);
+
+    if (!Number.isFinite(normalizedUserId) || !Number.isFinite(normalizedCourseId)) {
+      set({
+        enrollment: null,
+        isLoading: false,
+        error: "수강 정보 조회에 필요한 사용자·강의 정보가 올바르지 않습니다.",
+      });
+      return null;
+    }
+
+    set({ isLoading: true });
     try {
-      const response = await getApi({ path: `/enrollments/user/${userId}/course/${courseId}` });
+      const response = await getApi({
+        path: `/enrollments/user/${normalizedUserId}/course/${normalizedCourseId}`,
+      });
       if (response) {
-        set({ enrollment: response, isLoading: false });
+        set({ enrollment: response, isLoading: false, error: null });
         console.log("수강 정보를 성공적으로 가져왔습니다.");
         return response;
-      } else {
-        throw new Error(`Failed to fetch enrollment: Status ${response.status}`);
       }
+      throw new Error("Failed to fetch enrollment");
+    } catch (error) {
+      set({ enrollment: null, error: error.message, isLoading: false });
+      console.error("수강 정보를 가져오는 중 오류가 발생했습니다:", error.message);
+      return null;
+    }
+  },
+
+  refreshEnrollmentDetails: async (enrollmentId) => {
+    const id = Number(enrollmentId);
+    if (!Number.isFinite(id)) return null;
+
+    set({ isLoading: true });
+    try {
+      const [progress, enrollment] = await Promise.all([
+        getApi({ path: `/enrollments/${id}/progress` }),
+        getApi({ path: `/enrollments/${id}` }),
+      ]);
+
+      set({
+        enrollmentProgress: Array.isArray(progress) ? progress : [],
+        enrollment: enrollment || null,
+        isLoading: false,
+        error: null,
+      });
+      return { progress, enrollment };
     } catch (error) {
       set({ error: error.message, isLoading: false });
-      console.error("수강 정보를 가져오는 중 오류가 발생했습니다:", error.message);
+      console.error("수강 정보 갱신 중 오류가 발생했습니다:", error.message);
       return null;
     }
   },
