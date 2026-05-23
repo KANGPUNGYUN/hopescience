@@ -193,8 +193,8 @@ export const LectureVideoSection = ({
     : null;
 
   return (
-    <div className="lecture-video" ref={shellRef}>
-      <div className="lecture-video__stage">
+    <div className="lecture-video">
+      <div className="lecture-video__stage" ref={shellRef}>
         {isLoading ? (
           <div className="lecture-video__loading">
             <div className="lecture-video__loader" />
@@ -226,7 +226,6 @@ export const LectureVideoSection = ({
             )}
           </>
         )}
-      </div>
 
       {!isLoading && (
         <div className="lecture-video__controls">
@@ -334,6 +333,7 @@ export const LectureVideoSection = ({
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 };

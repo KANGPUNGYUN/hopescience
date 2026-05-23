@@ -159,6 +159,15 @@
   aspect-ratio: 16 / 9;
   max-height: calc(100vh - 48px - 160px);
   background: #111111;
+  overflow: hidden;
+}
+
+.lecture-video__stage:fullscreen,
+.lecture-video__stage:-webkit-full-screen {
+  width: 100%;
+  max-height: none;
+  aspect-ratio: auto;
+  height: 100%;
 }
 
 .lecture-video__loading {
@@ -270,10 +279,19 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
   padding: 0;
   border: none;
   background: transparent;
   cursor: pointer;
+}
+
+.lecture-video__icon-btn svg {
+  display: block;
+  width: 20px;
+  height: 20px;
 }
 
 .lecture-video__time {
@@ -307,12 +325,14 @@
 
 .lecture-video__volume-popup {
   position: absolute;
-  bottom: calc(100% + 10px);
+  bottom: calc(100% + 8px);
   left: 50%;
   z-index: 5;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  padding: 10px 12px;
+  justify-content: center;
+  padding: 12px 10px;
   border-radius: 6px;
   background: rgba(34, 34, 34, 0.92);
   opacity: 0;
@@ -332,19 +352,40 @@
 }
 
 .lecture-video__volume-slider {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 88px;
-  height: 3px;
+  -webkit-appearance: slider-vertical;
+  appearance: auto;
+  width: 3px;
+  height: 88px;
+  margin: 0;
   border-radius: 999px;
   background: linear-gradient(
-    to right,
+    to top,
     #d0e0f9 0%,
     #d0e0f9 var(--volume-percent, 0%),
     #505050 var(--volume-percent, 0%),
     #505050 100%
   );
   cursor: pointer;
+  writing-mode: vertical-lr;
+  direction: rtl;
+}
+
+@supports not (-webkit-appearance: slider-vertical) {
+  .lecture-video__volume-slider {
+    width: 88px;
+    height: 3px;
+    writing-mode: horizontal-tb;
+    direction: ltr;
+    transform: rotate(-90deg);
+    transform-origin: center center;
+    background: linear-gradient(
+      to right,
+      #d0e0f9 0%,
+      #d0e0f9 var(--volume-percent, 0%),
+      #505050 var(--volume-percent, 0%),
+      #505050 100%
+    );
+  }
 }
 
 .lecture-video__volume-slider::-webkit-slider-thumb {

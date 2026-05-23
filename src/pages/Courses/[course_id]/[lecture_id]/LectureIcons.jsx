@@ -183,17 +183,18 @@ export const LectureCompressIcon = ({ size = 20, className = "" }) => (
     className={className}
     width={size}
     height={size}
-    viewBox="0 0 20 20"
+    viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     aria-hidden
   >
     <path
-      d="M8.21484 8.21401L3.453 3.45215M3.453 7.26168V3.45215H7.26255M11.0721 11.0711L15.834 15.833M15.834 12.0235V15.834H12.0245"
-      stroke="white"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      d="M7.97867 9.45697L4.40883 9.45417L4.40726 11.4542L11.4073 11.4597L11.4127 4.45966L9.41274 4.45809L9.40992 8.05972L3.09616 1.76929L1.68457 3.18612L7.97867 9.45697Z"
+      fill="white"
+    />
+    <path
+      d="M19.5615 14.5521L19.5535 12.5521L12.5536 12.5799L12.5814 19.5799L14.5814 19.5719L14.5671 15.9705L20.9105 22.2306L22.3153 20.8071L15.9914 14.5663L19.5615 14.5521Z"
+      fill="white"
     />
   </svg>
 );
