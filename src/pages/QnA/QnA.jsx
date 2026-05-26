@@ -25,8 +25,8 @@ export const QnA = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
 
   const isLoading = inquiry((state) => state.isLoading);
-  const getInquiries = inquiry((state) => state.getInquiries);
-  const searchInquiries = inquiry((state) => state.searchInquiries);
+  const getReviews = inquiry((state) => state.getReviews);
+  const searchReviews = inquiry((state) => state.searchReviews);
   const inquiries = inquiry((state) => state.inquiries);
   const totalCount = inquiry((state) => state.totalCount);
 
@@ -46,21 +46,21 @@ export const QnA = () => {
     if (!isApiEnabled) return;
 
     if (searchKeyword.trim()) {
-      searchInquiries(searchKeyword.trim());
+      searchReviews(searchKeyword.trim());
       return;
     }
 
     const limit = isClientPaged ? 500 : QNA_POSTS_PER_PAGE;
     const skip = isClientPaged ? 0 : (currentPage - 1) * QNA_POSTS_PER_PAGE;
-    getInquiries(skip, limit, "desc");
+    getReviews(skip, limit, "desc");
   }, [
     isApiEnabled,
     searchKeyword,
     activeFilter,
     currentPage,
     isClientPaged,
-    getInquiries,
-    searchInquiries,
+    getReviews,
+    searchReviews,
   ]);
 
   const filteredInquiries = useMemo(

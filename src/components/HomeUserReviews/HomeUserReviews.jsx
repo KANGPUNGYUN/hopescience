@@ -12,6 +12,20 @@ import {
   HOME_USER_REVIEWS_FILTERS,
   HOME_USER_REVIEWS_SECTION,
 } from "./homeUserReviewsConfig";
+import { EDUCATION_REVIEW_API_ENABLED } from "../../pages/QnA/educationReviewBoardConfig";
+import { inquiry } from "../../store";
+import { stripHtml } from "../../modules/MyPageInquiryList/myPageInquiryConfig";
+import { maskUserName } from "../../pages/Courses/[course_id]/courseDetailConfig";
+
+const formatDateYYYYMMDD = (dateString) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return "";
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+};
 
 const CARD_GAP = 28;
 
@@ -21,14 +35,38 @@ export const HomeUserReviews = () => {
   const [activeFilter, setActiveFilter] = useState("all");
   const [activeIndex, setActiveIndex] = useState(0);
 
+  const getReviews = inquiry((state) => state.getReviews);
+  const clearInquiries = inquiry((state) => state.clearInquiries);
+  const inquiries = inquiry((state) => state.inquiries);
+  const isLoading = inquiry((state) => state.isLoading);
+
+  useEffect(() => {
+    if (!EDUCATION_REVIEW_API_ENABLED) return;
+
+    clearInquiries();
+
+    getReviews(0, 12, "desc");
+  }, [getReviews, clearInquiries]);
+
   const filteredReviews = useMemo(() => {
-    if (activeFilter === "all") {
-      return HOME_USER_REVIEWS;
-    }
-    return HOME_USER_REVIEWS.filter(
-      (review) => review.category === activeFilter
-    );
-  }, [activeFilter]);
+    const useApiReviews =
+      EDUCATION_REVIEW_API_ENABLED &&
+      !isLoading &&
+      (inquiries?.length ?? 0) > 0;
+
+    const baseReviews = useApiReviews
+      ? (inquiries ?? []).map((item) => ({
+          id: item.id,
+          name: maskUserName(item.user_name),
+          date: formatDateYYYYMMDD(item.created_at),
+          category: item.category,
+          review: stripHtml(item.content ?? ""),
+        }))
+      : HOME_USER_REVIEWS;
+
+    if (activeFilter === "all") return baseReviews;
+    return baseReviews.filter((review) => review.category === activeFilter);
+  }, [activeFilter, inquiries, isLoading]);
 
   useEffect(() => {
     setActiveIndex(0);

@@ -17,8 +17,9 @@ export const COMPANY_INFO = {
 
 /** URL이 있을 때만 외부 링크, 없으면 준비 중 모달 */
 export const SOCIAL_LINKS = {
-  instagram: "",
-  youtube: "",
+  instagram:
+    "https://www.instagram.com/hopescience4u?igsh=MXVqZ2cydjI1anUzMQ==",
+  youtube: "https://www.youtube.com/@hopescience",
 };
 
 export const SOCIAL_UNAVAILABLE_MODAL = {

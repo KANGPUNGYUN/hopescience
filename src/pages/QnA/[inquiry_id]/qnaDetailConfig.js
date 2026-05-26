@@ -20,3 +20,19 @@ export function isCenterComment(comment) {
   const name = comment?.user_name ?? "";
   return name.includes("희망") || name.includes("Hope");
 }
+
+export function getCommentVariant(comment, myUserId) {
+  if (isCenterComment(comment)) return "center";
+  if (myUserId && myUserId === comment.user_id) return "mine";
+  return "default";
+}
+
+export function getReplyVariant(reply, myUserId) {
+  if (myUserId && myUserId === reply.user_id) return "mine";
+  return "default";
+}
+
+export function sortCommentReplies(replies) {
+  if (!replies?.length) return [];
+  return [...replies].sort((a, b) => a.id - b.id);
+}

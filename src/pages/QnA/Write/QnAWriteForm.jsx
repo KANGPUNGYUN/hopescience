@@ -48,15 +48,25 @@ export const QnAWriteForm = ({ mode = "create", variant = "board" }) => {
 
   const [attachments, setAttachments] = useState([]);
 
-  const { createInquiry, updateInquiry, getInquiry, QnA, isLoading } = inquiry(
-    (state) => ({
-      createInquiry: state.createInquiry,
-      updateInquiry: state.updateInquiry,
-      getInquiry: state.getInquiry,
-      QnA: state.QnA,
-      isLoading: state.isLoading,
-    })
-  );
+  const {
+    createInquiry,
+    updateInquiry,
+    getInquiry,
+    createReview,
+    updateReview,
+    getReview,
+    QnA,
+    isLoading,
+  } = inquiry((state) => ({
+    createInquiry: state.createInquiry,
+    updateInquiry: state.updateInquiry,
+    getInquiry: state.getInquiry,
+    createReview: state.createReview,
+    updateReview: state.updateReview,
+    getReview: state.getReview,
+    QnA: state.QnA,
+    isLoading: state.isLoading,
+  }));
 
   const refreshAccessToken = auth((state) => state.refreshAccessToken);
 
@@ -77,10 +87,13 @@ export const QnAWriteForm = ({ mode = "create", variant = "board" }) => {
   });
 
   useEffect(() => {
-    if (isEdit && boardPostId) {
+    if (!isEdit || !boardPostId) return;
+    if (isMypage) {
       getInquiry(boardPostId);
+    } else {
+      getReview(boardPostId);
     }
-  }, [isEdit, boardPostId, getInquiry]);
+  }, [isEdit, boardPostId, isMypage, getInquiry, getReview]);
 
   useEffect(() => {
     if (isEdit && QnA) {
@@ -122,31 +135,41 @@ export const QnAWriteForm = ({ mode = "create", variant = "board" }) => {
     const { accessToken, refreshToken } = auth.getState();
 
     try {
-      if (isEdit) {
-        const success = await updateInquiry(
+      if (isMypage) {
+        if (isEdit) {
+          const success = await updateInquiry(
+            boardPostId,
+            data.title,
+            data.category,
+            data.content
+          );
+          if (success) navigate("/mypage/inquiries");
+        } else {
+          const success = await createInquiry(
+            myUserId,
+            data.title,
+            data.category,
+            data.content,
+            accessToken
+          );
+          if (success) navigate("/mypage/inquiries");
+        }
+      } else if (isEdit) {
+        const success = await updateReview(
           boardPostId,
           data.title,
           data.category,
           data.content
         );
-        if (success) {
-          navigate(
-            isMypage
-              ? `/mypage/inquiries`
-              : reviewBoardRoutes.detail(boardPostId)
-          );
-        }
+        if (success) navigate(reviewBoardRoutes.detail(boardPostId));
       } else {
-        const success = await createInquiry(
-          myUserId,
+        const success = await createReview(
           data.title,
           data.category,
           data.content,
           accessToken
         );
-        if (success) {
-          navigate(isMypage ? "/mypage/inquiries" : reviewBoardRoutes.list);
-        }
+        if (success) navigate(reviewBoardRoutes.list);
       }
     } catch (error) {
       if (error?.response?.status === 401 && !retryAttempted) {

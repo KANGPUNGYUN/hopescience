@@ -1,5 +1,5 @@
-/** 고객 후기 API 연동 전까지 false — true 시 목록·상세·작성 API 호출 */
-export const EDUCATION_REVIEW_API_ENABLED = false;
+/** 고객 후기 API 연동 */
+export const EDUCATION_REVIEW_API_ENABLED = true;
 
 export const EDUCATION_REVIEW_COMING_SOON_MODAL = {
   title: "안내",

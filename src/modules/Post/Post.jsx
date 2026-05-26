@@ -33,19 +33,23 @@ export const Post = () => {
   const {
     isLoading,
     getInquiry,
+    getReview,
     deleteInquiry,
-    createComment,
-    updateComment,
-    deleteComment,
+    deleteReview,
+    createReviewComment,
+    updateReviewComment,
+    deleteReviewComment,
     QnA,
     clearQnA,
   } = inquiry((state) => ({
     isLoading: state.isLoading,
     getInquiry: state.getInquiry,
+    getReview: state.getReview,
     deleteInquiry: state.deleteInquiry,
-    createComment: state.createComment,
-    updateComment: state.updateComment,
-    deleteComment: state.deleteComment,
+    deleteReview: state.deleteReview,
+    createReviewComment: state.createReviewComment,
+    updateReviewComment: state.updateReviewComment,
+    deleteReviewComment: state.deleteReviewComment,
     QnA: state.QnA,
     clearQnA: state.clearQnA,
   }));
@@ -99,21 +103,33 @@ export const Post = () => {
   useEffect(() => {
     if (boardPostId) {
       clearCourseQnA();
-      getInquiry(boardPostId);
+      if (isReviewBoardDetailPath(location.pathname, boardPostId)) {
+        getReview(boardPostId);
+      } else {
+        getInquiry(boardPostId);
+      }
     } else if (course_id && course_inquiry_id) {
       clearQnA();
       getCourseInquiry(course_id, course_inquiry_id);
     }
-  }, [getInquiry, clearCourseQnA, getCourseInquiry, clearQnA]);
+  }, [
+    boardPostId,
+    location.pathname,
+    getInquiry,
+    getReview,
+    clearCourseQnA,
+    getCourseInquiry,
+    clearQnA,
+  ]);
 
   const onSubmit = async (data) => {
     if (myUserId) {
       const { accessToken, refreshToken } = auth.getState();
       if (isReviewBoardDetailPath(location.pathname, boardPostId)) {
-        await createComment(boardPostId, myUserId, data.commentContent).then(
+        await createReviewComment(boardPostId, data.commentContent).then(
           () => {
             clearCourseQnA();
-            getInquiry(boardPostId);
+            getReview(boardPostId);
           }
         );
       } else {
@@ -159,9 +175,9 @@ export const Post = () => {
     if (editMode) {
       const updatedContent = getValues(`commentContent${comment.id}`);
       if (isReviewBoardDetailPath(location.pathname, boardPostId)) {
-        await updateComment(comment.id, updatedContent);
+        await updateReviewComment(comment.id, updatedContent);
         clearCourseQnA();
-        getInquiry(boardPostId);
+        getReview(boardPostId);
       } else {
         await updateCourseComment(
           course_id,
@@ -178,9 +194,9 @@ export const Post = () => {
 
   const handleDeleteComment = async (comment_id) => {
     if (isReviewBoardDetailPath(location.pathname, boardPostId)) {
-      await deleteComment(comment_id);
+      await deleteReviewComment(comment_id);
       clearCourseQnA();
-      getInquiry(inquiry_id);
+      getReview(boardPostId);
     } else {
       await deleteCourseComment(course_id, course_inquiry_id, comment_id);
       clearQnA();
@@ -403,7 +419,7 @@ export const Post = () => {
           onClose={() => setShowModal(false)}
           onConfirm={() => {
             isReviewBoardDetailPath(location.pathname, boardPostId)
-              ? deleteInquiry(boardPostId)
+              ? deleteReview(boardPostId)
               : deleteCourseInquiry(course_id, course_inquiry_id);
             setShowModal(false);
             isReviewBoardDetailPath(location.pathname, boardPostId)

@@ -7,53 +7,34 @@ import { MyPageInquiriesEmpty } from "./MyPageInquiriesEmpty";
 import {
   countInquiriesByTab,
   filterInquiriesByTab,
-  getMyUserId,
   INQUIRIES_PER_PAGE,
   INQUIRY_TABS,
 } from "./myPageInquiryConfig";
-import {
-  getDevMockInquiriesForUser,
-  isDevMockInquiriesEnabled,
-} from "./devMockInquiries";
 import "./MyPageInquiryList.css";
 
 export const MyPageInquiryList = () => {
-  const useDevMock = isDevMockInquiriesEnabled();
   const [activeTab, setActiveTab] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [openId, setOpenId] = useState(null);
-  const [mockInquiries, setMockInquiries] = useState(() =>
-    useDevMock ? getDevMockInquiriesForUser(getMyUserId()) : []
-  );
 
-  const getInquiries = inquiry((state) => state.getInquiries);
+  const getMyInquiries = inquiry((state) => state.getMyInquiries);
   const deleteInquiry = inquiry((state) => state.deleteInquiry);
   const clearInquiries = inquiry((state) => state.clearInquiries);
   const inquiries = inquiry((state) => state.inquiries);
   const isLoading = inquiry((state) => state.isLoading);
 
-  const myUserId = useMemo(() => getMyUserId(), []);
-
   const loadInquiries = useCallback(async () => {
-    await getInquiries(0, 500, "desc");
-  }, [getInquiries]);
+    await getMyInquiries();
+  }, [getMyInquiries]);
 
   useEffect(() => {
-    if (useDevMock) {
-      setMockInquiries(getDevMockInquiriesForUser(myUserId));
-      return;
-    }
     clearInquiries();
     loadInquiries();
-  }, [useDevMock, clearInquiries, loadInquiries, myUserId]);
+  }, [clearInquiries, loadInquiries]);
 
   const myInquiries = useMemo(() => {
-    if (useDevMock) {
-      return mockInquiries;
-    }
-    if (!myUserId) return [];
-    return (inquiries ?? []).filter((item) => item.user_id === myUserId);
-  }, [useDevMock, mockInquiries, inquiries, myUserId]);
+    return inquiries ?? [];
+  }, [inquiries]);
 
   const filteredInquiries = useMemo(
     () => filterInquiriesByTab(myInquiries, activeTab),
@@ -89,16 +70,11 @@ export const MyPageInquiryList = () => {
 
   const handleDelete = useCallback(
     async (inquiryId) => {
-      if (useDevMock) {
-        setMockInquiries((prev) => prev.filter((item) => item.id !== inquiryId));
-        if (openId === inquiryId) setOpenId(null);
-        return;
-      }
       await deleteInquiry(inquiryId);
       if (openId === inquiryId) setOpenId(null);
       await loadInquiries();
     },
-    [useDevMock, deleteInquiry, loadInquiries, openId]
+    [deleteInquiry, loadInquiries, openId]
   );
 
   useEffect(() => {
@@ -107,7 +83,7 @@ export const MyPageInquiryList = () => {
     }
   }, [currentPage, totalPages]);
 
-  if (!hasAnyInquiry && !isLoading && !useDevMock) {
+  if (!hasAnyInquiry && !isLoading) {
     return <MyPageInquiriesEmpty />;
   }
 
@@ -143,7 +119,7 @@ export const MyPageInquiryList = () => {
         </Link>
       </div>
 
-      {isLoading && !useDevMock ? (
+      {isLoading ? (
         <p className="mypage-inquiries__loading">불러오는 중...</p>
       ) : filteredInquiries.length === 0 ? (
         <p className="mypage-inquiries__empty-tab">

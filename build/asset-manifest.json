@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.e778445b.css",
-    "main.js": "/static/js/main.1eeafc55.js",
+    "main.css": "/static/css/main.979e9913.css",
+    "main.js": "/static/js/main.cee9858a.js",
     "static/js/213.9120b1f7.chunk.js": "/static/js/213.9120b1f7.chunk.js",
     "static/js/455.9c178790.chunk.js": "/static/js/455.9c178790.chunk.js",
     "static/js/453.aca93a33.chunk.js": "/static/js/453.aca93a33.chunk.js",
@@ -20,7 +20,6 @@
     "static/media/certification.png": "/static/media/certification.3608312e3d511e81a3ae.png",
     "static/media/certification02.png": "/static/media/certification02.240e20f2781113aa0707.png",
     "static/media/certification03.png": "/static/media/certification03.936bfe63f2faf6a4bb8c.png",
-    "static/media/example.png": "/static/media/example.8dfff53411ce5f1f1e53.png",
     "static/media/stamp.png": "/static/media/stamp.94e9fd54ab0d5e544f46.png",
     "static/media/certification-paper.png": "/static/media/certification-paper.077d1a5be97bbd9a0ee4.png",
     "index.html": "/index.html",
@@ -38,14 +37,14 @@
     "static/media/chevron-right-large.svg": "/static/media/chevron-right-large.6cbb14cd34ca20dcb9a0a66993464059.svg",
     "static/media/chevron-up-large.svg": "/static/media/chevron-up-large.a8573eee24f30268361bf876150e9bfb.svg",
     "static/media/chevron-down-large-4.svg": "/static/media/chevron-down-large-4.a6056af9068091ce69c26b1e3d8ef449.svg",
-    "main.e778445b.css.map": "/static/css/main.e778445b.css.map",
-    "main.1eeafc55.js.map": "/static/js/main.1eeafc55.js.map",
+    "main.979e9913.css.map": "/static/css/main.979e9913.css.map",
+    "main.cee9858a.js.map": "/static/js/main.cee9858a.js.map",
     "213.9120b1f7.chunk.js.map": "/static/js/213.9120b1f7.chunk.js.map",
     "455.9c178790.chunk.js.map": "/static/js/455.9c178790.chunk.js.map",
     "453.aca93a33.chunk.js.map": "/static/js/453.aca93a33.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.e778445b.css",
-    "static/js/main.1eeafc55.js"
+    "static/css/main.979e9913.css",
+    "static/js/main.cee9858a.js"
   ]
 }

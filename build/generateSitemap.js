@@ -11,8 +11,8 @@ const routes = [
   '/',
   '/policy',
   '/courses',
-  '/QnA',
-  '/QnA/new',
+  '/review',
+  '/review/new',
 ];
 
 async function generateSitemap() {

@@ -1277,6 +1277,49 @@ const useServiceStore = create((set) => ({
 
 }));
 
+function getStoreApiErrorMessage(error, fallback) {
+  const data = error?.response?.data;
+  if (typeof data?.detail === "string") return data.detail;
+  if (Array.isArray(data?.detail)) {
+    const messages = data.detail.map((item) => item.msg).filter(Boolean);
+    if (messages.length) return messages.join("\n");
+  }
+  return data?.message || error?.message || fallback;
+}
+
+function getReviewAccessToken() {
+  const { accessToken } = useAuthStore.getState();
+  if (!accessToken) {
+    alert("로그인이 필요한 작업입니다.");
+    return null;
+  }
+  return accessToken;
+}
+
+function mapBoardPostListItem(item) {
+  return {
+    id: item.id,
+    title: item.title,
+    category: item.category,
+    created_at: item.created_at,
+    updated_at: item.updated_at,
+    content: item.content,
+    user_id: item.user_id,
+    user_name: item.user_name,
+    view_count: item.view_count,
+    comments: item.comments,
+  };
+}
+
+function parseBoardPostListResponse(response) {
+  const items = Array.isArray(response) ? response : response?.items ?? [];
+  return {
+    items: items.map(mapBoardPostListItem),
+    totalCount:
+      response?.total_count ?? response?.totalCount ?? items.length ?? 0,
+  };
+}
+
 const useInquiryStore = create((set) => ({
   isLoading: false,
   error: null,
@@ -1320,6 +1363,76 @@ const useInquiryStore = create((set) => ({
     }
   },
 
+  getMyInquiries: async () => {
+    set({ isLoading: true });
+    try {
+      const { accessToken, user } = auth.getState();
+      const userId = user?.userId;
+
+      if (!userId) {
+        set({ inquiries: [], totalCount: 0, isLoading: false });
+        return;
+      }
+
+      // 운영 Heroku: GET /inquiries/my — 구버전 서버는 /inquiries/{id}로 잡혀 422
+      let response;
+      try {
+        response = await getApi({
+          path: `/inquiries/my`,
+          access_token: accessToken,
+        });
+      } catch (error) {
+        const status = error.response?.status;
+        const detail = error.response?.data?.detail;
+        const legacyMyRoute =
+          status === 422 &&
+          Array.isArray(detail) &&
+          detail.some(
+            (d) =>
+              Array.isArray(d.loc) &&
+              d.loc.includes("inquiry_id") &&
+              d.type === "type_error.integer"
+          );
+
+        if (status === 404 || legacyMyRoute) {
+          response = await getApi({
+            path: `/inquiries/user/${userId}`,
+            access_token: accessToken,
+          });
+        } else {
+          throw error;
+        }
+      }
+
+      if (!response) throw new Error("No response from server");
+
+      const items = Array.isArray(response)
+        ? response
+        : response.items ?? [];
+
+      set({
+        inquiries: items.map((inquiry) => ({
+          id: inquiry.id,
+          title: inquiry.title,
+          category: inquiry.category,
+          created_at: inquiry.created_at,
+          updated_at: inquiry.updated_at,
+          content: inquiry.content,
+          user_id: inquiry.user_id,
+          user_name: inquiry.user_name,
+          view_count: inquiry.view_count,
+          comments: inquiry.comments,
+        })),
+        totalCount:
+          response.total_count ?? response.totalCount ?? items.length ?? 0,
+        isLoading: false,
+      });
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+      alert("문의 내역을 가져오는 중 오류가 발생했습니다: " + error.message);
+    }
+  },
+
   searchInquiries: async (keyword) => {
     set({ isLoading: true });
     try {
@@ -1354,7 +1467,11 @@ const useInquiryStore = create((set) => ({
   getInquiry: async (inquiry_id) => {
     set({ isLoading: true });
     try {
-      const response = await getApi({ path: `/inquiries/${inquiry_id}` });
+      const { accessToken } = auth.getState();
+      const response = await getApi({
+        path: `/inquiries/${inquiry_id}`,
+        access_token: accessToken ?? "",
+      });
       if (response) {
         set({
           QnA: response,
@@ -1369,6 +1486,144 @@ const useInquiryStore = create((set) => ({
     } catch (error) {
       set({ error: error.message, isLoading: false });
       alert("질문을 가져오는 중 오류가 발생했습니다: " + error.message);
+    }
+  },
+
+  // 고객 후기 게시글 — GET/POST/PUT/DELETE /reviews/...
+  getReviews: async (skip = 0, limit = 100, sort = null) => {
+    set({ isLoading: true });
+    try {
+      let path = `/reviews/?skip=${skip}&limit=${limit}`;
+      if (sort) {
+        path += `&sort=${sort}`;
+      }
+
+      const response = await getApi({ path });
+      if (!response) throw new Error("No response from server");
+
+      const { items, totalCount } = parseBoardPostListResponse(response);
+      set({ inquiries: items, totalCount, isLoading: false });
+    } catch (error) {
+      const message = getStoreApiErrorMessage(
+        error,
+        "고객 후기 목록을 가져오는 중 오류가 발생했습니다"
+      );
+      set({ error: message, isLoading: false });
+      alert(message);
+    }
+  },
+
+  searchReviews: async (keyword) => {
+    set({ isLoading: true });
+    try {
+      const encoded = encodeURIComponent(keyword);
+      const response = await getApi({
+        path: `/reviews/?skip=0&limit=100&keyword=${encoded}&sort=desc`,
+      });
+      if (!response) throw new Error("No response from server");
+
+      const { items, totalCount } = parseBoardPostListResponse(response);
+      set({ inquiries: items, totalCount, isLoading: false });
+    } catch (error) {
+      const message = getStoreApiErrorMessage(
+        error,
+        "고객 후기 검색 중 오류가 발생했습니다"
+      );
+      set({ error: message, isLoading: false });
+      alert(message);
+    }
+  },
+
+  getReview: async (review_id) => {
+    set({ isLoading: true });
+    try {
+      const { accessToken } = auth.getState();
+      const response = await getApi({
+        path: `/reviews/${review_id}`,
+        access_token: accessToken ?? "",
+      });
+      if (response) {
+        set({ QnA: response, isLoading: false });
+      } else {
+        throw new Error("No response from server");
+      }
+    } catch (error) {
+      const message = getStoreApiErrorMessage(
+        error,
+        "고객 후기를 가져오는 중 오류가 발생했습니다"
+      );
+      set({ error: message, isLoading: false });
+      alert(message);
+    }
+  },
+
+  createReview: async (title, category, content, accessToken) => {
+    const token = accessToken || getReviewAccessToken();
+    if (!token) return false;
+
+    set({ isLoading: true });
+    try {
+      const response = await postApi({
+        path: `/reviews/`,
+        data: { title, category, content },
+        access_token: token,
+      });
+      if (response?.id != null) {
+        set({ isLoading: false });
+        alert("고객 후기가 등록되었습니다.");
+        return true;
+      }
+      set({ isLoading: false });
+      alert("고객 후기 등록에 실패했습니다.");
+      return false;
+    } catch (error) {
+      const message = getStoreApiErrorMessage(error, "고객 후기 등록 실패");
+      set({ error: message, isLoading: false });
+      alert(message);
+      return false;
+    }
+  },
+
+  updateReview: async (review_id, title, category, content) => {
+    const accessToken = getReviewAccessToken();
+    if (!accessToken) return false;
+
+    set({ isLoading: true });
+    try {
+      await putApi({
+        path: `/reviews/${review_id}`,
+        data: { title, category, content },
+        access_token: accessToken,
+      });
+      set({ isLoading: false });
+      alert("고객 후기가 수정되었습니다.");
+      return true;
+    } catch (error) {
+      const message = getStoreApiErrorMessage(error, "고객 후기 수정 실패");
+      set({ error: message, isLoading: false });
+      alert(message);
+      return false;
+    }
+  },
+
+  deleteReview: async (review_id) => {
+    const accessToken = getReviewAccessToken();
+    if (!accessToken) return false;
+
+    set({ isLoading: true });
+    try {
+      await deleteApi({
+        path: `/reviews/${review_id}`,
+        access_token: accessToken,
+      });
+      set({ isLoading: false });
+      alert("고객 후기가 삭제되었습니다.");
+      return true;
+    } catch (error) {
+      const message = getStoreApiErrorMessage(error, "고객 후기 삭제 실패");
+      set({ error: message, isLoading: false });
+      alert(message);
+      return false;
     }
   },
 
@@ -1398,6 +1653,7 @@ const useInquiryStore = create((set) => ({
   updateInquiry: async (inquiry_id, title, category, content) => {
     set({ isLoading: true });
     try {
+      const { accessToken } = auth.getState();
       const response = await putApi({
         path: `/inquiries/${inquiry_id}`,
         data: {
@@ -1405,6 +1661,7 @@ const useInquiryStore = create((set) => ({
           category,
           content,
         },
+        access_token: accessToken,
       });
       if (response) {
         set({ isLoading: false });
@@ -1420,8 +1677,10 @@ const useInquiryStore = create((set) => ({
   deleteInquiry: async (inquiry_id) => {
     set({ isLoading: true });
     try {
+      const { accessToken } = auth.getState();
       const response = await deleteApi({
         path: `/inquiries/${inquiry_id}`,
+        access_token: accessToken,
       });
       if (response) {
         set({ isLoading: false });
@@ -1433,14 +1692,19 @@ const useInquiryStore = create((set) => ({
     }
   },
 
-  createComment: async (inquiry_id, user_id, content) => {
+  // /inquiries/{id}/comments - admin/staff만 생성
+  // 호환을 위해 (inquiry_id, content) / (inquiry_id, user_id, content) 호출 모두 지원
+  createComment: async (inquiry_id, user_id_or_content, content) => {
     set({ isLoading: true });
     try {
+      const resolvedContent = content ?? user_id_or_content;
+      const { accessToken } = auth.getState();
       const response = await postApi({
-        path: `/inquiries/${inquiry_id}/comments?user_id=${user_id}`,
+        path: `/inquiries/${inquiry_id}/comments`,
         data: {
-          content,
+          content: resolvedContent,
         },
+        access_token: accessToken,
       });
       if (response?.id) {
         set({ isLoading: false });
@@ -1456,11 +1720,13 @@ const useInquiryStore = create((set) => ({
   updateComment: async (comment_id, content) => {
     set({ isLoading: true });
     try {
+      const { accessToken } = auth.getState();
       const response = await putApi({
         path: `/inquiries/comments/${comment_id}`,
         data: {
           content,
         },
+        access_token: accessToken,
       });
       if (response) {
         set({ isLoading: false });
@@ -1476,8 +1742,10 @@ const useInquiryStore = create((set) => ({
   deleteComment: async (comment_id) => {
     set({ isLoading: true });
     try {
+      const { accessToken } = auth.getState();
       const response = await deleteApi({
         path: `/inquiries/comments/${comment_id}`,
+        access_token: accessToken,
       });
       if (response) {
         set({ isLoading: false });
@@ -1486,6 +1754,184 @@ const useInquiryStore = create((set) => ({
     } catch (error) {
       set({ error: error.message, isLoading: false });
       alert("댓글 삭제 실패: " + error.message);
+    }
+  },
+
+  // 고객 후기 댓글·답글 — POST/PUT/DELETE /reviews/...
+  createReviewComment: async (review_id, content) => {
+    const accessToken = getReviewAccessToken();
+    if (!accessToken) return false;
+
+    try {
+      const response = await postApi({
+        path: `/reviews/${review_id}/comments`,
+        data: { content },
+        access_token: accessToken,
+      });
+      if (response?.id != null) {
+        alert("댓글을 등록했습니다.");
+        return true;
+      }
+      alert("댓글 등록에 실패했습니다.");
+      return false;
+    } catch (error) {
+      const message = getStoreApiErrorMessage(error, "댓글 등록 실패");
+      set({ error: message });
+      alert(message);
+      return false;
+    }
+  },
+
+  updateReviewComment: async (comment_id, content) => {
+    const accessToken = getReviewAccessToken();
+    if (!accessToken) return false;
+
+    try {
+      await putApi({
+        path: `/reviews/comments/${comment_id}`,
+        data: { content },
+        access_token: accessToken,
+      });
+      alert("댓글이 정상적으로 수정되었습니다.");
+      return true;
+    } catch (error) {
+      const message = getStoreApiErrorMessage(error, "댓글 수정 실패");
+      set({ error: message });
+      alert(message);
+      return false;
+    }
+  },
+
+  deleteReviewComment: async (comment_id) => {
+    const accessToken = getReviewAccessToken();
+    if (!accessToken) return false;
+
+    try {
+      await deleteApi({
+        path: `/reviews/comments/${comment_id}`,
+        access_token: accessToken,
+      });
+      alert("댓글이 정상적으로 삭제되었습니다.");
+      return true;
+    } catch (error) {
+      const message = getStoreApiErrorMessage(error, "댓글 삭제 실패");
+      set({ error: message });
+      alert(message);
+      return false;
+    }
+  },
+
+  createInquiryReply: async (inquiry_id, comment_id, content) => {
+    set({ isLoading: true });
+    try {
+      const { accessToken } = auth.getState();
+      const response = await postApi({
+        path: `/inquiries/${inquiry_id}/comments/${comment_id}/replies`,
+        data: { content },
+        access_token: accessToken,
+      });
+      if (response?.id) {
+        set({ isLoading: false });
+        return true;
+      }
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+      alert("답글 등록 실패: " + error.message);
+    }
+  },
+
+  updateInquiryReply: async (reply_id, content) => {
+    set({ isLoading: true });
+    try {
+      const { accessToken } = auth.getState();
+      const response = await putApi({
+        path: `/inquiries/replies/${reply_id}`,
+        data: { content },
+        access_token: accessToken,
+      });
+      if (response) {
+        set({ isLoading: false });
+        return true;
+      }
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+      alert("답글 수정 실패: " + error.message);
+    }
+  },
+
+  deleteInquiryReply: async (reply_id) => {
+    set({ isLoading: true });
+    try {
+      const { accessToken } = auth.getState();
+      const response = await deleteApi({
+        path: `/inquiries/replies/${reply_id}`,
+        access_token: accessToken,
+      });
+      if (response) {
+        set({ isLoading: false });
+        return true;
+      }
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+      alert("답글 삭제 실패: " + error.message);
+    }
+  },
+
+  createReviewReply: async (review_id, comment_id, content) => {
+    const accessToken = getReviewAccessToken();
+    if (!accessToken) return false;
+
+    try {
+      const response = await postApi({
+        path: `/reviews/${review_id}/comments/${comment_id}/replies`,
+        data: { content },
+        access_token: accessToken,
+      });
+      if (response?.id != null) return true;
+      alert("답글 등록에 실패했습니다.");
+      return false;
+    } catch (error) {
+      const message = getStoreApiErrorMessage(error, "답글 등록 실패");
+      set({ error: message });
+      alert(message);
+      return false;
+    }
+  },
+
+  updateReviewReply: async (reply_id, content) => {
+    const accessToken = getReviewAccessToken();
+    if (!accessToken) return false;
+
+    try {
+      await putApi({
+        path: `/reviews/replies/${reply_id}`,
+        data: { content },
+        access_token: accessToken,
+      });
+      return true;
+    } catch (error) {
+      const message = getStoreApiErrorMessage(error, "답글 수정 실패");
+      set({ error: message });
+      alert(message);
+      return false;
+    }
+  },
+
+  deleteReviewReply: async (reply_id) => {
+    const accessToken = getReviewAccessToken();
+    if (!accessToken) return false;
+
+    try {
+      await deleteApi({
+        path: `/reviews/replies/${reply_id}`,
+        access_token: accessToken,
+      });
+      return true;
+    } catch (error) {
+      const message = getStoreApiErrorMessage(error, "답글 삭제 실패");
+      set({ error: message });
+      alert(message);
+      return false;
     }
   },
 

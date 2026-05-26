@@ -1,10 +1,12 @@
 import React from "react";
 import { QnADetailAvatarIcon, QnADetailDotsIcon } from "./QnADetailIcons";
-import { formatQnaDateTime } from "./qnaDetailConfig";
+import { QnADetailReply } from "./QnADetailReply";
+import { formatQnaDateTime, getReplyVariant, sortCommentReplies } from "./qnaDetailConfig";
 
 export const QnADetailComment = ({
   comment,
   variant,
+  myUserId,
   isEditing,
   editRegister,
   editError,
@@ -15,8 +17,27 @@ export const QnADetailComment = ({
   menuOpen,
   onMenuToggle,
   onMenuClose,
+  showReplyButton,
+  isReplyFormOpen,
+  onReplyOpen,
+  onReplyClose,
+  onReplySubmit,
+  replyRegister,
+  replyError,
+  sortedReplies,
+  editReplyId,
+  openReplyMenuId,
+  onReplyMenuToggle,
+  onReplyMenuClose,
+  onReplyEditStart,
+  onReplyEditSave,
+  onReplyEditCancel,
+  onReplyDelete,
+  getReplyEditRegister,
+  getReplyEditError,
 }) => {
   const dateLabel = formatQnaDateTime(comment.updated_at || comment.created_at);
+  const replies = sortedReplies ?? sortCommentReplies(comment.replies);
 
   return (
     <article
@@ -104,13 +125,74 @@ export const QnADetailComment = ({
         ) : (
           <>
             <p className="qna-detail-comment__content">{comment.content}</p>
-            {variant === "default" && (
-              <button type="button" className="qna-detail-comment__reply">
-                답글달기
+            {showReplyButton && (
+              <button
+                type="button"
+                className="qna-detail-comment__reply"
+                onClick={isReplyFormOpen ? onReplyClose : onReplyOpen}
+                aria-expanded={isReplyFormOpen}
+              >
+                {isReplyFormOpen ? "답글 닫기" : "답글달기"}
               </button>
             )}
           </>
         )}
+
+        {replies.length > 0 ? (
+          <div className="qna-detail-comment__replies" aria-label="답글 목록">
+            {replies.map((reply) => {
+              const replyVariant = getReplyVariant(reply, myUserId);
+              const isReplyEditing = editReplyId === reply.id;
+
+              return (
+                <QnADetailReply
+                  key={reply.id}
+                  reply={reply}
+                  variant={replyVariant}
+                  isEditing={isReplyEditing}
+                  editRegister={getReplyEditRegister?.(reply.id)}
+                  editError={getReplyEditError?.(reply.id)}
+                  onEditStart={() => onReplyEditStart?.(reply)}
+                  onEditSave={onReplyEditSave?.(reply)}
+                  onEditCancel={onReplyEditCancel}
+                  onDelete={() => onReplyDelete?.(reply)}
+                  menuOpen={openReplyMenuId === reply.id}
+                  onMenuToggle={(e) => onReplyMenuToggle?.(e, reply.id)}
+                  onMenuClose={onReplyMenuClose}
+                />
+              );
+            })}
+          </div>
+        ) : null}
+
+        {isReplyFormOpen && showReplyButton ? (
+          <form
+            className="qna-detail-comment__reply-form"
+            onSubmit={onReplySubmit}
+          >
+            <textarea
+              {...replyRegister}
+              className="qna-detail-comment__reply-textarea"
+              placeholder="댓글을 입력하세요"
+              rows={2}
+            />
+            {replyError && (
+              <p className="qna-detail-comment__error">{replyError}</p>
+            )}
+            <div className="qna-detail-comment__reply-form-actions">
+              <button
+                type="button"
+                className="qna-detail-comment__reply-cancel"
+                onClick={onReplyClose}
+              >
+                취소
+              </button>
+              <button type="submit" className="qna-detail-comment__reply-submit">
+                등록
+              </button>
+            </div>
+          </form>
+        ) : null}
       </div>
     </article>
   );

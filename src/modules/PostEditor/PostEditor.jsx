@@ -42,15 +42,25 @@ export const PostEditor = () => {
     refreshAccessToken: state.refreshAccessToken,
     accessToken: state.accessToken,
   }));
-  const { isLoading, createInquiry, updateInquiry, getInquiry, QnA } = inquiry(
-    (state) => ({
-      isLoading: state.isLoading,
-      createInquiry: state.createInquiry,
-      updateInquiry: state.updateInquiry,
-      getInquiry: state.getInquiry,
-      QnA: state.QnA,
-    })
-  );
+  const {
+    isLoading,
+    createInquiry,
+    updateInquiry,
+    getInquiry,
+    createReview,
+    updateReview,
+    getReview,
+    QnA,
+  } = inquiry((state) => ({
+    isLoading: state.isLoading,
+    createInquiry: state.createInquiry,
+    updateInquiry: state.updateInquiry,
+    getInquiry: state.getInquiry,
+    createReview: state.createReview,
+    updateReview: state.updateReview,
+    getReview: state.getReview,
+    QnA: state.QnA,
+  }));
 
   const { getService, course, isCategoryLoading, clearCourse } = service(
     (state) => ({
@@ -107,9 +117,13 @@ export const PostEditor = () => {
       getCourseInquiry(course_id, course_inquiry_id);
       getService(course_id);
     } else if (boardPostId) {
-      getInquiry(boardPostId);
+      if (isReviewBoardDetailPath(location.pathname, boardPostId)) {
+        getReview(boardPostId);
+      } else {
+        getInquiry(boardPostId);
+      }
     }
-  }, [location.pathname, boardPostId, getInquiry, reset]);
+  }, [location.pathname, boardPostId, getInquiry, getReview, reset]);
 
   useEffect(() => {
     if (QnA && !isReviewBoardNewPath(location.pathname)) {
@@ -157,6 +171,18 @@ export const PostEditor = () => {
                 alert("에러가 발생했습니다: " + error.message);
               }
             });
+        } else if (isReviewBoardNewPath(location.pathname)) {
+          createReview(data.title, data.category, data.content, accessToken)
+            .then((success) => {
+              if (success) navigate(reviewBoardRoutes.list);
+            })
+            .catch(async (error) => {
+              if (error?.response?.status === 401 && !retryAttempted) {
+                await refreshAccessToken(refreshToken);
+                return onSubmit(data, true);
+              }
+              console.error("Error during review creation:", error);
+            });
         } else {
           createInquiry(myUserId, data.title, data.category, data.content, accessToken)
             .then(() => {
@@ -182,6 +208,12 @@ export const PostEditor = () => {
           if (CourseQnAUpdateSuccess) {
             navigate(`/courses/${course_id}/${lecture_id}`);
           }
+        } else if (isReviewBoardDetailPath(location.pathname, boardPostId)) {
+          updateReview(boardPostId, data.title, data.category, data.content).then(
+            (success) => {
+              if (success) navigate(reviewBoardRoutes.list);
+            }
+          );
         } else {
           const QnAUpdateSuccess = updateInquiry(
             boardPostId,
