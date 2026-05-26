@@ -49,12 +49,7 @@ export const HomeUserReviews = () => {
   }, [getReviews, clearInquiries]);
 
   const filteredReviews = useMemo(() => {
-    const useApiReviews =
-      EDUCATION_REVIEW_API_ENABLED &&
-      !isLoading &&
-      (inquiries?.length ?? 0) > 0;
-
-    const baseReviews = useApiReviews
+    const baseReviews = EDUCATION_REVIEW_API_ENABLED
       ? (inquiries ?? []).map((item) => ({
           id: item.id,
           name: maskUserName(item.user_name),
@@ -66,7 +61,10 @@ export const HomeUserReviews = () => {
 
     if (activeFilter === "all") return baseReviews;
     return baseReviews.filter((review) => review.category === activeFilter);
-  }, [activeFilter, inquiries, isLoading]);
+  }, [activeFilter, inquiries]);
+
+  const showApiEmptyState =
+    EDUCATION_REVIEW_API_ENABLED && !isLoading && filteredReviews.length === 0;
 
   useEffect(() => {
     setActiveIndex(0);
@@ -109,8 +107,12 @@ export const HomeUserReviews = () => {
   const handlePrev = () => scrollToIndex(activeIndex - 1);
   const handleNext = () => scrollToIndex(activeIndex + 1);
 
-  const canGoPrev = activeIndex > 0;
-  const canGoNext = activeIndex < filteredReviews.length - 1;
+  const carouselDisabled =
+    isLoading || showApiEmptyState || filteredReviews.length === 0;
+
+  const canGoPrev = !carouselDisabled && activeIndex > 0;
+  const canGoNext =
+    !carouselDisabled && activeIndex < filteredReviews.length - 1;
 
   return (
     <section
@@ -189,19 +191,29 @@ export const HomeUserReviews = () => {
         </div>
 
         <div className="home-reviews__carousel">
-          <div
-            ref={trackRef}
-            className="home-reviews__track"
-            onScroll={updateActiveIndexFromScroll}
-          >
-            {filteredReviews.map((review, index) => (
-              <HomeReviewCard
-                key={review.id}
-                review={review}
-                featured={index === activeIndex}
-              />
-            ))}
-          </div>
+          {EDUCATION_REVIEW_API_ENABLED && isLoading ? (
+            <p className="home-reviews__status" role="status">
+              불러오는 중…
+            </p>
+          ) : showApiEmptyState ? (
+            <p className="home-reviews__empty" role="status">
+              아직 등록된 고객 후기가 없습니다.
+            </p>
+          ) : (
+            <div
+              ref={trackRef}
+              className="home-reviews__track"
+              onScroll={updateActiveIndexFromScroll}
+            >
+              {filteredReviews.map((review, index) => (
+                <HomeReviewCard
+                  key={review.id}
+                  review={review}
+                  featured={index === activeIndex}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>

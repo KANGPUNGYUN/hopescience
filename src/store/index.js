@@ -1320,6 +1320,15 @@ function parseBoardPostListResponse(response) {
   };
 }
 
+/** 목록 API 미배포(404) 또는 후기 없음 — 알림 없이 빈 목록 처리 */
+function isReviewsListUnavailableError(error) {
+  return error?.response?.status === 404;
+}
+
+function applyEmptyReviewList(set) {
+  set({ inquiries: [], totalCount: 0, isLoading: false, error: null });
+}
+
 const useInquiryStore = create((set) => ({
   isLoading: false,
   error: null,
@@ -1502,8 +1511,12 @@ const useInquiryStore = create((set) => ({
       if (!response) throw new Error("No response from server");
 
       const { items, totalCount } = parseBoardPostListResponse(response);
-      set({ inquiries: items, totalCount, isLoading: false });
+      set({ inquiries: items, totalCount, isLoading: false, error: null });
     } catch (error) {
+      if (isReviewsListUnavailableError(error)) {
+        applyEmptyReviewList(set);
+        return;
+      }
       const message = getStoreApiErrorMessage(
         error,
         "고객 후기 목록을 가져오는 중 오류가 발생했습니다"
@@ -1523,8 +1536,12 @@ const useInquiryStore = create((set) => ({
       if (!response) throw new Error("No response from server");
 
       const { items, totalCount } = parseBoardPostListResponse(response);
-      set({ inquiries: items, totalCount, isLoading: false });
+      set({ inquiries: items, totalCount, isLoading: false, error: null });
     } catch (error) {
+      if (isReviewsListUnavailableError(error)) {
+        applyEmptyReviewList(set);
+        return;
+      }
       const message = getStoreApiErrorMessage(
         error,
         "고객 후기 검색 중 오류가 발생했습니다"
