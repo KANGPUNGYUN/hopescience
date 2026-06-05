@@ -21,13 +21,44 @@ export function parseHashtags(hashtags) {
   return result;
 }
 
+/** HTML 문자열에서 태그를 제거해 검색용 평문으로 변환 */
+export function stripHtmlToText(html) {
+  if (!html) return "";
+  return String(html)
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 export function mapColumnToFaqItem(column) {
   return {
     id: column.id,
     hashtags: parseHashtags(column.hashtags),
     question: column.title,
+    title: column.title,
     content: column.content ?? "",
+    created_at: column.created_at,
+    view_count: column.view_count ?? 0,
   };
+}
+
+export function matchesFaqSearch(item, keyword) {
+  const trimmed = (keyword ?? "").trim().toLowerCase();
+  if (!trimmed) return true;
+
+  const haystack = [
+    item.question ?? "",
+    stripHtmlToText(item.content),
+    item.hashtags.join(" "),
+  ]
+    .join(" ")
+    .toLowerCase();
+
+  return haystack.includes(trimmed);
 }
 
 export function buildFaqHashtagFilters(items) {

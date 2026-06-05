@@ -17,6 +17,7 @@ export { HomeEducationOperations } from './HomeEducationOperations';
 export { HomeCtaBanner } from './HomeCtaBanner';
 export { HomeContact } from './HomeContact';
 export { PaginationNav } from './PaginationNav';
+export { Seo } from './Seo';
 export {
   PageLoading,
   PageLoadingGate,

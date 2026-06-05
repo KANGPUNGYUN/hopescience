@@ -6,5 +6,7 @@ export const FAQ_PAGE_HERO = {
 };
 
 export const FAQ_FETCH_SKIP = 0;
-export const FAQ_FETCH_LIMIT = 6;
+export const FAQ_FETCH_LIMIT = 500;
 export const FAQ_FETCH_SORT = "desc";
+
+export const FAQ_POSTS_PER_PAGE = 10;

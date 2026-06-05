@@ -1,6 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const DRAG_THRESHOLD_PX = 6;
+const SCROLL_EPSILON_PX = 1;
 
 export function useHorizontalDragScroll() {
   const scrollRef = useRef(null);
@@ -11,6 +12,56 @@ export function useHorizontalDragScroll() {
     dragged: false,
     fromButton: false,
   });
+
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const updateScrollState = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const maxScrollLeft = el.scrollWidth - el.clientWidth;
+    setCanScrollLeft(el.scrollLeft > SCROLL_EPSILON_PX);
+    setCanScrollRight(el.scrollLeft < maxScrollLeft - SCROLL_EPSILON_PX);
+  }, []);
+
+  const scrollByDirection = useCallback((direction) => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const amount = Math.max(el.clientWidth * 0.7, 160);
+    el.scrollBy({ left: direction * amount, behavior: "smooth" });
+  }, []);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    updateScrollState();
+
+    const handleScroll = () => updateScrollState();
+    el.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", updateScrollState);
+
+    const resizeObserver =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(updateScrollState)
+        : null;
+    resizeObserver?.observe(el);
+
+    const mutationObserver =
+      typeof MutationObserver !== "undefined"
+        ? new MutationObserver(updateScrollState)
+        : null;
+    mutationObserver?.observe(el, { childList: true, subtree: true });
+
+    return () => {
+      el.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", updateScrollState);
+      resizeObserver?.disconnect();
+      mutationObserver?.disconnect();
+    };
+  }, [updateScrollState]);
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -114,5 +165,5 @@ export function useHorizontalDragScroll() {
     };
   }, []);
 
-  return { scrollRef };
+  return { scrollRef, canScrollLeft, canScrollRight, scrollByDirection };
 }

@@ -1,272 +1,296 @@
-.faq-detail-background {
-  width: 100vw;
-  min-height: calc(100vh - 286px);
-  background-color: #171a1f;
-  display: flex;
-  justify-content: center;
-  padding: 120px 30px 80px;
+.faq-detail-page-shell {
+  position: relative;
+}
+
+.faq-detail-page-shell > .site-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.faq-detail-page-shell > .site-header--solid {
+  position: sticky;
 }
 
 .faq-detail-page {
-  max-width: 900px;
   width: 100%;
+  background-color: #f6f8fa;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.faq-detail-loading {
-  color: #9095a1;
-  font-size: 15px;
-  text-align: center;
-  padding: 60px 0;
+/* Hero (shared with list page) */
+.faq-detail-page .faq-page-hero {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
 }
 
-.faq-detail-header {
-  margin-bottom: 32px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid #2a2d35;
+.faq-detail-page .faq-page-hero__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
-.faq-detail-title {
-  font-size: 28px;
-  font-weight: 700;
-  color: #dee1e6;
-  line-height: 1.5;
-  margin-bottom: 16px;
-  word-break: keep-all;
+.faq-detail-page .faq-page-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
 }
 
-.faq-detail-meta {
+.faq-detail-page .faq-page-hero__inner {
+  position: relative;
+  z-index: 1;
   display: flex;
-  gap: 24px;
-  font-size: 14px;
-  color: #9095a1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 80px 24px 48px;
+  text-align: center;
+  box-sizing: border-box;
 }
 
-.faq-detail-content {
-  color: #dee1e6;
+.faq-detail-page .faq-page-hero__label {
+  margin: 0 0 16px;
+  color: #d4d4d8;
+  font-family: "Times New Roman", Times, serif;
   font-size: 16px;
-  line-height: 1.9;
-  word-break: keep-all;
-  padding-bottom: 40px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
-/* HTML 콘텐츠 내 요소 스타일 */
-.faq-detail-content img {
+.faq-detail-page .faq-page-hero__title {
+  margin: 0;
+  max-width: 900px;
+  color: #ffffff;
+  font-size: clamp(28px, 3.2vw, 48px);
+  font-weight: 600;
+  line-height: 1.29;
+  word-break: keep-all;
+}
+
+.faq-detail-page .faq-page-hero__desc {
+  margin: 16px 0 0;
+  max-width: 560px;
+  color: #d4d4d8;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.33;
+  word-break: keep-all;
+}
+
+/* Content */
+.faq-detail-page__content {
+  padding: 70px 0 100px;
+}
+
+.faq-detail-page__inner {
+  margin: 0 auto;
+  max-width: 1280px;
+  padding: 0 clamp(16px, 8vw, 120px);
+  box-sizing: border-box;
+}
+
+.faq-detail-page__status {
+  margin: 48px 0;
+  text-align: center;
+  color: #767676;
+  font-size: 16px;
+}
+
+/* Article */
+.faq-detail-article {
+  margin-bottom: 48px;
+}
+
+.faq-detail-article__header {
+  padding-bottom: 24px;
+  border-bottom: 2px solid #1e3a6d;
+}
+
+.faq-detail-article__title {
+  margin: 0 0 16px;
+  color: #222222;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.4;
+  word-break: keep-all;
+}
+
+.faq-detail-article__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  color: #767676;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.faq-detail-article__meta-divider {
+  color: #d4d4d8;
+}
+
+.faq-detail-article__body {
+  margin: 32px 0 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #222222;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.75;
+  word-break: break-word;
+}
+
+.faq-detail-article__body--html p {
+  margin: 0 0 1em;
+}
+
+.faq-detail-article__body--html p:last-child {
+  margin-bottom: 0;
+}
+
+.faq-detail-article__body--html img {
   max-width: 100%;
   height: auto;
-  display: block;
-  margin: 16px 0;
-  border-radius: 4px;
 }
 
-.faq-detail-content p {
-  margin-bottom: 12px;
-}
-
-/* Heading — CSS Reset(font: inherit)를 오버라이드 */
-.faq-detail-content h1 {
-  font-size: 2em !important;
-  font-weight: 700 !important;
-  font-style: normal !important;
-  color: #dee1e6;
-  margin: 24px 0 12px;
-  line-height: 1.4;
-}
-
-.faq-detail-content h2 {
-  font-size: 1.5em !important;
-  font-weight: 700 !important;
-  font-style: normal !important;
-  color: #dee1e6;
-  margin: 22px 0 10px;
-  line-height: 1.4;
-}
-
-.faq-detail-content h3 {
-  font-size: 1.17em !important;
-  font-weight: 700 !important;
-  font-style: normal !important;
-  color: #dee1e6;
-  margin: 20px 0 10px;
-  line-height: 1.4;
-}
-
-.faq-detail-content h4 {
-  font-size: 1em !important;
-  font-weight: 700 !important;
-  font-style: normal !important;
-  color: #dee1e6;
-  margin: 18px 0 8px;
-  line-height: 1.4;
-}
-
-.faq-detail-content h5 {
-  font-size: 0.83em !important;
-  font-weight: 700 !important;
-  font-style: normal !important;
-  color: #dee1e6;
-  margin: 16px 0 8px;
-  line-height: 1.4;
-}
-
-.faq-detail-content h6 {
-  font-size: 0.67em !important;
-  font-weight: 700 !important;
-  font-style: normal !important;
-  color: #dee1e6;
-  margin: 14px 0 6px;
-  line-height: 1.4;
-}
-
-/* 텍스트 스타일 — CSS Reset(font: inherit)를 오버라이드 */
-.faq-detail-content strong,
-.faq-detail-content b {
-  color: #f0f0f0;
-  font-weight: 700 !important;
-}
-
-.faq-detail-content em,
-.faq-detail-content i {
-  font-style: italic !important;
-}
-
-.faq-detail-content u {
-  text-decoration: underline !important;
-}
-
-.faq-detail-content s,
-.faq-detail-content del,
-.faq-detail-content strike {
-  text-decoration: line-through !important;
-}
-
-.faq-detail-content sub {
-  vertical-align: sub;
-  font-size: smaller !important;
-}
-
-.faq-detail-content sup {
-  vertical-align: super;
-  font-size: smaller !important;
-}
-
-/* 링크 */
-.faq-detail-content a {
-  color: #bd9a31;
+.faq-detail-article__body--html a {
+  color: #1e3a6d;
   text-decoration: underline;
 }
 
-.faq-detail-content a:hover {
-  color: #d4b040;
-}
-
-/* 리스트 */
-.faq-detail-content ul,
-.faq-detail-content ol {
-  padding-left: 24px;
-  margin-bottom: 12px;
-}
-
-.faq-detail-content ul {
-  list-style-type: disc;
-}
-
-.faq-detail-content ol {
-  list-style-type: decimal;
-}
-
-.faq-detail-content li {
-  margin-bottom: 6px;
-}
-
-/* 인용구 */
-.faq-detail-content blockquote {
-  border-left: 3px solid #4b5263;
+.faq-detail-article__body--html blockquote {
   margin: 16px 0;
   padding: 10px 16px;
-  background-color: #1e2128;
-  color: #9095a1;
-  border-radius: 0 4px 4px 0;
+  border-left: 3px solid #1e3a6d;
+  background: #f1f3f6;
+  color: #767676;
 }
 
-/* 코드 블록 */
-.faq-detail-content pre {
-  background-color: #1e2128;
-  border: 1px solid #2a2d35;
-  border-radius: 4px;
-  padding: 12px 16px;
+.faq-detail-article__body--html pre {
   margin: 16px 0;
+  padding: 12px 16px;
+  border: 1px solid #e5e5ec;
+  border-radius: 4px;
+  background: #f6f8fa;
   overflow-x: auto;
   font-family: "Courier New", monospace;
   font-size: 14px;
-  color: #bdc1ca;
+  white-space: pre-wrap;
 }
 
-.faq-detail-content code {
-  background-color: #1e2128;
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-family: "Courier New", monospace;
-  font-size: 14px;
-  color: #bdc1ca;
-}
-
-.faq-detail-content pre code {
-  background: none;
-  padding: 0;
-}
-
-/* Quill 정렬 클래스 */
-.faq-detail-content .ql-align-center {
+.faq-detail-article__body--html .ql-align-center {
   text-align: center;
 }
 
-.faq-detail-content .ql-align-right {
+.faq-detail-article__body--html .ql-align-right {
   text-align: right;
 }
 
-.faq-detail-content .ql-align-justify {
+.faq-detail-article__body--html .ql-align-justify {
   text-align: justify;
 }
 
-/* Quill 인라인 스타일 컬러/배경 지원 */
-.faq-detail-content span[style] {
-  /* 인라인 color/background-color 스타일 허용 */
-}
-
-/* Quill 동영상 iframe */
-.faq-detail-content iframe {
+.faq-detail-article__body--html iframe {
   max-width: 100%;
   margin: 16px 0;
   border: none;
 }
 
-.faq-detail-tags {
+/* Tags */
+.faq-detail-article__tags {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  padding: 24px 0;
-  border-top: 1px solid #2a2d35;
-  margin-bottom: 24px;
+  margin-top: 32px;
 }
 
-.faq-detail-tag {
-  background-color: #323743;
-  color: #9095a1;
-  border-radius: 4px;
-  padding: 4px 10px;
-  font-size: 13px;
+.faq-detail-article__tag {
+  padding: 6px 16px;
+  border-radius: 80px;
+  background-color: #eef1f5;
+  color: #1e3a6d;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
 }
 
-.faq-detail-footer {
-  padding-top: 8px;
+/* Actions */
+.faq-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
 }
 
-@media screen and (max-width: 800px) {
-  .faq-detail-background {
-    padding: 100px 16px 60px;
+.faq-detail-actions__list {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  height: 44px;
+  padding: 0 24px;
+  border: 1px solid #1e3a6d;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #1e3a6d;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+/* Mobile */
+@media screen and (max-width: 768px) {
+  .faq-detail-page .faq-page-hero {
+    display: none;
   }
 
-  .faq-detail-title {
-    font-size: 22px;
+  .faq-detail-page__content {
+    padding: 24px 0 64px;
+  }
+
+  .faq-detail-page__inner {
+    padding: 0 16px;
+  }
+
+  .faq-detail-article {
+    margin-bottom: 32px;
+  }
+
+  .faq-detail-article__title {
+    font-size: 20px;
+  }
+
+  .faq-detail-article__body {
+    margin-top: 20px;
+    font-size: 15px;
+  }
+
+  .faq-detail-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .faq-detail-actions__list {
+    width: 100%;
+    max-width: 100%;
+    height: 48px;
   }
 }
