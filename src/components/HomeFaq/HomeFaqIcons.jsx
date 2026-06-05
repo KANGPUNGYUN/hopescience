@@ -21,6 +21,26 @@ export const FaqChevronIcon = ({ className = "", isOpen = false }) => (
   </svg>
 );
 
+export const FaqArrowRightIcon = ({ className = "" }) => (
+  <svg
+    className={className}
+    width="9"
+    height="14"
+    viewBox="0 0 9 14"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <path
+      d="M1.5 1L7.5 7L1.5 13"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 export const FaqMoreIcon = ({ className = "" }) => (
   <svg
     className={className}

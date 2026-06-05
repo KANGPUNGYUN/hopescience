@@ -1,7 +1,6 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { column } from "../../store";
-import { enhanceFaqContentLinks } from "../../pages/FAQ/faqPageUtils";
 import "./HomeFaq.css";
 import {
   HOME_FAQ_FETCH_LIMIT,
@@ -9,34 +8,9 @@ import {
   HOME_FAQ_FETCH_SORT,
   mapColumnToHomeFaqItem,
 } from "./homeFaqConfig";
-import { FaqChevronIcon, FaqMoreIcon } from "./HomeFaqIcons";
-
-const HomeFaqPanel = ({ item, isOpen }) => {
-  const contentRef = useRef(null);
-
-  useEffect(() => {
-    if (isOpen && contentRef.current) {
-      enhanceFaqContentLinks(contentRef.current);
-    }
-  }, [isOpen, item.content]);
-
-  return (
-    <div
-      className={`home-faq__panel${isOpen ? " home-faq__panel--open" : ""}`}
-      hidden={!isOpen}
-    >
-      <div
-        ref={contentRef}
-        className="home-faq__answer-content"
-        dangerouslySetInnerHTML={{ __html: item.content }}
-      />
-    </div>
-  );
-};
+import { FaqArrowRightIcon, FaqMoreIcon } from "./HomeFaqIcons";
 
 export const HomeFaq = () => {
-  const [activeIndex, setActiveIndex] = useState(null);
-
   const { columns, isLoading, getColumns } = column((state) => ({
     columns: state.columns,
     isLoading: state.isLoading,
@@ -47,14 +21,13 @@ export const HomeFaq = () => {
     getColumns(HOME_FAQ_FETCH_SKIP, HOME_FAQ_FETCH_LIMIT, HOME_FAQ_FETCH_SORT);
   }, [getColumns]);
 
+  // 공유 스토어(FAQ 목록 페이지는 최대 500건 조회)에 항목이 더 쌓여 있어도
+  // 메인에서는 항상 최신순 상위 3건만 노출한다.
   const items = useMemo(
-    () => (columns ?? []).map(mapColumnToHomeFaqItem),
+    () =>
+      (columns ?? []).slice(0, HOME_FAQ_FETCH_LIMIT).map(mapColumnToHomeFaqItem),
     [columns]
   );
-
-  const handleToggle = (index) => {
-    setActiveIndex(activeIndex === index ? null : index);
-  };
 
   return (
     <section className="home-faq" aria-labelledby="home-faq-title">
@@ -77,36 +50,25 @@ export const HomeFaq = () => {
           </Link>
         </div>
 
-        <div className="home-faq__accordion">
+        <div className="home-faq__list">
           {isLoading && items.length === 0 ? (
             <p className="home-faq__loading">질문을 불러오는 중입니다.</p>
           ) : items.length === 0 ? null : (
-            items.map((item, index) => {
-              const isOpen = activeIndex === index;
-
-              return (
-                <div
-                  key={item.id}
-                  className={`home-faq__item${isOpen ? " home-faq__item--open" : ""}${
-                    index === 0 ? " home-faq__item--first" : ""
-                  }`}
-                >
-                  <button
-                    type="button"
-                    className="home-faq__trigger"
-                    onClick={() => handleToggle(index)}
-                    aria-expanded={isOpen}
-                  >
-                    <span className="home-faq__number">Q{index + 1}</span>
-                    <span className="home-faq__question">{item.question}</span>
-                    <span className="home-faq__chevron" aria-hidden>
-                      <FaqChevronIcon isOpen={isOpen} />
-                    </span>
-                  </button>
-                  <HomeFaqPanel item={item} isOpen={isOpen} />
-                </div>
-              );
-            })
+            items.map((item, index) => (
+              <Link
+                key={item.id}
+                to={`/faq/${item.id}`}
+                className={`home-faq__item${
+                  index === 0 ? " home-faq__item--first" : ""
+                }`}
+              >
+                <span className="home-faq__number">Q{index + 1}</span>
+                <span className="home-faq__question">{item.question}</span>
+                <span className="home-faq__arrow" aria-hidden>
+                  <FaqArrowRightIcon />
+                </span>
+              </Link>
+            ))
           )}
         </div>
       </div>
