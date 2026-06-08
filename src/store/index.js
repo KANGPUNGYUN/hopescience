@@ -1627,7 +1627,10 @@ const useInquiryStore = create((set) => ({
   },
 
   uploadReviewImage: async (review_id, imageFile) => {
-    const accessToken = getReviewAccessToken();
+    const raw = sessionStorage.getItem("auth-storage");
+    const accessToken = raw
+      ? JSON.parse(raw)?.state?.accessToken
+      : null;
     if (!accessToken) return false;
     try {
       const formData = new FormData();
@@ -1639,7 +1642,12 @@ const useInquiryStore = create((set) => ({
       });
       return response?.image_url ?? false;
     } catch (error) {
+      const msg =
+        error?.response?.data?.detail ||
+        error?.message ||
+        "이미지 업로드 실패";
       console.error("리뷰 이미지 업로드 실패:", error);
+      alert(`이미지 업로드에 실패했습니다: ${msg}`);
       return false;
     }
   },
