@@ -14,35 +14,33 @@ export const QnAWriteAttachments = ({ files, onAdd, onRemove }) => {
     event.target.value = "";
     if (!selected.length) return;
 
-    const valid = [];
-    for (const file of selected) {
-      const ext = file.name.split(".").pop()?.toLowerCase();
-      const allowed = ["jpg", "jpeg", "png", "pdf"];
-      if (!ext || !allowed.includes(ext)) {
-        alert("JPG, PNG, PDF 파일만 첨부할 수 있습니다.");
-        continue;
-      }
-      if (file.size > QNA_ATTACHMENT_MAX_BYTES) {
-        alert("파일 크기는 최대 10MB까지 가능합니다.");
-        continue;
-      }
-      valid.push(file);
+    const file = selected[0];
+    const ext = file.name.split(".").pop()?.toLowerCase();
+    if (!ext || !["jpg", "jpeg", "png"].includes(ext)) {
+      alert("JPG, PNG 이미지만 첨부할 수 있습니다.");
+      return;
     }
-    if (valid.length) onAdd(valid);
+    if (file.size > QNA_ATTACHMENT_MAX_BYTES) {
+      alert("파일 크기는 최대 10MB까지 가능합니다.");
+      return;
+    }
+    onAdd([file]);
   };
 
   return (
     <div className="qna-write-attachments">
-      <h3 className="qna-write-attachments__label">첨부파일</h3>
+      <h3 className="qna-write-attachments__label">첨부 이미지</h3>
       <div className="qna-write-attachments__list">
-        <button
-          type="button"
-          className="qna-write-attachments__add"
-          aria-label="파일 첨부"
-          onClick={() => inputRef.current?.click()}
-        >
-          <QnAWritePlusIcon />
-        </button>
+        {files.length === 0 && (
+          <button
+            type="button"
+            className="qna-write-attachments__add"
+            aria-label="이미지 첨부"
+            onClick={() => inputRef.current?.click()}
+          >
+            <QnAWritePlusIcon />
+          </button>
+        )}
         {files.map((file) => (
           <div key={file.id} className="qna-write-attachments__item">
             {file.previewUrl ? (

@@ -24,8 +24,8 @@ export const MYPAGE_INQUIRY_WRITE_CATEGORIES = [
 export const MYPAGE_INQUIRY_WRITE_FORM_ID = "mypage-inquiry-write-form";
 
 export const QNA_ATTACHMENT_HINT =
-  "* JPG, PNG, PDF 파일 첨부 가능 · 최대 10MB";
+  "* JPG, PNG 이미지 1장 · 최대 10MB";
 
 export const QNA_ATTACHMENT_MAX_BYTES = 10 * 1024 * 1024;
 
-export const QNA_ATTACHMENT_ACCEPT = ".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf";
+export const QNA_ATTACHMENT_ACCEPT = ".jpg,.jpeg,.png,image/jpeg,image/png";

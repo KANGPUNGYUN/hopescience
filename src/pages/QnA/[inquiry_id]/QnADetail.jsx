@@ -327,6 +327,16 @@ export const QnADetail = () => {
                     </div>
                   </header>
 
+                  {QnA.image_url && (
+                    <div className="qna-detail-article__cover">
+                      <img
+                        src={QnA.image_url}
+                        alt="첨부 이미지"
+                        className="qna-detail-article__cover-img"
+                      />
+                    </div>
+                  )}
+
                   {isHtmlContent(QnA.content) ? (
                     <div
                       ref={contentRef}

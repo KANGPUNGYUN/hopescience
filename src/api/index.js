@@ -192,4 +192,16 @@ const postApi = ({ path = "", data = {}, access_token = "" } = {}) =>
 const deleteApi = ({ path = "", data = {}, access_token = "" } = {}) =>
   send({ method: "DELETE", path, data, access_token });
 
-export { getApi, putApi, postApi, patchApi, deleteApi };
+const uploadFileApi = ({ path = "", formData, access_token = "" } = {}) => {
+  const baseUrl = getBaseUrl();
+  const url = baseUrl + path;
+  return axios({
+    method: "POST",
+    url,
+    headers: { Authorization: `Bearer ${access_token}` },
+    data: formData,
+    withCredentials: true,
+  }).then((r) => r.data);
+};
+
+export { getApi, putApi, postApi, patchApi, deleteApi, uploadFileApi };

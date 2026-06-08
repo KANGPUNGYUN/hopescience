@@ -63,6 +63,7 @@ export const QnAWriteForm = ({ mode = "create", variant = "board" }) => {
     getInquiry,
     createReview,
     updateReview,
+    uploadReviewImage,
     getReview,
     getMyEnrolledReviewCourses,
     QnA,
@@ -73,6 +74,7 @@ export const QnAWriteForm = ({ mode = "create", variant = "board" }) => {
     getInquiry: state.getInquiry,
     createReview: state.createReview,
     updateReview: state.updateReview,
+    uploadReviewImage: state.uploadReviewImage,
     getReview: state.getReview,
     getMyEnrolledReviewCourses: state.getMyEnrolledReviewCourses,
     QnA: state.QnA,
@@ -204,15 +206,27 @@ export const QnAWriteForm = ({ mode = "create", variant = "board" }) => {
           data.title,
           data.content
         );
-        if (success) navigate(reviewBoardRoutes.detail(boardPostId));
+        if (success) {
+          const imageFile = attachments.find((a) =>
+            a.file.type.startsWith("image/")
+          )?.file;
+          if (imageFile) await uploadReviewImage(boardPostId, imageFile);
+          navigate(reviewBoardRoutes.detail(boardPostId));
+        }
       } else {
-        const success = await createReview(
+        const reviewId = await createReview(
           data.course_id,
           data.title,
           data.content,
           accessToken
         );
-        if (success) navigate(reviewBoardRoutes.list);
+        if (reviewId) {
+          const imageFile = attachments.find((a) =>
+            a.file.type.startsWith("image/")
+          )?.file;
+          if (imageFile) await uploadReviewImage(reviewId, imageFile);
+          navigate(reviewBoardRoutes.list);
+        }
       }
     } catch (error) {
       if (error?.response?.status === 401 && !retryAttempted) {

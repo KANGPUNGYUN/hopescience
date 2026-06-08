@@ -1,4 +1,4 @@
-import { getApi, putApi, deleteApi, postApi, patchApi } from "../api/index";
+import { getApi, putApi, deleteApi, postApi, patchApi, uploadFileApi } from "../api/index";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -1613,7 +1613,7 @@ const useInquiryStore = create((set) => ({
       if (response?.id != null) {
         set({ isLoading: false });
         alert("고객 후기가 등록되었습니다.");
-        return true;
+        return response.id;
       }
       set({ isLoading: false });
       alert("고객 후기 등록에 실패했습니다.");
@@ -1622,6 +1622,24 @@ const useInquiryStore = create((set) => ({
       const message = getStoreApiErrorMessage(error, "고객 후기 등록 실패");
       set({ error: message, isLoading: false });
       alert(message);
+      return false;
+    }
+  },
+
+  uploadReviewImage: async (review_id, imageFile) => {
+    const accessToken = getReviewAccessToken();
+    if (!accessToken) return false;
+    try {
+      const formData = new FormData();
+      formData.append("image", imageFile);
+      const response = await uploadFileApi({
+        path: `/reviews/${review_id}/image`,
+        formData,
+        access_token: accessToken,
+      });
+      return response?.image_url ?? false;
+    } catch (error) {
+      console.error("리뷰 이미지 업로드 실패:", error);
       return false;
     }
   },
