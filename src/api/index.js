@@ -1,22 +1,50 @@
 // api/index.js
 import axios from "axios";
 
-function getUserTypeFromSessionStorage() {
+function getBaseUrl() {
+  const isDevelopment = process.env.REACT_APP_ENV === "development";
+  return isDevelopment
+    ? process.env.REACT_APP_API_URL_DEV
+    : process.env.REACT_APP_API_URL_PROD;
+}
+
+function getAuthState() {
   try {
     const raw = sessionStorage.getItem("auth-storage");
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    return parsed?.state?.user?.userType ?? null;
+    if (!raw) return {};
+    return JSON.parse(raw)?.state ?? {};
   } catch {
-    return null;
+    return {};
   }
+}
+
+function setAuthState(updates) {
+  try {
+    const raw = sessionStorage.getItem("auth-storage");
+    const parsed = raw ? JSON.parse(raw) : { state: {} };
+    parsed.state = { ...parsed.state, ...updates };
+    sessionStorage.setItem("auth-storage", JSON.stringify(parsed));
+  } catch {
+    // ignore
+  }
+}
+
+function clearAuthState() {
+  try {
+    sessionStorage.removeItem("auth-storage");
+  } catch {
+    // ignore
+  }
+}
+
+function getUserTypeFromSessionStorage() {
+  return getAuthState()?.user?.userType ?? null;
 }
 
 function assertStaffApiAllowed({ path }) {
   const userType = getUserTypeFromSessionStorage();
   if (userType !== "staff") return;
 
-  // staff는 현재 칼럼 관련 API만 허용하되, 인증 필수 엔드포인트는 예외 허용
   const staffAllowedPrefixes = ["/columns"];
   const staffAllowedExact = ["/users/logout", "/users/login", "/users/refresh"];
   const isAllowed =
@@ -30,6 +58,95 @@ function assertStaffApiAllowed({ path }) {
   }
 }
 
+// 동시에 여러 요청이 401을 받아도 refresh를 한 번만 시도하기 위한 상태
+let isRefreshing = false;
+let pendingQueue = []; // { resolve, reject }[]
+
+function processPendingQueue(error, newToken = null) {
+  pendingQueue.forEach(({ resolve, reject }) => {
+    if (error) reject(error);
+    else resolve(newToken);
+  });
+  pendingQueue = [];
+}
+
+// axios 인터셉터 설정
+axios.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    // refresh 요청 자체가 401이면 세션 만료 → 로그아웃
+    if (
+      error.response?.status === 401 &&
+      originalRequest.url?.includes("/users/refresh")
+    ) {
+      clearAuthState();
+      window.location.href = "/signin";
+      return Promise.reject(error);
+    }
+
+    // 401이고 재시도 전인 경우에만 refresh 시도
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      const { refreshToken } = getAuthState();
+      if (!refreshToken) {
+        clearAuthState();
+        window.location.href = "/signin";
+        return Promise.reject(error);
+      }
+
+      if (isRefreshing) {
+        // 이미 refresh 중이면 대기열에 추가
+        return new Promise((resolve, reject) => {
+          pendingQueue.push({ resolve, reject });
+        }).then((newToken) => {
+          originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
+          return axios(originalRequest);
+        });
+      }
+
+      isRefreshing = true;
+
+      try {
+        const baseUrl = getBaseUrl();
+        const res = await axios.post(
+          `${baseUrl}/users/refresh`,
+          { refresh_token: refreshToken },
+          {
+            headers: {
+              "content-type": "application/json;charset=UTF-8",
+              accept: "application/json",
+            },
+            withCredentials: true,
+          }
+        );
+
+        const { access_token, refresh_token } = res.data;
+        setAuthState({
+          accessToken: access_token,
+          refreshToken: refresh_token ?? refreshToken,
+        });
+
+        processPendingQueue(null, access_token);
+        originalRequest.headers["Authorization"] = `Bearer ${access_token}`;
+        return axios(originalRequest);
+      } catch (refreshError) {
+        processPendingQueue(refreshError);
+        clearAuthState();
+        alert("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
+        window.location.href = "/signin";
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
+
 const send = async ({
   method = "",
   path = "",
@@ -37,10 +154,8 @@ const send = async ({
   access_token = "",
   headers = {},
 } = {}) => {
-
-  const isDevelopment = process.env.REACT_APP_ENV === 'development';
-  const commonUrl = isDevelopment ? process.env.REACT_APP_API_URL_DEV : process.env.REACT_APP_API_URL_PROD;
-  const url = commonUrl + path;
+  const baseUrl = getBaseUrl();
+  const url = baseUrl + path;
   assertStaffApiAllowed({ path });
 
   const defaultHeaders = {
@@ -49,15 +164,10 @@ const send = async ({
     Authorization: `Bearer ${access_token}`,
   };
 
-  const mergedHeaders = {
-    ...defaultHeaders,
-    ...headers,
-  };
-
   const options = {
     method,
     url,
-    headers: mergedHeaders,
+    headers: { ...defaultHeaders, ...headers },
     data,
     withCredentials: true,
   };

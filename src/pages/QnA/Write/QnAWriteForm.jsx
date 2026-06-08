@@ -16,15 +16,23 @@ import {
 import { reviewBoardRoutes } from "../qnaBoardConfig";
 import { isQuillEmpty } from "./qnaWriteQuill";
 
-const schema = yup
-  .object({
-    title: yup.string().required("제목을 입력해주세요"),
-    category: yup.string().required("카테고리를 선택해주세요"),
-    content: yup
-      .string()
-      .test("content", "내용을 작성해주세요", (val) => !isQuillEmpty(val)),
-  })
-  .required();
+const buildSchema = (isMypage) =>
+  yup
+    .object({
+      title: yup.string().required("제목을 입력해주세요"),
+      ...(isMypage
+        ? { category: yup.string().required("카테고리를 선택해주세요") }
+        : {
+            course_id: yup
+              .string()
+              .required("수강 중인 강의를 선택해주세요")
+              .min(1, "수강 중인 강의를 선택해주세요"),
+          }),
+      content: yup
+        .string()
+        .test("content", "내용을 작성해주세요", (val) => !isQuillEmpty(val)),
+    })
+    .required();
 
 function createAttachmentEntry(file) {
   const isImage = file.type.startsWith("image/");
@@ -47,6 +55,7 @@ export const QnAWriteForm = ({ mode = "create", variant = "board" }) => {
   const formId = isMypage ? MYPAGE_INQUIRY_WRITE_FORM_ID : undefined;
 
   const [attachments, setAttachments] = useState([]);
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
 
   const {
     createInquiry,
@@ -55,6 +64,7 @@ export const QnAWriteForm = ({ mode = "create", variant = "board" }) => {
     createReview,
     updateReview,
     getReview,
+    getMyEnrolledReviewCourses,
     QnA,
     isLoading,
   } = inquiry((state) => ({
@@ -64,6 +74,7 @@ export const QnAWriteForm = ({ mode = "create", variant = "board" }) => {
     createReview: state.createReview,
     updateReview: state.updateReview,
     getReview: state.getReview,
+    getMyEnrolledReviewCourses: state.getMyEnrolledReviewCourses,
     QnA: state.QnA,
     isLoading: state.isLoading,
   }));
@@ -82,8 +93,10 @@ export const QnAWriteForm = ({ mode = "create", variant = "board" }) => {
     control,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(schema),
-    defaultValues: { title: "", category: "", content: "" },
+    resolver: yupResolver(buildSchema(isMypage)),
+    defaultValues: isMypage
+      ? { title: "", category: "", content: "" }
+      : { title: "", course_id: "", content: "" },
   });
 
   useEffect(() => {
@@ -96,14 +109,44 @@ export const QnAWriteForm = ({ mode = "create", variant = "board" }) => {
   }, [isEdit, boardPostId, isMypage, getInquiry, getReview]);
 
   useEffect(() => {
+    if (isMypage) return;
+    let active = true;
+    (async () => {
+      const list = await getMyEnrolledReviewCourses();
+      if (active) setEnrolledCourses(list);
+    })();
+    return () => {
+      active = false;
+    };
+  }, [isMypage, getMyEnrolledReviewCourses]);
+
+  useEffect(() => {
     if (isEdit && QnA) {
-      reset({
-        title: QnA.title ?? "",
-        category: QnA.category ?? "",
-        content: QnA.content ?? "",
-      });
+      reset(
+        isMypage
+          ? {
+              title: QnA.title ?? "",
+              category: QnA.category ?? "",
+              content: QnA.content ?? "",
+            }
+          : {
+              title: QnA.title ?? "",
+              course_id:
+                QnA.course_id != null ? String(QnA.course_id) : "",
+              content: QnA.content ?? "",
+            }
+      );
     }
-  }, [isEdit, QnA, reset]);
+  }, [isEdit, QnA, isMypage, reset]);
+
+  const courseOptions = useMemo(
+    () =>
+      enrolledCourses.map((course) => ({
+        value: String(course.course_id),
+        label: course.course_title,
+      })),
+    [enrolledCourses]
+  );
 
   const handleAddAttachments = (files) => {
     setAttachments((prev) => {
@@ -157,15 +200,15 @@ export const QnAWriteForm = ({ mode = "create", variant = "board" }) => {
       } else if (isEdit) {
         const success = await updateReview(
           boardPostId,
+          data.course_id,
           data.title,
-          data.category,
           data.content
         );
         if (success) navigate(reviewBoardRoutes.detail(boardPostId));
       } else {
         const success = await createReview(
+          data.course_id,
           data.title,
-          data.category,
           data.content,
           accessToken
         );
@@ -232,23 +275,48 @@ export const QnAWriteForm = ({ mode = "create", variant = "board" }) => {
               )}
             </div>
 
-            <div className="qna-write-form__field">
-              <label htmlFor="qna-write-category" className="qna-write-form__label">
-                카테고리 <span className="qna-write-form__required">*</span>
-              </label>
-              <Controller
-                name="category"
-                control={control}
-                render={({ field }) => (
-                  <QnAWriteCategorySelect
-                    value={field.value}
-                    onChange={field.onChange}
-                    options={categories}
-                    error={errors.category?.message}
-                  />
-                )}
-              />
-            </div>
+            {isMypage ? (
+              <div className="qna-write-form__field">
+                <label htmlFor="qna-write-category" className="qna-write-form__label">
+                  카테고리 <span className="qna-write-form__required">*</span>
+                </label>
+                <Controller
+                  name="category"
+                  control={control}
+                  render={({ field }) => (
+                    <QnAWriteCategorySelect
+                      value={field.value}
+                      onChange={field.onChange}
+                      options={categories}
+                      error={errors.category?.message}
+                    />
+                  )}
+                />
+              </div>
+            ) : (
+              <div className="qna-write-form__field">
+                <label htmlFor="qna-write-course" className="qna-write-form__label">
+                  수강 강의 <span className="qna-write-form__required">*</span>
+                </label>
+                <Controller
+                  name="course_id"
+                  control={control}
+                  render={({ field }) => (
+                    <QnAWriteCategorySelect
+                      value={field.value}
+                      onChange={field.onChange}
+                      options={courseOptions}
+                      error={errors.course_id?.message}
+                      placeholder={
+                        courseOptions.length === 0
+                          ? "수강 중인 강의가 없습니다"
+                          : "수강 중인 강의를 선택해주세요"
+                      }
+                    />
+                  )}
+                />
+              </div>
+            )}
           </div>
 
           <div className="qna-write-form__field">

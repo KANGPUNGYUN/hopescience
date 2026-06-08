@@ -1574,15 +1574,40 @@ const useInquiryStore = create((set) => ({
     }
   },
 
-  createReview: async (title, category, content, accessToken) => {
+  getMyEnrolledReviewCourses: async () => {
+    const accessToken = getReviewAccessToken();
+    if (!accessToken) return [];
+    try {
+      const response = await getApi({
+        path: `/reviews/my-courses`,
+        access_token: accessToken,
+      });
+      return Array.isArray(response) ? response : [];
+    } catch (error) {
+      const message = getStoreApiErrorMessage(
+        error,
+        "수강 중인 강의 목록을 가져오는 중 오류가 발생했습니다"
+      );
+      set({ error: message });
+      return [];
+    }
+  },
+
+  createReview: async (course_id, title, content, accessToken) => {
     const token = accessToken || getReviewAccessToken();
     if (!token) return false;
+
+    const numericCourseId = Number(course_id);
+    if (!numericCourseId || isNaN(numericCourseId)) {
+      alert("수강 중인 강의를 선택해주세요.");
+      return false;
+    }
 
     set({ isLoading: true });
     try {
       const response = await postApi({
         path: `/reviews/`,
-        data: { title, category, content },
+        data: { course_id: numericCourseId, title, content },
         access_token: token,
       });
       if (response?.id != null) {
@@ -1601,7 +1626,7 @@ const useInquiryStore = create((set) => ({
     }
   },
 
-  updateReview: async (review_id, title, category, content) => {
+  updateReview: async (review_id, course_id, title, content) => {
     const accessToken = getReviewAccessToken();
     if (!accessToken) return false;
 
@@ -1609,7 +1634,7 @@ const useInquiryStore = create((set) => ({
     try {
       await putApi({
         path: `/reviews/${review_id}`,
-        data: { title, category, content },
+        data: { course_id: Number(course_id), title, content },
         access_token: accessToken,
       });
       set({ isLoading: false });
