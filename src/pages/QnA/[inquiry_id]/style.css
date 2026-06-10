@@ -17,7 +17,11 @@
 .qna-detail-page {
   width: 100%;
   background-color: #f6f8fa;
-  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    "Pretendard",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
 }
 
 /* Hero (desktop) */
@@ -204,12 +208,24 @@
   color: #222222;
 }
 
-.qna-detail-article__body--html h1 { font-size: 2em; }
-.qna-detail-article__body--html h2 { font-size: 1.5em; }
-.qna-detail-article__body--html h3 { font-size: 1.17em; }
-.qna-detail-article__body--html h4 { font-size: 1em; }
-.qna-detail-article__body--html h5 { font-size: 0.83em; }
-.qna-detail-article__body--html h6 { font-size: 0.67em; }
+.qna-detail-article__body--html h1 {
+  font-size: 2em;
+}
+.qna-detail-article__body--html h2 {
+  font-size: 1.5em;
+}
+.qna-detail-article__body--html h3 {
+  font-size: 1.17em;
+}
+.qna-detail-article__body--html h4 {
+  font-size: 1em;
+}
+.qna-detail-article__body--html h5 {
+  font-size: 0.83em;
+}
+.qna-detail-article__body--html h6 {
+  font-size: 0.67em;
+}
 
 /* Images */
 .qna-detail-article__body--html img {
@@ -272,7 +288,7 @@
 }
 
 .qna-detail-article__body--html ul > li::before {
-  content: '\2022';
+  content: "\2022";
   display: inline-block;
   white-space: nowrap;
   width: 1.2em;
@@ -291,7 +307,7 @@
 }
 
 .qna-detail-article__body--html ol > li::before {
-  content: counter(list-0, decimal) '. ';
+  content: counter(list-0, decimal) ". ";
   display: inline-block;
   white-space: nowrap;
   width: 1.2em;
@@ -301,24 +317,52 @@
 }
 
 /* Indent levels */
-.qna-detail-article__body--html .ql-indent-1 { padding-left: 3em; }
-.qna-detail-article__body--html .ql-indent-2 { padding-left: 4.5em; }
-.qna-detail-article__body--html .ql-indent-3 { padding-left: 6em; }
-.qna-detail-article__body--html .ql-indent-4 { padding-left: 7.5em; }
-.qna-detail-article__body--html .ql-indent-5 { padding-left: 9em; }
-.qna-detail-article__body--html .ql-indent-6 { padding-left: 10.5em; }
-.qna-detail-article__body--html .ql-indent-7 { padding-left: 12em; }
-.qna-detail-article__body--html .ql-indent-8 { padding-left: 13.5em; }
+.qna-detail-article__body--html .ql-indent-1 {
+  padding-left: 3em;
+}
+.qna-detail-article__body--html .ql-indent-2 {
+  padding-left: 4.5em;
+}
+.qna-detail-article__body--html .ql-indent-3 {
+  padding-left: 6em;
+}
+.qna-detail-article__body--html .ql-indent-4 {
+  padding-left: 7.5em;
+}
+.qna-detail-article__body--html .ql-indent-5 {
+  padding-left: 9em;
+}
+.qna-detail-article__body--html .ql-indent-6 {
+  padding-left: 10.5em;
+}
+.qna-detail-article__body--html .ql-indent-7 {
+  padding-left: 12em;
+}
+.qna-detail-article__body--html .ql-indent-8 {
+  padding-left: 13.5em;
+}
 
 /* Font size */
-.qna-detail-article__body--html .ql-size-small { font-size: 0.75em; }
-.qna-detail-article__body--html .ql-size-large { font-size: 1.5em; }
-.qna-detail-article__body--html .ql-size-huge  { font-size: 2.5em; }
+.qna-detail-article__body--html .ql-size-small {
+  font-size: 0.75em;
+}
+.qna-detail-article__body--html .ql-size-large {
+  font-size: 1.5em;
+}
+.qna-detail-article__body--html .ql-size-huge {
+  font-size: 2.5em;
+}
 
 /* Alignment */
-.qna-detail-article__body--html .ql-align-center  { text-align: center; }
-.qna-detail-article__body--html .ql-align-right   { text-align: right; }
-.qna-detail-article__body--html .ql-align-justify { text-align: justify; }
+.qna-detail-article__body--html .ql-align-center {
+  text-align: center;
+}
+.qna-detail-article__body--html .ql-align-right {
+  text-align: right;
+}
+.qna-detail-article__body--html .ql-align-justify {
+  text-align: justify;
+}
 
 /* Video / iframe */
 .qna-detail-article__body--html iframe,
@@ -353,7 +397,6 @@
   border: 1px solid #e5e5ec;
   border-bottom: none;
   border-radius: 0;
-  overflow: hidden;
   padding: 24px;
 }
 
