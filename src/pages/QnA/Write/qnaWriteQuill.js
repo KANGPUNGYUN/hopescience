@@ -37,7 +37,8 @@ export const QNA_QUILL_MODULES = {
       [{ list: "ordered" }, { list: "bullet" }],
       [{ align: [] }],
       ["blockquote", "code-block"],
-      ["link", "video"],
+      ["link"],
+      // ["link", "video"],
       ["clean"],
     ],
     // handlers: {
@@ -60,7 +61,7 @@ export const QNA_QUILL_FORMATS = [
   "code-block",
   "link",
   // "image",
-  "video",
+  // "video",
 ];
 
 export function isQuillEmpty(html) {
