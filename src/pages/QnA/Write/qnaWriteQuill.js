@@ -17,16 +17,16 @@ class ExternalLink extends Link {
 Quill.register(ExternalLink, true);
 
 // base64 저장 대신 URL 입력 방식으로 교체 — base64는 수 백KB가 되어 백엔드 크기 제한에 걸림
-function imageUrlHandler() {
-  const url = prompt("이미지 URL을 입력해주세요");
-  if (!url) return;
-  const normalizedUrl =
-    /^https?:\/\//i.test(url) ? url : `https://${url}`;
-  const quill = this.quill;
-  const range = quill.getSelection(true);
-  quill.insertEmbed(range.index, "image", normalizedUrl, "user");
-  quill.setSelection(range.index + 1, 0, "silent");
-}
+// function imageUrlHandler() {
+//   const url = prompt("이미지 URL을 입력해주세요");
+//   if (!url) return;
+//   const normalizedUrl =
+//     /^https?:\/\//i.test(url) ? url : `https://${url}`;
+//   const quill = this.quill;
+//   const range = quill.getSelection(true);
+//   quill.insertEmbed(range.index, "image", normalizedUrl, "user");
+//   quill.setSelection(range.index + 1, 0, "silent");
+// }
 
 export const QNA_QUILL_MODULES = {
   toolbar: {
@@ -37,12 +37,12 @@ export const QNA_QUILL_MODULES = {
       [{ list: "ordered" }, { list: "bullet" }],
       [{ align: [] }],
       ["blockquote", "code-block"],
-      ["link", "image", "video"],
+      ["link", "video"],
       ["clean"],
     ],
-    handlers: {
-      image: imageUrlHandler,
-    },
+    // handlers: {
+    //   image: imageUrlHandler,
+    // },
   },
 };
 
@@ -59,7 +59,7 @@ export const QNA_QUILL_FORMATS = [
   "blockquote",
   "code-block",
   "link",
-  "image",
+  // "image",
   "video",
 ];
 

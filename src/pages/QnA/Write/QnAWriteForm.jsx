@@ -207,10 +207,10 @@ export const QnAWriteForm = ({ mode = "create", variant = "board" }) => {
           data.content
         );
         if (success) {
-          const imageFile = attachments.find((a) =>
-            a.file.type.startsWith("image/")
-          )?.file;
-          if (imageFile) await uploadReviewImage(boardPostId, imageFile);
+          // const imageFile = attachments.find((a) =>
+          //   a.file.type.startsWith("image/")
+          // )?.file;
+          // if (imageFile) await uploadReviewImage(boardPostId, imageFile);
           navigate(reviewBoardRoutes.detail(boardPostId));
         }
       } else {
@@ -221,10 +221,10 @@ export const QnAWriteForm = ({ mode = "create", variant = "board" }) => {
           accessToken
         );
         if (reviewId) {
-          const imageFile = attachments.find((a) =>
-            a.file.type.startsWith("image/")
-          )?.file;
-          if (imageFile) await uploadReviewImage(reviewId, imageFile);
+          // const imageFile = attachments.find((a) =>
+          //   a.file.type.startsWith("image/")
+          // )?.file;
+          // if (imageFile) await uploadReviewImage(reviewId, imageFile);
           navigate(reviewBoardRoutes.list);
         }
       }
@@ -350,11 +350,11 @@ export const QnAWriteForm = ({ mode = "create", variant = "board" }) => {
             />
           </div>
 
-          <QnAWriteAttachments
+          {/* <QnAWriteAttachments
             files={attachments}
             onAdd={handleAddAttachments}
             onRemove={handleRemoveAttachment}
-          />
+          /> */}
         </div>
 
         <div className="qna-write-form__actions">
