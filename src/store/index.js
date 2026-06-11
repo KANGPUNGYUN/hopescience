@@ -2881,7 +2881,6 @@ const useColumnStore = create((set) => ({
       }
     } catch (error) {
       set({ error: error.message, isLoading: false });
-      alert("칼럼 목록을 가져오는 중 오류가 발생했습니다: " + error.message);
     }
   },
 
@@ -2896,7 +2895,6 @@ const useColumnStore = create((set) => ({
       }
     } catch (error) {
       set({ error: error.message, isLoading: false });
-      alert("칼럼을 가져오는 중 오류가 발생했습니다: " + error.message);
     }
   },
 
