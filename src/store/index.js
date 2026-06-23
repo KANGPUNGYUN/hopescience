@@ -366,6 +366,23 @@ const usePaymentStore = create((set) => ({
         return true;
       }
     } catch (error) {
+      const status = error?.response?.status;
+      const detail = error?.response?.data?.detail;
+      const detailMsg =
+        typeof detail === "string"
+          ? detail
+          : Array.isArray(detail)
+          ? detail.map((d) => d?.msg).filter(Boolean).join(", ")
+          : detail?.message || "";
+      const alreadyConfirmed =
+        status === 400 && /already confirmed/i.test(detailMsg);
+
+      if (alreadyConfirmed) {
+        console.log(`결제 이미 완료됨: 주문번호 ${orderId}`);
+        set({ isLoading: false });
+        return true;
+      }
+
       set({
         error: error.message || "결제 완료 처리 중 오류가 발생했습니다",
         isLoading: false,
@@ -2067,6 +2084,10 @@ const useCourseInquiryStore = create((set) => ({
         throw new Error(`Failed to fetch inquiry: Status ${response.status}`);
       }
     } catch (error) {
+      if (error?.response?.status === 404) {
+        set({ courseQnA: null, error: null, isLoading: false });
+        return;
+      }
       set({ error: error.message, isLoading: false });
       alert("질문을 가져오는 중 오류가 발생했습니다: " + error.message);
     }
@@ -2275,6 +2296,10 @@ const useCourseInquiryStore = create((set) => ({
         throw new Error(`Failed to fetch inquiry: Status ${response.status}`);
       }
     } catch (error) {
+      if (error?.response?.status === 404) {
+        set({ courseQnA: null, error: null, isLoading: false });
+        return;
+      }
       set({ error: error.message, isLoading: false });
       alert(`${category_name} 카테고리의 질문을 가져오는 중 오류가 발생했습니다: ` + error.message);
     }

@@ -70,11 +70,33 @@ function processPendingQueue(error, newToken = null) {
   pendingQueue = [];
 }
 
+// 429 알림 디바운스 (연속 호출 시 중복 alert 방지)
+let lastRateLimitAlertAt = 0;
+function notifyRateLimited(error) {
+  const now = Date.now();
+  if (now - lastRateLimitAlertAt < 3000) return;
+  lastRateLimitAlertAt = now;
+  const serverMsg =
+    error?.response?.data?.error ||
+    error?.response?.data?.detail ||
+    "";
+  alert(
+    `요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.${
+      serverMsg ? `\n(${serverMsg})` : ""
+    }`
+  );
+}
+
 // axios 인터셉터 설정
 axios.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+
+    if (error.response?.status === 429) {
+      notifyRateLimited(error);
+      return Promise.reject(error);
+    }
 
     // refresh 요청 자체가 401이면 세션 만료 → 로그아웃
     if (
@@ -158,10 +180,11 @@ const send = async ({
   const url = baseUrl + path;
   assertStaffApiAllowed({ path });
 
+  const token = access_token || getAuthState()?.accessToken || "";
   const defaultHeaders = {
     "content-type": "application/json;charset=UTF-8",
     accept: "application/json",
-    Authorization: `Bearer ${access_token}`,
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
 
   const options = {
@@ -195,10 +218,11 @@ const deleteApi = ({ path = "", data = {}, access_token = "" } = {}) =>
 const uploadFileApi = ({ path = "", formData, access_token = "" } = {}) => {
   const baseUrl = getBaseUrl();
   const url = baseUrl + path;
+  const token = access_token || getAuthState()?.accessToken || "";
   return axios({
     method: "POST",
     url,
-    headers: { Authorization: `Bearer ${access_token}` },
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
     data: formData,
     withCredentials: true,
   }).then((r) => r.data);

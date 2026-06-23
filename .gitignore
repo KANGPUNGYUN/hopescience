@@ -30,3 +30,4 @@ sourcemap-info.json
 build
 
 *.pen
+.gstack/
