@@ -2345,7 +2345,7 @@ const useEnrollmentStore = create((set) => ({
     }
   },
 
-  getIsEnrolled: async (userId, courseId) => {
+  getIsEnrolled: async (userId, courseId, options = {}) => {
     const normalizedUserId = Number(userId);
     const normalizedCourseId = Number(courseId);
 
@@ -2358,10 +2358,12 @@ const useEnrollmentStore = create((set) => ({
       return null;
     }
 
+    const query = options.includeCanceled ? "?include_canceled=true" : "";
+
     set({ isLoading: true });
     try {
       const response = await getApi({
-        path: `/enrollments/user/${normalizedUserId}/course/${normalizedCourseId}`,
+        path: `/enrollments/user/${normalizedUserId}/course/${normalizedCourseId}${query}`,
       });
       if (response) {
         set({ enrollment: response, isLoading: false, error: null });

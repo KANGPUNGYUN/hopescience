@@ -284,14 +284,20 @@ export const AdminReceiptPdfGenerator = () => {
         try {
           // 결제 취소
           await cancelPayment(paymentKey, "관리자에 의한 결제 취소", paymentData?.amount);
-          
-          // 등록 정보 확인
-          const enrollmentInfo = await getIsEnrolled(purchaserUserId, purchaserCourseId);
-          
+
+          // 관리자 페이지에서는 취소된 수강도 조회해야 하므로 include_canceled=true
+          const enrollmentInfo = await getIsEnrolled(purchaserUserId, purchaserCourseId, {
+            includeCanceled: true,
+          });
+
           if (enrollmentInfo && enrollmentInfo.id) {
-            // 등록 삭제
-            await deleteEnrollment(enrollmentInfo.id);
-            alert("결제가 취소되고 수강 등록이 삭제되었습니다.");
+            if (enrollmentInfo.canceled_at) {
+              // 백엔드에서 이미 수강 취소 처리됨
+              alert("결제가 취소되었습니다. (수강 정보: 결제 취소됨)");
+            } else {
+              await deleteEnrollment(enrollmentInfo.id);
+              alert("결제가 취소되고 수강 등록이 삭제되었습니다.");
+            }
           } else {
             alert("결제는 취소되었지만, 수강 등록 정보를 찾을 수 없습니다.");
           }
