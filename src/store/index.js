@@ -197,17 +197,12 @@ const useAuthStore = create(
             },
           });
           if (response) {
-            const { access_token, refresh_token, user_id, name, user_type } = response;
+            const { access_token, refresh_token, user_id, name, user_type, uuid } = response;
             set({
-              user: {
-                accessToken: access_token,
-                refreshToken: refresh_token,
-                userId: user_id,
-                name: name,
-                userType: user_type,
-              },
+              user: { userId: user_id, name, userType: user_type, uuid },
+              accessToken: access_token,
+              refreshToken: refresh_token,
               isLoading: false,
-              token: access_token,
             });
             alert(`로그인 성공! ${name}님 환영합니다!`);
             return response;
