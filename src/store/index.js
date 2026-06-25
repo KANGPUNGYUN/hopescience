@@ -1187,7 +1187,7 @@ const useServiceStore = create((set) => ({
   },
 
   getLecture: async (lecture_id) => {
-    set({ isLoading: true });
+    set({ isLoading: true, lecture: null });
     try {
       const response = await getApi({
         path: `/courses/lectures/${lecture_id}`,

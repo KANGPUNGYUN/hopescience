@@ -144,6 +144,8 @@ export const Lecture = () => {
   );
 
   const courseTitle = course?.title || lecture?.title || "";
+  const isLectureReady =
+    lecture && String(lecture.id) === String(lecture_id);
   const prevLink = nextLecture?.previous
     ? `/courses/${course_id}/${nextLecture.previous.lecture_id}`
     : null;
@@ -177,14 +179,14 @@ export const Lecture = () => {
         >
           <div className="lecture-page__main">
             <LectureVideoSection
-              videoUrl={lecture?.video_url}
+              videoUrl={isLectureReady ? lecture?.video_url : undefined}
               enrollmentData={enrollmentData}
               lectureId={lecture_id}
               courseId={course_id}
               onVideoComplete={handleVideoComplete}
               onProgressUpdated={refreshEnrollmentState}
               nextLecture={nextLecture}
-              isLoading={isLoading && !lecture}
+              isLoading={!isLectureReady}
             />
 
             <div className="lecture-page__meta-block lecture-page__meta-block--mobile">

@@ -172,6 +172,13 @@ export const LectureVideoSection = ({
   }, []);
 
   useEffect(() => {
+    setVideoReady(false);
+    setPaused(true);
+    setCurrentTime(0);
+    setDuration(0);
+  }, [lectureId]);
+
+  useEffect(() => {
     syncFullscreen();
     document.addEventListener("fullscreenchange", syncFullscreen);
     document.addEventListener("webkitfullscreenchange", syncFullscreen);
@@ -202,6 +209,7 @@ export const LectureVideoSection = ({
         ) : (
           <>
             <VideoPlayer
+              key={lectureId}
               videoUrl={videoUrl}
               enrollmentData={enrollmentData}
               lectureId={lectureId}
