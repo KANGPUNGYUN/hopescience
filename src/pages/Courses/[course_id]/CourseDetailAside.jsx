@@ -85,7 +85,7 @@ const PurchaseAside = ({
         수강 신청하기
       </Link>
     ) : (
-      <Link to="/login" className="course-detail-card__cta">
+      <Link to="/signin" className="course-detail-card__cta">
         수강 신청하기
       </Link>
     )}
