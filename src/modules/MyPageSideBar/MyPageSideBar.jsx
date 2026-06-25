@@ -38,7 +38,7 @@ export const MyPageSideBar = () => {
   const navigate = useNavigate();
 
   const userEmail = useMemo(() => {
-    const data = sessionStorage.getItem("auth-storage");
+    const data = localStorage.getItem("auth-storage");
     if (!data) return "";
     try {
       const parsed = JSON.parse(data);

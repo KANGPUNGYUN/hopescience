@@ -59,7 +59,7 @@ import { PageLoadingGate } from "./components/PageLoading";
 
 function getUserType() {
   try {
-    const raw = sessionStorage.getItem("auth-storage");
+    const raw = localStorage.getItem("auth-storage");
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     return parsed?.state?.user?.userType ?? null;

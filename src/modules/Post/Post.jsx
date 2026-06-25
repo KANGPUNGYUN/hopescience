@@ -75,7 +75,7 @@ export const Post = () => {
   const { refreshAccessToken } = auth((state) => ({
     refreshAccessToken: state.refreshAccessToken,
   }));
-  const data = sessionStorage.getItem("auth-storage") || null;
+  const data = localStorage.getItem("auth-storage") || null;
   const myUserId = data ? JSON.parse(data).state?.user?.userId : null;
   const [showModal, setShowModal] = useState(false);
   const [editMode, setEditMode] = useState(null);

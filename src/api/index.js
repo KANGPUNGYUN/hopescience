@@ -10,7 +10,7 @@ function getBaseUrl() {
 
 function getAuthState() {
   try {
-    const raw = sessionStorage.getItem("auth-storage");
+    const raw = localStorage.getItem("auth-storage");
     if (!raw) return {};
     return JSON.parse(raw)?.state ?? {};
   } catch {
@@ -20,10 +20,10 @@ function getAuthState() {
 
 function setAuthState(updates) {
   try {
-    const raw = sessionStorage.getItem("auth-storage");
+    const raw = localStorage.getItem("auth-storage");
     const parsed = raw ? JSON.parse(raw) : { state: {} };
     parsed.state = { ...parsed.state, ...updates };
-    sessionStorage.setItem("auth-storage", JSON.stringify(parsed));
+    localStorage.setItem("auth-storage", JSON.stringify(parsed));
   } catch {
     // ignore
   }
@@ -31,7 +31,7 @@ function setAuthState(updates) {
 
 function clearAuthState() {
   try {
-    sessionStorage.removeItem("auth-storage");
+    localStorage.removeItem("auth-storage");
   } catch {
     // ignore
   }

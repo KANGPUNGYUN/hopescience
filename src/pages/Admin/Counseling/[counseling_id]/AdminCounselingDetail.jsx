@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 export const AdminCounselingDetail = () => {
   const navigate = useNavigate();
   const myUserType = useMemo(() => {
-    const data = sessionStorage.getItem("auth-storage");
+    const data = localStorage.getItem("auth-storage");
     return data ? JSON.parse(data).state?.user?.userType : null;
   }, []);
 

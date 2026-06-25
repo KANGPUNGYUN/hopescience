@@ -82,7 +82,7 @@ export const PostEditor = () => {
     updateCourseInquiry: state.updateCourseInquiry,
     courseQnA: state.courseQnA,
   }));
-  const data = sessionStorage.getItem("auth-storage");
+  const data = localStorage.getItem("auth-storage");
   const myUserId = data ? JSON.parse(data).state?.user?.userId : null;
   const refreshToken = data ? JSON.parse(data).state?.refreshToken : null;
   const navigate = useNavigate();

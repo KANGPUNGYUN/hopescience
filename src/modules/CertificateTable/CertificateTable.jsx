@@ -7,7 +7,7 @@ export const CertificateTable = () => {
     const {getCertificatesByUser, certificates, clearCertificates, isLoading} = certificate((state => ({getCertificatesByUser: state.getCertificatesByUser, certificates: state.certificates, clearCertificates: state.clearCertificates, isLoading: state.isLoading})));
 
   const myUserId = useMemo(() => {
-    const data = sessionStorage.getItem("auth-storage");
+    const data = localStorage.getItem("auth-storage");
     return data ? JSON.parse(data).state?.user?.userId : null;
   }, []);
 

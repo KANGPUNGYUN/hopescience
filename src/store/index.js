@@ -86,7 +86,7 @@ const useAuthStore = create(
             refreshToken: null,
             isLoading: false,
           });
-          sessionStorage.removeItem("auth-storage");
+          localStorage.removeItem("auth-storage");
         }
       },
 
@@ -301,7 +301,7 @@ const useAuthStore = create(
     }),
     {
       name: "auth-storage",
-      getStorage: () => sessionStorage,
+      getStorage: () => localStorage,
       onRehydrateStorage: () => (state, error) => {
         if (error) {
           console.error("Failed to rehydrate auth state:", error);
@@ -1639,7 +1639,7 @@ const useInquiryStore = create((set) => ({
   },
 
   uploadReviewImage: async (review_id, imageFile) => {
-    const raw = sessionStorage.getItem("auth-storage");
+    const raw = localStorage.getItem("auth-storage");
     const accessToken = raw
       ? JSON.parse(raw)?.state?.accessToken
       : null;

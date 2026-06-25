@@ -108,7 +108,7 @@ export const Setting = () => {
   const [activeModal, setActiveModal] = useState(MODAL.NONE);
   const [isSaving, setIsSaving] = useState(false);
 
-  const data = sessionStorage.getItem("auth-storage");
+  const data = localStorage.getItem("auth-storage");
   const myUserId = data ? JSON.parse(data).state?.user?.userId : null;
   const myUserUUID = data ? JSON.parse(data).state?.user?.uuid : null;
   const myAccessToken = data ? JSON.parse(data).state?.accessToken : null;

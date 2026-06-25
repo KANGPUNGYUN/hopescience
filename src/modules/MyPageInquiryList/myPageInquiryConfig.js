@@ -10,7 +10,7 @@ export const INQUIRIES_PER_PAGE = 5;
 
 export function getMyUserId() {
   try {
-    const data = sessionStorage.getItem("auth-storage");
+    const data = localStorage.getItem("auth-storage");
     if (!data) return null;
     return JSON.parse(data).state?.user?.userId ?? null;
   } catch {

@@ -46,7 +46,7 @@ export const Cart = () => {
   const userData = user((state) => state.profile);
   const getUser = user((state) => state.getUser);
   const isUserLoading = user((state) => state.isLoading);
-  const data = sessionStorage.getItem("auth-storage");
+  const data = localStorage.getItem("auth-storage");
   const navigate = useNavigate();
   const { course_id } = useParams();
   const isServiceLoading = service((state) => state.isLoading);
