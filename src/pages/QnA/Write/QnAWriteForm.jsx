@@ -27,12 +27,28 @@ const buildSchema = (isMypage) =>
               .string()
               .required("수강 중인 강의를 선택해주세요")
               .min(1, "수강 중인 강의를 선택해주세요"),
+            display_date: yup
+              .string()
+              .required("작성일을 선택해주세요")
+              .matches(/^\d{4}-\d{2}-\d{2}$/, "올바른 날짜 형식이 아닙니다"),
           }),
       content: yup
         .string()
         .test("content", "내용을 작성해주세요", (val) => !isQuillEmpty(val)),
     })
     .required();
+
+const toDateInputValue = (value) => {
+  if (!value) return "";
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return "";
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+};
+
+const todayDateInputValue = () => toDateInputValue(new Date());
 
 function createAttachmentEntry(file) {
   const isImage = file.type.startsWith("image/");
@@ -98,7 +114,7 @@ export const QnAWriteForm = ({ mode = "create", variant = "board" }) => {
     resolver: yupResolver(buildSchema(isMypage)),
     defaultValues: isMypage
       ? { title: "", category: "", content: "" }
-      : { title: "", course_id: "", content: "" },
+      : { title: "", course_id: "", display_date: todayDateInputValue(), content: "" },
   });
 
   useEffect(() => {
@@ -135,6 +151,8 @@ export const QnAWriteForm = ({ mode = "create", variant = "board" }) => {
               title: QnA.title ?? "",
               course_id:
                 QnA.course_id != null ? String(QnA.course_id) : "",
+              display_date:
+                toDateInputValue(QnA.created_at) || todayDateInputValue(),
               content: QnA.content ?? "",
             }
       );
@@ -204,7 +222,8 @@ export const QnAWriteForm = ({ mode = "create", variant = "board" }) => {
           boardPostId,
           data.course_id,
           data.title,
-          data.content
+          data.content,
+          data.display_date ? `${data.display_date}T00:00:00` : undefined
         );
         if (success) {
           // const imageFile = attachments.find((a) =>
@@ -218,7 +237,8 @@ export const QnAWriteForm = ({ mode = "create", variant = "board" }) => {
           data.course_id,
           data.title,
           data.content,
-          accessToken
+          accessToken,
+          data.display_date ? `${data.display_date}T00:00:00` : undefined
         );
         if (reviewId) {
           // const imageFile = attachments.find((a) =>
@@ -332,6 +352,26 @@ export const QnAWriteForm = ({ mode = "create", variant = "board" }) => {
               </div>
             )}
           </div>
+
+          {!isMypage && (
+            <div className="qna-write-form__field">
+              <label htmlFor="qna-write-date" className="qna-write-form__label">
+                작성일 <span className="qna-write-form__required">*</span>
+              </label>
+              <input
+                id="qna-write-date"
+                type="date"
+                className="qna-write-form__input"
+                max={todayDateInputValue()}
+                {...register("display_date")}
+              />
+              {errors.display_date && (
+                <p className="qna-write-form__error">
+                  {errors.display_date.message}
+                </p>
+              )}
+            </div>
+          )}
 
           <div className="qna-write-form__field">
             <label htmlFor="qna-write-content" className="qna-write-form__label">

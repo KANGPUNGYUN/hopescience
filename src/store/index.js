@@ -1605,7 +1605,7 @@ const useInquiryStore = create((set) => ({
     }
   },
 
-  createReview: async (course_id, title, content, accessToken) => {
+  createReview: async (course_id, title, content, accessToken, createdAt) => {
     const token = accessToken || getReviewAccessToken();
     if (!token) return false;
 
@@ -1617,9 +1617,11 @@ const useInquiryStore = create((set) => ({
 
     set({ isLoading: true });
     try {
+      const data = { course_id: numericCourseId, title, content };
+      if (createdAt) data.created_at = createdAt;
       const response = await postApi({
         path: `/reviews/`,
-        data: { course_id: numericCourseId, title, content },
+        data,
         access_token: token,
       });
       if (response?.id != null) {
@@ -1664,15 +1666,17 @@ const useInquiryStore = create((set) => ({
     }
   },
 
-  updateReview: async (review_id, course_id, title, content) => {
+  updateReview: async (review_id, course_id, title, content, createdAt) => {
     const accessToken = getReviewAccessToken();
     if (!accessToken) return false;
 
     set({ isLoading: true });
     try {
+      const data = { course_id: Number(course_id), title, content };
+      if (createdAt) data.created_at = createdAt;
       await putApi({
         path: `/reviews/${review_id}`,
-        data: { course_id: Number(course_id), title, content },
+        data,
         access_token: accessToken,
       });
       set({ isLoading: false });
