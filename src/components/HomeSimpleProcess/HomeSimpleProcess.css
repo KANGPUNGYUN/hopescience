@@ -1,7 +1,11 @@
 .home-process {
   width: 100%;
   background-color: #faf9f8;
-  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    "Pretendard",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
 }
 
 .home-process__inner {
@@ -79,7 +83,6 @@
   grid-template-columns: 112px minmax(0, 1fr);
   align-items: start;
   width: 100%;
-  min-width: 383px;
   min-height: 120px;
   overflow: visible;
   border-bottom: 2px solid rgba(47, 95, 184, 0.5);
