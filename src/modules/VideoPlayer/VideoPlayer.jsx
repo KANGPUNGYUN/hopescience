@@ -66,6 +66,23 @@ export const VideoPlayer = ({
     }, 0);
   }, []);
 
+  const intervalsStorageKey = useMemo(
+    () => (lectureId ? `watchedIntervals-${lectureId}` : null),
+    [lectureId]
+  );
+
+  const persistWatchedIntervals = useCallback(() => {
+    if (!intervalsStorageKey) return;
+    try {
+      localStorage.setItem(
+        intervalsStorageKey,
+        JSON.stringify(watchedIntervalsRef.current)
+      );
+    } catch {
+      /* ignore */
+    }
+  }, [intervalsStorageKey]);
+
   // VideoPlayer.jsx에서 saveProgress 함수의 수정 부분
   const saveProgress = useCallback(async () => {
     console.log("saveProgress 함수 시작");
@@ -108,6 +125,13 @@ export const VideoPlayer = ({
           );
           console.log("새로운 진도 생성 결과:", result);
           isNewlyCompleted = true;
+          if (intervalsStorageKey) {
+            try {
+              localStorage.removeItem(intervalsStorageKey);
+            } catch {
+              /* ignore */
+            }
+          }
         }
       } else {
         console.log("이미 완료된 강의입니다. 업데이트 생략.");
@@ -275,9 +299,10 @@ export const VideoPlayer = ({
     updateEnrollmentTotalProcess,
     getEnrollment,
     onProgressUpdated,
+    intervalsStorageKey,
   ]);
 
-  const updateWatchedIntervals = useCallback((newTime) => {
+  const updateWatchedIntervals = useCallback((newTime, persist = false) => {
     const intervals = watchedIntervalsRef.current;
     const lastInterval = intervals[intervals.length - 1];
 
@@ -321,7 +346,11 @@ export const VideoPlayer = ({
       }
       return merged;
     }, []);
-  }, []);
+
+    if (persist) {
+      persistWatchedIntervals();
+    }
+  }, [persistWatchedIntervals]);
 
   const handleVideoEnded = useCallback(async () => {
     console.log("비디오 종료. 진도 저장 및 완료 모달 표시");
@@ -375,9 +404,32 @@ export const VideoPlayer = ({
         const videoDuration = await player.getDuration();
         setDuration(videoDuration);
 
+        if (intervalsStorageKey) {
+          try {
+            const saved = localStorage.getItem(intervalsStorageKey);
+            if (saved) {
+              const parsed = JSON.parse(saved);
+              if (Array.isArray(parsed)) {
+                watchedIntervalsRef.current = parsed.filter(
+                  (it) =>
+                    it &&
+                    Number.isFinite(it.start) &&
+                    Number.isFinite(it.end) &&
+                    it.end <= videoDuration + 1
+                );
+              }
+            }
+          } catch {
+            /* ignore */
+          }
+        }
+
+        let lastPersistAt = 0;
         const handleTimeUpdate = (data) => {
           setCurrentTime(data.seconds);
-          updateWatchedIntervals(data.seconds);
+          const shouldPersist = data.seconds - lastPersistAt >= 5;
+          updateWatchedIntervals(data.seconds, shouldPersist);
+          if (shouldPersist) lastPersistAt = data.seconds;
           onPlaybackTimeUpdate?.(data.seconds, videoDuration);
         };
 
@@ -411,6 +463,7 @@ export const VideoPlayer = ({
     initializePlayer();
 
     return () => {
+      persistWatchedIntervals();
       if (playerRef.current) {
         playerRef.current.off("timeupdate");
         playerRef.current.off("play");
@@ -434,6 +487,8 @@ export const VideoPlayer = ({
     onPlayerReady,
     onPlaybackTimeUpdate,
     onPlayStateChange,
+    intervalsStorageKey,
+    persistWatchedIntervals,
   ]);
 
   useEffect(() => {
