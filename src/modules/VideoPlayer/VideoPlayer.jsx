@@ -109,8 +109,9 @@ export const VideoPlayer = ({
       );
 
       const progressData = {
-        lecture_id: lectureId,
-        video_progress_time: Math.min(totalWatchedTime, duration),
+        enrollment_id: Number(enrollmentData.id),
+        lecture_id: Number(lectureId),
+        video_progress_time: Math.round(Math.min(totalWatchedTime, duration)),
         is_completed: currentIsCompleted,
       };
 
