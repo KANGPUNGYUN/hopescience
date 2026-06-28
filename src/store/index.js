@@ -581,8 +581,27 @@ const usePaymentStore = create((set) => ({
 const useUserStore = create((set) => ({
   users: [],
   profile: null,
+  studyStats: null,
   isLoading: false,
   error: null,
+
+  getStudyStats: async () => {
+    try {
+      const response = await getApi({ path: "/users/me/study-stats" });
+      if (response) {
+        set({ studyStats: response });
+        return response;
+      }
+      return null;
+    } catch (error) {
+      console.error("학습 통계를 가져오는 중 오류가 발생했습니다:", error.message);
+      return null;
+    }
+  },
+
+  clearStudyStats: () => {
+    set({ studyStats: null });
+  },
 
   getUsers: async () => {
     set({ isLoading: true });

@@ -89,6 +89,39 @@ export const filterCoursesByTab = (courses, tab) => {
 
 const EMPTY_SUMMARY_DEFAULT_LECTURES = 8;
 
+const buildEmptyWeeklyChartData = () => {
+  const today = new Date();
+  return Array.from({ length: 7 }).map((_, i) => {
+    const d = new Date(today);
+    d.setDate(today.getDate() - (6 - i));
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return { date: `${mm}.${dd}`, sessions: 0 };
+  });
+};
+
+export const toWeeklyChartData = (weeklyStudy) => {
+  if (!Array.isArray(weeklyStudy) || weeklyStudy.length === 0) {
+    return buildEmptyWeeklyChartData();
+  }
+  return weeklyStudy.map((item) => {
+    const dateStr = item?.date ?? "";
+    const [, mm, dd] = dateStr.split("-");
+    const label = mm && dd ? `${mm}.${dd}` : dateStr;
+    return {
+      date: label,
+      sessions: Number(item?.lecture_count) || 0,
+    };
+  });
+};
+
+export const formatHoursMinutes = (totalSeconds) => {
+  const seconds = Math.max(0, Math.floor(Number(totalSeconds) || 0));
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  return `${hours}시간 ${minutes}분`;
+};
+
 export const computeSummary = (courses) => {
   if (courses.length === 0) {
     return {

@@ -5,10 +5,13 @@ import { useAnimateFromZero } from "./useAnimateFromZero";
 import { SUMMARY_ANIMATION } from "./weeklyStudyChartConfig";
 import "./WeeklyStudyChart.css";
 
-export const MyCoursesSummary = ({ summary, weeklyStudyData }) => {
+export const MyCoursesSummary = ({
+  summary,
+  weeklyStudyData,
+  lifetimeStudyLabel,
+}) => {
   const location = useLocation();
   const {
-    total,
     overallPercent,
     completedRatioLabel,
     completedLectures,
@@ -74,7 +77,7 @@ export const MyCoursesSummary = ({ summary, weeklyStudyData }) => {
         <div className="mypage-summary__study-time">
           <span className="mypage-summary__label">전체 학습시간</span>
           <span className="mypage-summary__time-value">
-            {total > 0 ? "—" : "0시간 0분"}
+            {lifetimeStudyLabel ?? "0시간 0분"}
           </span>
         </div>
       </div>

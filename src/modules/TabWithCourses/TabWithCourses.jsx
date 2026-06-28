@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import "./TabWithCourses.css";
-import { auth, enrollment } from "../../store";
+import { auth, enrollment, user } from "../../store";
 import { MyCoursesSummary } from "./MyCoursesSummary";
 import { MyCourseCard } from "./MyCourseCard";
 import { MyCoursesEmpty } from "./MyCoursesEmpty";
@@ -8,6 +8,8 @@ import {
   mapEnrollmentToCourse,
   filterCoursesByTab,
   computeSummary,
+  toWeeklyChartData,
+  formatHoursMinutes,
 } from "./myCoursesUtils";
 
 const TAB_ITEMS = [
@@ -28,14 +30,28 @@ export const TabWithCourses = () => {
       isLoading: state.isLoading,
     }));
 
+  const { getStudyStats, studyStats, clearStudyStats } = user((state) => ({
+    getStudyStats: state.getStudyStats,
+    studyStats: state.studyStats,
+    clearStudyStats: state.clearStudyStats,
+  }));
+
   const myUserId = auth((state) => state.user?.userId);
 
   useEffect(() => {
     clearEnrollments();
+    clearStudyStats();
     if (!myUserId) return;
 
     getUserEnrollments(myUserId);
-  }, [clearEnrollments, getUserEnrollments, myUserId]);
+    getStudyStats();
+  }, [
+    clearEnrollments,
+    clearStudyStats,
+    getUserEnrollments,
+    getStudyStats,
+    myUserId,
+  ]);
 
   useEffect(() => {
     if (enrollments.length > 0) {
@@ -51,9 +67,23 @@ export const TabWithCourses = () => {
     [courses, activeTab]
   );
 
+  const weeklyStudyData = useMemo(
+    () => toWeeklyChartData(studyStats?.weekly_study),
+    [studyStats]
+  );
+
+  const lifetimeStudyLabel = useMemo(
+    () => formatHoursMinutes(studyStats?.lifetime_total_seconds),
+    [studyStats]
+  );
+
   return (
     <div className="mypage-courses">
-      <MyCoursesSummary summary={summary} />
+      <MyCoursesSummary
+        summary={summary}
+        weeklyStudyData={weeklyStudyData}
+        lifetimeStudyLabel={lifetimeStudyLabel}
+      />
 
       <div className="mypage-courses__tabs" role="tablist" aria-label="수강 필터">
         {TAB_ITEMS.map(({ key, label }) => (
