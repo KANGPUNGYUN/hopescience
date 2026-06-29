@@ -1,34 +1,21 @@
-import { useEffect, useCallback, useRef, useMemo } from "react";
-import { Link, useSearchParams, useParams } from "react-router-dom";
-import { payment, enrollment } from "../../../../../store";
+import { useEffect, useCallback, useRef } from "react";
+import { useSearchParams, useParams, useNavigate } from "react-router-dom";
+import { payment, enrollment, service } from "../../../../../store";
 import {
   PaymentResultLayout,
-  PaymentResultDetails,
   PaymentSuccessIcon,
 } from "../paymentResult";
 
-const formatPaymentDate = () => {
-  const today = new Date();
-  const yyyy = String(today.getFullYear());
-  const mm = String(today.getMonth() + 1).padStart(2, "0");
-  const dd = String(today.getDate()).padStart(2, "0");
-  return `${yyyy}.${mm}.${dd}`;
-};
-
-const formatAmount = (rawAmount) => {
-  const amount = Number(rawAmount);
-  if (!Number.isFinite(amount)) return "-";
-  return `${amount.toLocaleString()}원`;
-};
 
 export function SuccessPage() {
   const [searchParams] = useSearchParams();
   const confirmPayment = payment((state) => state.confirmPayment);
   const createEnrollment = enrollment((state) => state.createEnrollment);
+  const getService = service((state) => state.getService);
   const { course_id, user_id } = useParams();
+  const navigate = useNavigate();
 
   const hasRunEffect = useRef(false);
-  const dateStr = useMemo(() => formatPaymentDate(), []);
 
   const handlePaymentConfirm = useCallback(async () => {
     if (hasRunEffect.current) return;
@@ -56,7 +43,14 @@ export function SuccessPage() {
         throw new Error("강의 등록에 실패했습니다.");
       }
 
-      alert("결제 및 강의 등록이 성공적으로 완료되었습니다!");
+      const courseData = await getService(course_id);
+      const firstLectureId = courseData?.sections?.[0]?.lectures?.[0]?.id;
+
+      if (firstLectureId) {
+        navigate(`/courses/${course_id}/${firstLectureId}`, { replace: true });
+      } else {
+        navigate(`/courses/${course_id}`, { replace: true });
+      }
     } catch (error) {
       console.error("처리 중 오류 발생:", error);
 
@@ -73,37 +67,17 @@ export function SuccessPage() {
         `처리 중 오류가 발생했습니다: ${error.message}\n자세한 내용은 콘솔을 확인하고 관리자에게 문의해주세요.`
       );
     }
-  }, [searchParams, confirmPayment, createEnrollment, course_id, user_id]);
+  }, [searchParams, confirmPayment, createEnrollment, getService, course_id, user_id, navigate]);
 
   useEffect(() => {
     handlePaymentConfirm();
   }, [handlePaymentConfirm]);
 
-  const detailItems = [
-    { label: "주문번호", value: searchParams.get("orderId") },
-    { label: "결제일", value: dateStr },
-    {
-      label: "결제 금액",
-      value: formatAmount(searchParams.get("amount")),
-      highlight: true,
-    },
-  ];
-
   return (
     <PaymentResultLayout
       icon={<PaymentSuccessIcon />}
-      title="결제가 정상적으로 완료되었습니다"
-      subtitle="주문 내역을 확인했습니다. 구매하신 강의에서 바로 학습을 시작해 보세요."
-      actions={
-        <Link
-          to={`/courses/${course_id}`}
-          className="payment-result-card__btn payment-result-card__btn--primary"
-        >
-          구매한 강의로 이동하기
-        </Link>
-      }
-    >
-      <PaymentResultDetails items={detailItems} />
-    </PaymentResultLayout>
+      title="결제가 완료되었습니다"
+      subtitle="잠시 후 강의 화면으로 이동합니다..."
+    />
   );
 }

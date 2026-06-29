@@ -25,11 +25,14 @@ export const VideoPlayer = ({
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [showCompletionModal, setShowCompletionModal] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const watchedIntervalsRef = useRef([]);
   const iframeRef = useRef(null);
   const playerRef = useRef(null);
+  // saveProgress 동시 호출 방지용 mutex (state는 비동기라 useRef 사용)
+  const isSavingProgressRef = useRef(false);
+  // initializePlayer 이펙트가 handleVideoEnded 변경마다 재실행되지 않도록 ref로 분리
+  const handleVideoEndedRef = useRef(null);
 
   const {
     createEnrollmentProgress,
@@ -85,6 +88,11 @@ export const VideoPlayer = ({
 
   // VideoPlayer.jsx에서 saveProgress 함수의 수정 부분
   const saveProgress = useCallback(async () => {
+    if (isSavingProgressRef.current) {
+      console.log("saveProgress: 이미 진행 중, 중복 호출 무시");
+      return;
+    }
+    isSavingProgressRef.current = true;
     console.log("saveProgress 함수 시작");
     const totalWatchedTime = calculateTotalWatchedTime();
     const currentIsCompleted = totalWatchedTime / duration >= 0.9;
@@ -283,6 +291,8 @@ export const VideoPlayer = ({
       await onProgressUpdated?.();
     } catch (error) {
       console.error("진도 저장 중 오류 발생:", error);
+    } finally {
+      isSavingProgressRef.current = false;
     }
   }, [
     enrollmentData?.id,
@@ -363,6 +373,11 @@ export const VideoPlayer = ({
     console.log("모달 표시 직후");
   }, [saveProgress, onVideoComplete]);
 
+  // ref를 항상 최신 handleVideoEnded로 유지 (initializePlayer 이펙트 재실행 방지)
+  useEffect(() => {
+    handleVideoEndedRef.current = handleVideoEnded;
+  }, [handleVideoEnded]);
+
   useEffect(() => {
     console.log("showCompletionModal 상태 변경:", showCompletionModal);
   }, [showCompletionModal]);
@@ -439,7 +454,7 @@ export const VideoPlayer = ({
         player.on("pause", () => onPlayStateChange?.(true));
         player.on("ended", () => {
           console.log("Vimeo 'ended' event triggered");
-          handleVideoEnded();
+          handleVideoEndedRef.current?.();
         });
         player.on("loaded", () => setIsLoading(false));
 
@@ -483,7 +498,6 @@ export const VideoPlayer = ({
     videoId,
     lectureId,
     enrollmentData?.id,
-    handleVideoEnded,
     useCustomChrome,
     onPlayerReady,
     onPlaybackTimeUpdate,

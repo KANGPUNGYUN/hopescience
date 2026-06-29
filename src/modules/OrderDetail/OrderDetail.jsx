@@ -5,12 +5,9 @@ import { OrderDetailRow } from "./OrderDetailRow";
 import {
   formatOrderAmount,
   formatOrderDateTime,
-  formatPaymentNumber,
   getCancelDateTime,
   getCancelReason,
   getCourseTitle,
-  getPaymentMethodLabel,
-  getVatAmount,
   isCanceledPayment,
 } from "./orderDetailConfig";
 import "./OrderDetail.css";
@@ -42,7 +39,6 @@ export const OrderDetail = () => {
   }
 
   const canceled = isCanceledPayment(paymentData);
-  const amount = Number(paymentData.amount);
 
   return (
     <div className="mypage-order-detail">
@@ -74,44 +70,6 @@ export const OrderDetail = () => {
           결제일시 {formatOrderDateTime(paymentData.created_at)}
         </p>
       </article>
-
-      <section className="mypage-order-detail__panel" aria-labelledby="order-detail-payment-info">
-        <h3 id="order-detail-payment-info" className="mypage-order-detail__panel-title">
-          결제 정보
-        </h3>
-        <div className="mypage-order-detail__panel-body">
-          <OrderDetailRow label="결제금액" value={formatOrderAmount(amount)} />
-          <OrderDetailRow label="부가세" value={`${getVatAmount(amount)}원`} />
-          <OrderDetailRow label="할인액" value="0원" />
-          <OrderDetailRow
-            label="총 결제금액"
-            value={formatOrderAmount(amount)}
-            strong
-          />
-          <OrderDetailRow
-            label="결제일"
-            value={formatOrderDateTime(paymentData.created_at)}
-          />
-          <OrderDetailRow label="구매자" value={paymentData.user_name || "-"} />
-          <OrderDetailRow
-            label="결제번호"
-            value={formatPaymentNumber(paymentData)}
-          />
-          <OrderDetailRow label="할부" value="일시불" />
-        </div>
-      </section>
-
-      <section className="mypage-order-detail__panel" aria-labelledby="order-detail-payment-method">
-        <h3 id="order-detail-payment-method" className="mypage-order-detail__panel-title">
-          결제 방법
-        </h3>
-        <div className="mypage-order-detail__panel-body">
-          <OrderDetailRow
-            label="결제 수단"
-            value={getPaymentMethodLabel(paymentData)}
-          />
-        </div>
-      </section>
 
       {canceled ? (
         <section className="mypage-order-detail__panel" aria-labelledby="order-detail-cancel-info">

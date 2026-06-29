@@ -1,5 +1,5 @@
 import "./style.css";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Modal } from "../../../../modules/Modal";
 import { service, courseInquiry, enrollment } from "../../../../store";
@@ -34,6 +34,15 @@ export const Lecture = () => {
   const handleCloseModal = useCallback(() => {
     setShowCompletionModal(false);
   }, []);
+
+  const handleConfirmCompletion = useCallback(() => {
+    setShowCompletionModal(false);
+    if (nextLecture?.next?.lecture_id) {
+      navigate(`/courses/${course_id}/${nextLecture.next.lecture_id}`);
+    } else {
+      navigate("/mypage/certificates");
+    }
+  }, [nextLecture, course_id, navigate]);
 
   useEffect(() => {
     setShowCompletionModal(false);
@@ -77,6 +86,9 @@ export const Lecture = () => {
     return data ? JSON.parse(data).state?.user?.userId : null;
   }, []);
 
+  // 수강 조회 API 호출이 시작됐는지 추적 (초기값 null과 "조회 후 미수강"을 구분)
+  const enrollmentCheckStarted = useRef(false);
+
   const refreshEnrollmentState = useCallback(async () => {
     if (!enrollmentData?.id) return;
     await refreshEnrollmentDetails(enrollmentData.id);
@@ -95,11 +107,20 @@ export const Lecture = () => {
       return;
     }
 
+    enrollmentCheckStarted.current = false;
     getIsEnrolled(myUserId, course_id);
   }, [course_id, myUserId, getIsEnrolled, navigate]);
 
   useEffect(() => {
-    if (!course_id || !myUserId || isEnrollmentLoading) return;
+    if (isEnrollmentLoading) {
+      enrollmentCheckStarted.current = true;
+      return;
+    }
+
+    // 아직 API 호출이 시작되지 않은 초기 상태 — 무시
+    if (!enrollmentCheckStarted.current) return;
+
+    if (!course_id || !myUserId) return;
 
     if (!enrollmentData) {
       alert("구매 후에 이용이 가능합니다.");
@@ -315,9 +336,9 @@ export const Lecture = () => {
       <Modal
         isOpen={showCompletionModal}
         onClose={handleCloseModal}
-        onConfirm={handleCloseModal}
+        onConfirm={handleConfirmCompletion}
         modalTitle="강의 수강 완료"
-        confirmLabel="확인"
+        confirmLabel={nextLecture?.next?.lecture_id ? "다음 강의로" : "수료증 확인"}
       >
         <p>강의를 정상적으로 수강하셨습니다.</p>
       </Modal>

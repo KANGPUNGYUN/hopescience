@@ -92,39 +92,49 @@ const PurchaseAside = ({
   </div>
 );
 
-const EnrolledAside = ({ course, enrollmentData, isCourseCompleted }) => (
-  <div className="course-detail-card course-detail-card--enrolled">
-    <h1 className="course-detail-card__title">{course?.title}</h1>
-    <div className="course-detail-card__progress">
-      <span className="course-detail-card__progress-label">진도율</span>
-      <div className="course-detail-card__progress-bar">
-        <div
-          className="course-detail-card__progress-fill"
-          style={{ width: `${enrollmentData?.progress ?? 0}%` }}
-        />
+const EnrolledAside = ({ course, enrollmentData, isCourseCompleted }) => {
+  const firstLectureId = course?.sections?.[0]?.lectures?.[0]?.id;
+  const lectureLink = firstLectureId
+    ? `/courses/${course.id}/${firstLectureId}`
+    : `/courses/${course?.id}`;
+
+  return (
+    <div className="course-detail-card course-detail-card--enrolled">
+      <h1 className="course-detail-card__title">{course?.title}</h1>
+      <div className="course-detail-card__progress">
+        <span className="course-detail-card__progress-label">진도율</span>
+        <div className="course-detail-card__progress-bar">
+          <div
+            className="course-detail-card__progress-fill"
+            style={{ width: `${enrollmentData?.progress ?? 0}%` }}
+          />
+        </div>
+        <span className="course-detail-card__progress-text">
+          {enrollmentData?.completed_lecture_count ?? 0}/
+          {course?.total_lecture_count ?? 0} ({enrollmentData?.progress ?? 0}%)
+        </span>
       </div>
-      <span className="course-detail-card__progress-text">
-        {enrollmentData?.completed_lecture_count ?? 0}/
-        {course?.total_lecture_count ?? 0} ({enrollmentData?.progress ?? 0}%)
-      </span>
-    </div>
-    {isCourseCompleted && (
-      <Link
-        to="/mypage/certificates"
-        className="course-detail-card__cta course-detail-card__cta--secondary"
-      >
-        이수증 발급하기
+      <Link to={lectureLink} className="course-detail-card__cta">
+        수강하러 가기
       </Link>
-    )}
-    <dl className="course-detail-card__meta">
-      <div className="course-detail-card__meta-row">
-        <dt>수강기한</dt>
-        <dd>{COURSE_ENROLLMENT_PERIOD}</dd>
-      </div>
-      <div className="course-detail-card__meta-row">
-        <dt>수료증</dt>
-        <dd>{COURSE_CERTIFICATE_NOTE}</dd>
-      </div>
-    </dl>
-  </div>
-);
+      {isCourseCompleted && (
+        <Link
+          to="/mypage/certificates"
+          className="course-detail-card__cta course-detail-card__cta--secondary"
+        >
+          이수증 발급하기
+        </Link>
+      )}
+      <dl className="course-detail-card__meta">
+        <div className="course-detail-card__meta-row">
+          <dt>수강기한</dt>
+          <dd>{COURSE_ENROLLMENT_PERIOD}</dd>
+        </div>
+        <div className="course-detail-card__meta-row">
+          <dt>수료증</dt>
+          <dd>{COURSE_CERTIFICATE_NOTE}</dd>
+        </div>
+      </dl>
+    </div>
+  );
+};
