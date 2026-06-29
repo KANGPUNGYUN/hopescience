@@ -1,5 +1,5 @@
 import "./style.css";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Modal } from "../../../../modules/Modal";
 import { service, courseInquiry, enrollment } from "../../../../store";
@@ -86,14 +86,12 @@ export const Lecture = () => {
     return data ? JSON.parse(data).state?.user?.userId : null;
   }, []);
 
-  // 수강 조회 API 호출이 시작됐는지 추적 (초기값 null과 "조회 후 미수강"을 구분)
-  const enrollmentCheckStarted = useRef(false);
-
   const refreshEnrollmentState = useCallback(async () => {
     if (!enrollmentData?.id) return;
     await refreshEnrollmentDetails(enrollmentData.id);
   }, [enrollmentData?.id, refreshEnrollmentDetails]);
 
+  // 수강 여부 확인 — isLoading 관찰 방식 대신 반환값을 직접 사용해 race condition 방지
   useEffect(() => {
     if (!course_id) {
       alert("해당 강의는 존재하지 않는 강의입니다.");
@@ -107,41 +105,27 @@ export const Lecture = () => {
       return;
     }
 
-    enrollmentCheckStarted.current = false;
-    getIsEnrolled(myUserId, course_id);
+    let cancelled = false;
+
+    (async () => {
+      const enrolled = await getIsEnrolled(myUserId, course_id);
+      if (cancelled) return;
+      if (!enrolled) {
+        alert("구매 후에 이용이 가능합니다.");
+        navigate(`/courses/${course_id}`, { replace: true });
+      }
+    })();
+
+    return () => { cancelled = true; };
   }, [course_id, myUserId, getIsEnrolled, navigate]);
 
+  // 수강 확인 완료 후 강의 데이터 로드
   useEffect(() => {
-    if (isEnrollmentLoading) {
-      enrollmentCheckStarted.current = true;
-      return;
-    }
-
-    // 아직 API 호출이 시작되지 않은 초기 상태 — 무시
-    if (!enrollmentCheckStarted.current) return;
-
-    if (!course_id || !myUserId) return;
-
-    if (!enrollmentData) {
-      alert("구매 후에 이용이 가능합니다.");
-      navigate(`/courses/${course_id}`, { replace: true });
-      return;
-    }
-
+    if (!enrollmentData || !course_id || !lecture_id) return;
     getLecture(lecture_id);
     getService(course_id);
     getCourseInquiries(course_id);
-  }, [
-    course_id,
-    lecture_id,
-    myUserId,
-    isEnrollmentLoading,
-    enrollmentData,
-    getLecture,
-    getService,
-    getCourseInquiries,
-    navigate,
-  ]);
+  }, [course_id, lecture_id, enrollmentData, getLecture, getService, getCourseInquiries]);
 
   useEffect(() => {
     if (enrollmentData?.id) {
