@@ -21,7 +21,7 @@ export function formatPlaybackTime(seconds) {
 export function countLecturesInCourse(course) {
   return (course?.sections ?? []).reduce(
     (sum, section) => sum + (section.lectures?.length ?? 0),
-    0
+    0,
   );
 }
 
@@ -55,10 +55,13 @@ export function getCompletedLectureCount(enrollmentProgress, enrollmentData) {
 export function getLectureProgressPercent(
   enrollmentProgress,
   totalLectureCount,
-  enrollmentData
+  enrollmentData,
 ) {
   const total = Number(totalLectureCount) || 0;
-  const completed = getCompletedLectureCount(enrollmentProgress, enrollmentData);
+  const completed = getCompletedLectureCount(
+    enrollmentProgress,
+    enrollmentData,
+  );
 
   if (total > 0 && completed >= 0) {
     if (enrollmentData?.is_completed) {
@@ -81,15 +84,13 @@ export function getEnrollmentPeriodLabel(enrollmentData) {
 }
 
 export function getSectionSummary(section) {
-  const count = section?.lectures?.length ?? 0;
   const durationLabel =
     section?.duration ||
     section?.lectures?.[0]?.video_duration ||
     section?.lectures?.[0]?.videoDuration;
   if (durationLabel) {
-    return `${count}강 · ${durationLabel}`;
+    return `${durationLabel}`;
   }
-  return `${count}강`;
 }
 
 export function findSectionIdForLecture(sections, lectureId) {
