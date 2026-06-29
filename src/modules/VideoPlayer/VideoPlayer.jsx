@@ -378,19 +378,6 @@ export const VideoPlayer = ({
     handleVideoEndedRef.current = handleVideoEnded;
   }, [handleVideoEnded]);
 
-  useEffect(() => {
-    console.log("showCompletionModal 상태 변경:", showCompletionModal);
-  }, [showCompletionModal]);
-
-  const handleConfirmCompletion = useCallback(async () => {
-    if (isSaving) return;
-    console.log("완료 확인 및 진도 저장");
-    setIsSaving(true);
-    await saveProgress();
-    setIsSaving(false);
-    console.log("진도 저장 완료, 모달 닫기");
-    setShowCompletionModal(false);
-  }, [isSaving, saveProgress]);
 
   useEffect(() => {
     const initializePlayer = async () => {
