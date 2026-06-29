@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Header } from "../../components";
 import { PageLoading } from "../../components/PageLoading";
 import { auth } from "../../store";
+import { trackLogin } from "../../utils/analytics";
 
 export const NaverSignIn = () => {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ export const NaverSignIn = () => {
       try {
         const data = await naverLogin(accessToken, tokenType, expiresIn, state);
         if (data) {
+          trackLogin("naver");
           navigate("/"); // 홈페이지로 이동
         }
       } catch (error) {

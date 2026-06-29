@@ -14,6 +14,7 @@ import {
   AuthSocialSection,
   useNaverLogin,
 } from "../Auth";
+import { trackSignUp } from "../../utils/analytics";
 
 const schema = yup
   .object({
@@ -75,6 +76,7 @@ export const SignUp = () => {
       const { name, phone, email, password } = data;
       const signupSuccess = await signup(name, phone, email, password);
       if (signupSuccess) {
+        trackSignUp("email");
         navigate("/signin");
       }
     } catch (error) {

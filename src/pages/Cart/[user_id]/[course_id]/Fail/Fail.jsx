@@ -1,13 +1,23 @@
+import { useEffect } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import {
   PaymentResultLayout,
   PaymentResultDetails,
   PaymentFailIcon,
 } from "../paymentResult";
+import { trackPaymentFailed } from "../../../../../utils/analytics";
 
 export function FailPage() {
   const [searchParams] = useSearchParams();
   const { course_id, user_id } = useParams();
+
+  useEffect(() => {
+    trackPaymentFailed(
+      searchParams.get("code"),
+      searchParams.get("message"),
+      course_id
+    );
+  }, [searchParams, course_id]);
 
   const detailItems = [
     { label: "에러 코드", value: searchParams.get("code") },

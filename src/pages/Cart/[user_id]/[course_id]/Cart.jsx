@@ -11,6 +11,12 @@ import * as yup from "yup";
 import { CartCoursePanel } from "./CartCoursePanel";
 import { CartUserPanel } from "./CartUserPanel";
 import { CartSummaryAside } from "./CartSummaryAside";
+import {
+  trackBeginCheckout,
+  trackAddPaymentInfo,
+  trackPaymentCancelled,
+  trackPaymentError,
+} from "../../../../utils/analytics";
 
 const widgetClientKey = process.env.REACT_APP_TOSS_PAYMENTS_CLIENT_KEY;
 
@@ -152,6 +158,7 @@ export const Cart = () => {
   useEffect(() => {
     if (course?.discounted_price) {
       setPrice(Number(course.discounted_price));
+      trackBeginCheckout(course);
     }
   }, [course]);
 
@@ -294,6 +301,7 @@ export const Cart = () => {
               break;
             case "USER_CANCEL":
               paymentErrorMessage = "취소되었습니다.";
+              trackPaymentCancelled(course_id);
               break;
             case "V1_METHOD_NOT_SUPPORTED":
               paymentErrorMessage = "해당 API 는 v1 에서만 제공됩니다.";
@@ -305,6 +313,9 @@ export const Cart = () => {
             case "UNKNOWN":
             default:
               paymentErrorMessage = "알 수 없는 에러가 발생했습니다.";
+          }
+          if (error.code !== "USER_CANCEL") {
+            trackPaymentError(error.code, course_id);
           }
           setErrorMessage(paymentErrorMessage);
           setIsModalOpen(true);
@@ -362,6 +373,7 @@ export const Cart = () => {
   };
 
   const handlePayClick = () => {
+    trackAddPaymentInfo(course);
     handlePaymentRequest(
       orderNumber,
       course?.title,

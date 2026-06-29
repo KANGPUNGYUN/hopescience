@@ -56,6 +56,12 @@ import { AdminColumn } from "./pages/Admin/Column";
 import { NewColumn } from "./pages/Admin/Column/New";
 import { AdminColumnEdit } from "./pages/Admin/Column/[column_id]";
 import { PageLoadingGate } from "./components/PageLoading";
+import { usePageTracking } from "./hooks/usePageTracking";
+
+function PageTracker() {
+  usePageTracking();
+  return null;
+}
 
 function getUserType() {
   try {
@@ -79,6 +85,7 @@ function AdminProtectedRoute({ allowStaff = false, children }) {
 function App() {
   return (
     <Router basename={process.env.PUBLIC_URL}>
+      <PageTracker />
       <PageLoadingGate>
       <Routes>
         <Route path="/" element={<Home />} />

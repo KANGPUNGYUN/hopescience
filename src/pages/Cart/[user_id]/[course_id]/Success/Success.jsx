@@ -5,6 +5,7 @@ import {
   PaymentResultLayout,
   PaymentSuccessIcon,
 } from "../paymentResult";
+import { trackPurchase } from "../../../../../utils/analytics";
 
 
 export function SuccessPage() {
@@ -44,6 +45,7 @@ export function SuccessPage() {
       }
 
       const courseData = await getService(course_id);
+      trackPurchase(orderId, amount, courseData);
       const firstLectureId = courseData?.sections?.[0]?.lectures?.[0]?.id;
 
       if (firstLectureId) {
